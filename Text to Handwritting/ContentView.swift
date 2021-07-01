@@ -11,7 +11,12 @@ struct ContentView: View {
     @Binding var document: Text_to_HandwrittingDocument
 
     var body: some View {
-        TextEditor(text: $document.text)
+        VStack(alignment: .center) {
+            HStack(alignment: .center, spacing: 10) {
+                Button("generate image", action: document.createImage)
+            }
+            TextEditor(text: $document.text)
+        }
     }
 }
 
