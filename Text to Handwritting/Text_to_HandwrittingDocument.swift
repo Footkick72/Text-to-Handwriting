@@ -75,19 +75,22 @@ struct Text_to_HandwrittingDocument: FileDocument {
 //        let words = self.text.split(separator: " ")
         let words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
 
+        let template = Templates.get_template()
+        
         let size = [Int(8.5 * 100), Int(11 * 100)]
-        let font_size = 28
+        let font_size = template.font_size
 
-        let left_margin = 40
-        let right_margin = 20
-        let top_margin = 100
-        let bottom_margin = 160
+        let left_margin = template.margins[0]
+        let right_margin = template.margins[1]
+        let top_margin = template.margins[2]
+        let bottom_margin = template.margins[3]
 
-        let line_spacing = 27
-        let letter_spacing = 4
-        let space_length = 16
-        let line_end_buffer = 25
-        var image = UIImage(contentsOfFile: Bundle.main.resourcePath! + "/paper.png")!
+        let line_spacing = template.line_spacing
+        let letter_spacing = template.letter_spacing
+        let space_length = template.space_length
+        let line_end_buffer = template.line_end_buffer
+        
+        var image = template.get_bg()
         var x_pos = left_margin
         var y_pos = top_margin
         var page_i:Int = 1
