@@ -10,6 +10,7 @@ import SwiftUI
 
 extension UIImage {
     func cropAlpha(cropVertical: Bool, cropHorizontal: Bool) -> UIImage {
+        // modified from answer to https://stackoverflow.com/questions/9061800/how-do-i-autocrop-a-uiimage by Sahil Kapoor
         
         let cgImage = self.cgImage!;
         
