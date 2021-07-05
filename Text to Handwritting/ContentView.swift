@@ -74,7 +74,7 @@ struct TemplateSelector: View {
                     .gesture(TapGesture().onEnded({ Templates.primary_template = option; selectedBackground = option}))
                 }
             }
-        }.frame(width: min(CGFloat(Templates.templates.count) * (item_width), CGFloat((item_width) * 4)), alignment: .center)
+        }.frame(width: min(CGFloat(Templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
 
     }
 }
