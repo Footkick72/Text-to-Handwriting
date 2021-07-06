@@ -159,6 +159,7 @@ struct ImageRectSelector: View {
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
+        //test
         VStack {
             Text("Select the writing area of the image")
             Image(uiImage: image)
