@@ -11,7 +11,7 @@ import Photos
 @main
 struct Text_to_HandwrittingApp: App {
     init() {
-        PHPhotoLibrary.requestAuthorization(for: .addOnly, handler: { _ in return })
+        PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { _ in return })
     }
     
     var body: some Scene {

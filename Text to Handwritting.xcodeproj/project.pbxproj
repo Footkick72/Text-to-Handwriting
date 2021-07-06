@@ -20,6 +20,7 @@
 		1A59E4AC2690F8A700F93D58 /* TemplateCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A59E4AB2690F8A700F93D58 /* TemplateCatalog.swift */; };
 		1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A59E4AE2690FAC500F93D58 /* Template.swift */; };
 		1A59E4B62691F05E00F93D58 /* blankpaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A59E4B52691F05E00F93D58 /* blankpaper.png */; };
+		1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A59E4B82694D35000F93D58 /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		1A59E4AB2690F8A700F93D58 /* TemplateCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCatalog.swift; sourceTree = "<group>"; };
 		1A59E4AE2690FAC500F93D58 /* Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Template.swift; sourceTree = "<group>"; };
 		1A59E4B52691F05E00F93D58 /* blankpaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blankpaper.png; path = ../../../../../Downloads/blankpaper.png; sourceTree = "<group>"; };
+		1A59E4B82694D35000F93D58 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				1A3F92CC268BEA4C00710E99 /* CharSetCatalog.swift */,
 				1A59E4AE2690FAC500F93D58 /* Template.swift */,
 				1A59E4AB2690F8A700F93D58 /* TemplateCatalog.swift */,
+				1A59E4B82694D35000F93D58 /* ImagePicker.swift */,
 				1A3F8D45268B684200710E99 /* ContentView.swift */,
 				1A3F92D0268CB75800710E99 /* Extensions.swift */,
 				1A3F9853268E77CF00710E99 /* .gitignore */,
@@ -199,6 +202,7 @@
 				1A59E4AC2690F8A700F93D58 /* TemplateCatalog.swift in Sources */,
 				1A3F8D42268B684200710E99 /* Text_to_HandwrittingApp.swift in Sources */,
 				1A3F92D1268CB75800710E99 /* Extensions.swift in Sources */,
+				1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */,
 				1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */,
 				1A3F92CD268BEA4C00710E99 /* CharSetCatalog.swift in Sources */,
 				1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */,
