@@ -190,21 +190,22 @@ struct ImageRectSelector: View {
                                 }
                                 initial_rel_dist = CGPoint(x: rect.origin.x - pos.location.x, y: rect.origin.y - pos.location.y)
                             }
+                            var rect2: CGRect?
                             switch selectedCorner {
                             case .topLeft:
-                                rect = CGRect(x: pos.location.x, y: pos.location.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: rect.size.height + (rect.origin.y - pos.location.y))
+                                rect2 = CGRect(x: pos.location.x, y: pos.location.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: rect.size.height + (rect.origin.y - pos.location.y))
                             case .topRight:
-                                rect = CGRect(x: rect.origin.x, y: pos.location.y, width: pos.location.x - rect.origin.x, height: rect.size.height + (rect.origin.y - pos.location.y))
+                                rect2 = CGRect(x: rect.origin.x, y: pos.location.y, width: pos.location.x - rect.origin.x, height: rect.size.height + (rect.origin.y - pos.location.y))
                             case .bottomLeft:
-                                rect = CGRect(x: pos.location.x, y: rect.origin.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: pos.location.y - rect.origin.y)
+                                rect2 = CGRect(x: pos.location.x, y: rect.origin.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: pos.location.y - rect.origin.y)
                             case.bottomRight:
-                                rect = CGRect(x: rect.origin.x, y: rect.origin.y, width: pos.location.x - rect.origin.x, height: pos.location.y - rect.origin.y)
+                                rect2 = CGRect(x: rect.origin.x, y: rect.origin.y, width: pos.location.x - rect.origin.x, height: pos.location.y - rect.origin.y)
                             case .fullRect:
-                                rect.origin.x = pos.location.x + initial_rel_dist!.x
-                                rect.origin.y = pos.location.y + initial_rel_dist!.y
+                                rect2 = CGRect(x: pos.location.x + initial_rel_dist!.x, y: pos.location.y + initial_rel_dist!.y, width: rect.width, height: rect.height)
                             case .none:
                                 print("This should never happen. The selected corner is somehow null, despite having been just set.")
                             }
+                            rect = closest_valid_rect(oldRect: rect, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: 340, height: 440), minSize: CGSize(width: 50, height: 50))
                         }
                         .onEnded {_ in
                             selectedCorner = nil
@@ -220,6 +221,36 @@ struct ImageRectSelector: View {
                 shown = nil
             }
         }
+    }
+    
+    func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize) -> CGRect{
+        //logic that deals with constraining the CGRect to a real rectangle with positive area. Could be condensed, but this is by far the clearest way to write it.
+        var resultRect = newRect
+        if resultRect.minX < boundingRect.minX {
+            resultRect.origin.x = 0
+            resultRect.size.width = oldRect.width
+        }
+        if resultRect.minY < boundingRect.minY {
+            resultRect.origin.y = 0
+            resultRect.size.height = oldRect.height
+        }
+        if resultRect.maxX > boundingRect.maxX {
+            resultRect.origin.x = boundingRect.maxX - oldRect.width
+            resultRect.size.width = oldRect.width
+        }
+        if newRect.maxY > boundingRect.maxY {
+            resultRect.origin.y = boundingRect.maxY - oldRect.height
+            resultRect.size.height = oldRect.height
+        }
+        if resultRect.size.width < minSize.width {
+            resultRect.origin.x = oldRect.origin.x
+            resultRect.size.width = minSize.width
+        }
+        if resultRect.size.height < minSize.height {
+            resultRect.origin.y = oldRect.origin.y
+            resultRect.size.height = minSize.height
+        }
+        return resultRect
     }
 }
 
