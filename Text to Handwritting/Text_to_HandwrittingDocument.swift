@@ -51,8 +51,6 @@ struct Text_to_HandwrittingDocument: FileDocument {
         switch status {
             case .notDetermined:
                 // The user hasn't determined this app's access.
-//                PHPhotoLibrary.requestAuthorization(for: .addOnly, handler: <#T##(PHAuthorizationStatus) -> Void#>)
-//                return checkPhotoSavePermission()
                 return false
             case .restricted:
                 // The system restricted this app's access.
@@ -84,11 +82,11 @@ struct Text_to_HandwrittingDocument: FileDocument {
         let right_margin = template.margins[1]
         let top_margin = template.margins[2]
         let bottom_margin = template.margins[3]
-
-        let line_spacing = template.line_spacing
-        let letter_spacing = template.letter_spacing
-        let space_length = template.space_length
-        let line_end_buffer = template.line_end_buffer
+        
+        let line_spacing = font_size + 4
+        let letter_spacing = Int(Double(font_size) * 0.2)
+        let space_length = Int(Double(font_size) * 0.8)
+        let line_end_buffer = Int(font_size * 2)
         
         var image = template.get_bg()
         var x_pos = left_margin
@@ -130,7 +128,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
                         if checkPhotoSavePermission() {
                             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                         }
-                        image = UIImage(contentsOfFile: Bundle.main.resourcePath! + "/paper.png")!
+                        image = template.get_bg()
                         page_i += 1
                     }
                 }
@@ -146,7 +144,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
                     if checkPhotoSavePermission() {
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     }
-                    image = UIImage(contentsOfFile: Bundle.main.resourcePath! + "/paper.png")!
+                    image = template.get_bg()
                     page_i += 1
                 }
             }

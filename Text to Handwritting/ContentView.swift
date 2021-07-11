@@ -105,47 +105,93 @@ struct FontSelector: View {
     }
 }
 
-enum ActiveTemplateCreatorWindow: Identifiable {
-    case imageSelector, rectSelector
-    var id: Int {
-        hashValue
-    }
-}
-
 struct TemplateCreator: View {
     @State var selected_image: UIImage?
     @State var image_draw_rect = CGRect(x: 0, y: 0, width: 100, height: 100)
-    @State var currentView: ActiveTemplateCreatorWindow?
+    @State var showingImagePicker = false
+    @State var font_size = 20
+    @State var showingSaveDialog = false
+    @State var templateName = "Untitled"
+    
+    private var imageScale = 0.5
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             Text("Create New Template")
+            TextField("Template Name", text: $templateName)
+                .frame(width: 200)
+                .multilineTextAlignment(.center)
             Button("Select Image") {
-                currentView = .imageSelector
+                showingImagePicker = true
             }
             if selected_image != nil {
-                Image(uiImage: selected_image!)
-                    .resizable()
-                    .frame(width: 170, height: 220)
+                ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, font_size: $font_size, display_scale: imageScale)
+            }
+            HStack(alignment: .center, spacing: 10) {
+                Text("Font size:")
+                NumberSelector(value: $font_size, minValue: 5, maxValue: 200)
+            }
+            Button("Save Template") {
+                showingSaveDialog = true
+            }
+            .foregroundColor(.green)
+        }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(sourceType: .photoLibrary) { image in
+                self.selected_image = image
+                showingImagePicker = false
             }
         }
-        .sheet(item: $currentView) { item in
-            switch item {
-            case .imageSelector:
-                ImagePicker(sourceType: .photoLibrary) { image in
-                    self.selected_image = image
-                    currentView = .rectSelector
+        .alert(isPresented: $showingSaveDialog) {
+            if selected_image != nil {
+                return Alert(title: Text("Save"),
+                      message: Text("Are you sure you want to save this template as " + templateName + "?"),
+                      primaryButton: .default(Text("Save")) {self.save_template()},
+                      secondaryButton: .cancel()
+                )
+            }
+            else {
+                return Alert(title: Text("Save"), message: Text("Cannot save, select an image first"), dismissButton: .cancel())
+            }
+        }
+    }
+    
+    func save_template() {
+        let margins = [Int(image_draw_rect.minX/CGFloat(imageScale)),
+                       Int((image_draw_rect.width - image_draw_rect.maxX)/CGFloat(imageScale)),
+                       Int(image_draw_rect.minY/CGFloat(imageScale)),
+                       Int((image_draw_rect.height - image_draw_rect.maxY)/CGFloat(imageScale))]
+        Templates.create_template(name: templateName,
+                                  image: self.selected_image!,
+                                  margins: margins,
+                                  font_size: self.font_size)
+    }
+}
+
+struct NumberSelector: View {
+    @Binding var value: Int
+    @State var minValue: Int
+    @State var maxValue: Int
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 5) {
+            Text(String(value))
+            VStack(alignment: .leading, spacing: 5) {
+                Button("+1") {
+                    value += 1
+                    value = min(maxValue, max(minValue, value))
                 }
-            case .rectSelector:
-                ImageRectSelector(image: selected_image!, shown: $currentView, rect: $image_draw_rect)
+                Button("-1") {
+                    value -= 1
+                    value = min(maxValue, max(minValue, value))
+                }
             }
         }
     }
 }
 
-struct ImageRectSelector: View {
-    @State var image: UIImage
-    @Binding var shown: ActiveTemplateCreatorWindow?
+struct ImageOptionsDisplay: View {
+    @Binding var image: UIImage?
     
     @State var selectedCorner: Corners?
     enum Corners: Identifiable {
@@ -156,71 +202,81 @@ struct ImageRectSelector: View {
     }
     
     @Binding var rect: CGRect
+    @Binding var font_size: Int
     @State var initial_rel_dist: CGPoint?
     
+    @State var display_scale: Double
+    
     var body: some View {
-        VStack {
-            Text("Select the writing area of the image")
-            Image(uiImage: image)
-                .resizable()
-                .frame(width: 340, height: 440)
-                .gesture(
-                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                        .onChanged { pos in
-                            if selectedCorner == nil {
-                                let toTopLeft = sqrt(pow(pos.location.x - rect.minX,2) + pow(pos.location.y - rect.minY,2))
-                                let toTopRight = sqrt(pow(pos.location.x - rect.maxX,2) + pow(pos.location.y - rect.minY,2))
-                                let toBottomLeft = sqrt(pow(pos.location.x - rect.minX,2) + pow(pos.location.y - rect.maxY,2))
-                                let toBottomRight = sqrt(pow(pos.location.x - rect.maxX,2) + pow(pos.location.y - rect.maxY,2))
-                                let closest = min(toTopLeft, min(toTopRight, min(toBottomLeft, toBottomRight)))
-                                if closest > 25 {
-                                    selectedCorner = .fullRect
-                                }
-                                else if closest == toTopLeft {
-                                    selectedCorner = .topLeft
-                                }
-                                else if closest == toTopRight {
-                                    selectedCorner = .topRight
-                                }
-                                else if closest == toBottomLeft {
-                                    selectedCorner = .bottomLeft
-                                }
-                                else if closest == toBottomRight {
-                                    selectedCorner = .bottomRight
-                                }
-                                initial_rel_dist = CGPoint(x: rect.origin.x - pos.location.x, y: rect.origin.y - pos.location.y)
+        Image(uiImage: image!)
+            .resizable()
+            .frame(width: CGFloat(850*display_scale), height: CGFloat(1100*display_scale))
+            .gesture(
+                DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                    .onChanged { pos in
+                        if selectedCorner == nil {
+                            let toTopLeft = sqrt(pow(pos.location.x - rect.minX,2) + pow(pos.location.y - rect.minY,2))
+                            let toTopRight = sqrt(pow(pos.location.x - rect.maxX,2) + pow(pos.location.y - rect.minY,2))
+                            let toBottomLeft = sqrt(pow(pos.location.x - rect.minX,2) + pow(pos.location.y - rect.maxY,2))
+                            let toBottomRight = sqrt(pow(pos.location.x - rect.maxX,2) + pow(pos.location.y - rect.maxY,2))
+                            let closest = min(toTopLeft, min(toTopRight, min(toBottomLeft, toBottomRight)))
+                            if closest > 25 {
+                                selectedCorner = .fullRect
                             }
-                            var rect2: CGRect?
-                            switch selectedCorner {
-                            case .topLeft:
-                                rect2 = CGRect(x: pos.location.x, y: pos.location.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: rect.size.height + (rect.origin.y - pos.location.y))
-                            case .topRight:
-                                rect2 = CGRect(x: rect.origin.x, y: pos.location.y, width: pos.location.x - rect.origin.x, height: rect.size.height + (rect.origin.y - pos.location.y))
-                            case .bottomLeft:
-                                rect2 = CGRect(x: pos.location.x, y: rect.origin.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: pos.location.y - rect.origin.y)
-                            case.bottomRight:
-                                rect2 = CGRect(x: rect.origin.x, y: rect.origin.y, width: pos.location.x - rect.origin.x, height: pos.location.y - rect.origin.y)
-                            case .fullRect:
-                                rect2 = CGRect(x: pos.location.x + initial_rel_dist!.x, y: pos.location.y + initial_rel_dist!.y, width: rect.width, height: rect.height)
-                            case .none:
-                                print("This should never happen. The selected corner is somehow null, despite having been just set.")
+                            else if closest == toTopLeft {
+                                selectedCorner = .topLeft
                             }
-                            rect = closest_valid_rect(oldRect: rect, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: 340, height: 440), minSize: CGSize(width: 50, height: 50))
+                            else if closest == toTopRight {
+                                selectedCorner = .topRight
+                            }
+                            else if closest == toBottomLeft {
+                                selectedCorner = .bottomLeft
+                            }
+                            else if closest == toBottomRight {
+                                selectedCorner = .bottomRight
+                            }
+                            initial_rel_dist = CGPoint(x: rect.origin.x - pos.location.x, y: rect.origin.y - pos.location.y)
                         }
-                        .onEnded {_ in
-                            selectedCorner = nil
+                        var rect2: CGRect?
+                        switch selectedCorner {
+                        case .topLeft:
+                            rect2 = CGRect(x: pos.location.x, y: pos.location.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: rect.size.height + (rect.origin.y - pos.location.y))
+                        case .topRight:
+                            rect2 = CGRect(x: rect.origin.x, y: pos.location.y, width: pos.location.x - rect.origin.x, height: rect.size.height + (rect.origin.y - pos.location.y))
+                        case .bottomLeft:
+                            rect2 = CGRect(x: pos.location.x, y: rect.origin.y, width: rect.size.width + (rect.origin.x - pos.location.x), height: pos.location.y - rect.origin.y)
+                        case.bottomRight:
+                            rect2 = CGRect(x: rect.origin.x, y: rect.origin.y, width: pos.location.x - rect.origin.x, height: pos.location.y - rect.origin.y)
+                        case .fullRect:
+                            rect2 = CGRect(x: pos.location.x + initial_rel_dist!.x, y: pos.location.y + initial_rel_dist!.y, width: rect.width, height: rect.height)
+                        case .none:
+                            print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
-                )
-                .overlay(
-                    Rectangle()
-                        .stroke(Color.red, lineWidth: 5)
-                        .frame(width: rect.size.width, height: rect.size.height)
-                        .position(x: rect.midX, y: rect.midY)
-                )
-            Button("Done") {
-                shown = nil
-            }
-        }
+                        rect = closest_valid_rect(oldRect: rect, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: 850*display_scale, height: 1100*display_scale), minSize: CGSize(width: 50, height: 50))
+                    }
+                    .onEnded {_ in
+                        selectedCorner = nil
+                    }
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(Color.red, lineWidth: 5)
+                    .frame(width: rect.width, height: rect.height)
+                    .position(x: rect.midX, y: rect.midY)
+                    .overlay(
+                        VStack(alignment: .center, spacing: CGFloat(Double(font_size)*display_scale)) {
+                            ForEach(1..<Int(rect.height/(CGFloat(Double(font_size)*display_scale))), id: \.self) {i in
+                                Rectangle()
+                                    .stroke(Color.red, lineWidth: 1)
+                                    .frame(width: rect.width, height: 1)
+                            }
+                        }
+                        .frame(width: rect.width, height: rect.height)
+                        .clipped()
+                        .offset(x: CGFloat(-850*display_scale*0.5) + rect.width/2 + rect.origin.x,
+                                y: CGFloat(-1100*display_scale*0.5) + rect.height/2 + rect.origin.y)
+                    )
+            )
     }
     
     func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize) -> CGRect{

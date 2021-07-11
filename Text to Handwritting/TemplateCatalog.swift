@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 var Templates = TemplateCatalog()
 
@@ -17,21 +18,22 @@ struct TemplateCatalog {
         self.primary_template = "lined"
         self.templates = ["lined": Template(bg: "linedpaper.png",
                                             margins: [40,20,100,160],
-                                            size: 28,
-                                            line_spacing: 27,
-                                            letter_spacing: 4,
-                                            space_length: 16,
-                                            line_end_buffer: 25),
+                                            size: 28),
                           "blank": Template(bg: "blankpaper.png",
-                                                 margins: [50,50,50,50],
-                                                 size: 28,
-                                                 line_spacing: 27,
-                                                 letter_spacing: 4,
-                                                 space_length: 16,
-                                                 line_end_buffer: 25)]
+                                            margins: [50,50,50,50],
+                                            size: 28)]
     }
     
     func get_template() -> Template{
         return templates[primary_template]!
+    }
+    
+    mutating func create_template(name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
+        let imageName = name + "paper.png"
+        let imagePath = Bundle.main.resourcePath! + "/" + imageName
+        FileManager.default.createFile(atPath: imagePath, contents: image.pngData(), attributes: nil)
+        self.templates[name] = Template(bg: imageName,
+                                        margins: margins,
+                                        size: font_size)
     }
 }
