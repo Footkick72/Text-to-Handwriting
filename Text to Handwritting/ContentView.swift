@@ -72,7 +72,7 @@ struct TemplateSelector: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black)
-                                .frame(width: item_width, height: 220)
+                                .frame(width: item_width)
                                 .tag(option)
                         }
                         .foregroundColor(selectedBackground == option ? .red : .black)
@@ -82,7 +82,7 @@ struct TemplateSelector: View {
             }.frame(width: min(CGFloat(Templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
         }
         .sheet(isPresented: $showingTemplateCreation) {
-            TemplateCreator()
+            TemplateCreator(shown: $showingTemplateCreation)
         }
     }
 }
@@ -111,9 +111,10 @@ struct TemplateCreator: View {
     @State var showingImagePicker = false
     @State var font_size = 20
     @State var showingSaveDialog = false
-    @State var templateName = "Untitled"
+    @State var templateName = ""
+    @Binding var shown: Bool
     
-    private var imageScale = 0.5
+    var imageScale = 0.5
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -125,7 +126,7 @@ struct TemplateCreator: View {
                 showingImagePicker = true
             }
             if selected_image != nil {
-                ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, font_size: $font_size, display_scale: imageScale)
+                ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, font_size: $font_size)
             }
             HStack(alignment: .center, spacing: 10) {
                 Text("Font size:")
@@ -143,15 +144,21 @@ struct TemplateCreator: View {
             }
         }
         .alert(isPresented: $showingSaveDialog) {
-            if selected_image != nil {
-                return Alert(title: Text("Save"),
-                      message: Text("Are you sure you want to save this template as " + templateName + "?"),
-                      primaryButton: .default(Text("Save")) {self.save_template()},
-                      secondaryButton: .cancel()
-                )
+            if selected_image == nil {
+                return Alert(title: Text("Save"), message: Text("Cannot save, select an image first"), dismissButton: .cancel())
+            }
+            else if templateName == "" {
+                return Alert(title: Text("Save"), message: Text("Cannot save, name the template first"), dismissButton: .cancel())
             }
             else {
-                return Alert(title: Text("Save"), message: Text("Cannot save, select an image first"), dismissButton: .cancel())
+                return Alert(title: Text("Save"),
+                      message: Text("Are you sure you want to save this template as " + templateName + "?"),
+                      primaryButton: .default(Text("Save")) {
+                        self.save_template()
+                        shown = false
+                      },
+                      secondaryButton: .cancel()
+                )
             }
         }
     }
@@ -205,12 +212,15 @@ struct ImageOptionsDisplay: View {
     @Binding var font_size: Int
     @State var initial_rel_dist: CGPoint?
     
-    @State var display_scale: Double
-    
     var body: some View {
-        Image(uiImage: image!)
+        let display_scale = 500/Double(image!.size.width)
+        let width = Double(image!.size.width) * display_scale
+        let height = Double(image!.size.height) * display_scale
+        return Image(uiImage: image!)
             .resizable()
-            .frame(width: CGFloat(850*display_scale), height: CGFloat(1100*display_scale))
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 500)
+            .border(Color.black, width: 2)
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged { pos in
@@ -252,7 +262,7 @@ struct ImageOptionsDisplay: View {
                         case .none:
                             print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
-                        rect = closest_valid_rect(oldRect: rect, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: 850*display_scale, height: 1100*display_scale), minSize: CGSize(width: 50, height: 50))
+                        rect = closest_valid_rect(oldRect: rect, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: width, height: height), minSize: CGSize(width: 50, height: 50))
                     }
                     .onEnded {_ in
                         selectedCorner = nil
@@ -273,8 +283,8 @@ struct ImageOptionsDisplay: View {
                         }
                         .frame(width: rect.width, height: rect.height)
                         .clipped()
-                        .offset(x: CGFloat(-850*display_scale*0.5) + rect.width/2 + rect.origin.x,
-                                y: CGFloat(-1100*display_scale*0.5) + rect.height/2 + rect.origin.y)
+                        .offset(x: CGFloat(-width*0.5) + rect.width/2 + rect.origin.x,
+                                y: CGFloat(-height*0.5) + rect.height/2 + rect.origin.y)
                     )
             )
     }
@@ -314,6 +324,5 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(document: .constant(Text_to_HandwrittingDocument()))
         TemplateSelector()
-        TemplateCreator()
     }
 }

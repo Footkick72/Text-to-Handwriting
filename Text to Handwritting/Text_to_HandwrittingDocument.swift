@@ -75,9 +75,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
 
         let template = Templates.get_template()
         
-        let size = [Int(8.5 * 100), Int(11 * 100)]
         let font_size = template.font_size
-
         let left_margin = template.margins[0]
         let right_margin = template.margins[1]
         let top_margin = template.margins[2]
@@ -89,6 +87,8 @@ struct Text_to_HandwrittingDocument: FileDocument {
         let line_end_buffer = Int(font_size * 2)
         
         var image = template.get_bg()
+        let size = [Int(image.size.width), Int(image.size.height)]
+        
         var x_pos = left_margin
         var y_pos = top_margin
         var page_i:Int = 1
