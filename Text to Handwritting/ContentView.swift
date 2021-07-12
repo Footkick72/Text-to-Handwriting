@@ -54,20 +54,27 @@ struct OptionsView: View {
     }
 }
 
+enum templateViews: Identifiable {
+    case Creation
+    case Editing
+    var id: Int {
+        hashValue
+    }
+}
+
 struct TemplateSelector: View {
     @State private var selectedBackground = Templates.primary_template
-    @State var showingTemplateCreation = false
+    @State var templateViewState: templateViews?
     @State var showingTemplateDeletionConfirmation = false
-    @State var showingTemplateEditing = false
     private var item_width = CGFloat(180)
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
-            HStack(alignment: .center, spacing: 50) {
+        VStack(alignment: .center, spacing: 30) {
+            VStack(alignment: .center, spacing: 10) {
                 Button("Add template") {
-                    showingTemplateCreation = true
+                    templateViewState = .Creation
                 }
                 Button("Edit slected template") {
-                    showingTemplateEditing = true
+                    templateViewState = .Editing
                 }
                 Button("Delete selected template") {
                     showingTemplateDeletionConfirmation = true
@@ -92,8 +99,13 @@ struct TemplateSelector: View {
                 }
             }.frame(width: min(CGFloat(Templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
         }
-        .sheet(isPresented: $showingTemplateCreation) {
-            TemplateCreator(shown: $showingTemplateCreation)
+        .sheet(item: $templateViewState) { item in
+            switch item {
+            case .Creation:
+                TemplateCreator(shown: $templateViewState)
+            case .Editing:
+                TemplateEditor(shown: $templateViewState)
+            }
         }
         .alert(isPresented: $showingTemplateDeletionConfirmation) {
             Alert(title: Text("Delete Template"),
@@ -124,6 +136,14 @@ struct FontSelector: View {
     }
 }
 
+struct TemplateEditor: View {
+    @Binding var shown: templateViews?
+    
+    var body: some View {
+        Text("Edit template")
+    }
+}
+
 struct TemplateCreator: View {
     @State var selected_image: UIImage?
     @State var image_draw_rect = CGRect(x: 0, y: 0, width: 100, height: 100)
@@ -131,7 +151,7 @@ struct TemplateCreator: View {
     @State var font_size: Float = 20
     @State var showingSaveDialog = false
     @State var templateName = ""
-    @Binding var shown: Bool
+    @Binding var shown: templateViews?
     
     var imageScale = 0.5
     
@@ -153,6 +173,10 @@ struct TemplateCreator: View {
                 showingSaveDialog = true
             }
             .foregroundColor(.green)
+            Button("Cancel") {
+                shown = nil
+            }
+            .foregroundColor(.red)
         }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary) { image in
@@ -172,7 +196,7 @@ struct TemplateCreator: View {
                       message: Text("Are you sure you want to save this template as " + templateName + "?"),
                       primaryButton: .default(Text("Save")) {
                         self.save_template()
-                        shown = false
+                        shown = nil
                       },
                       secondaryButton: .cancel()
                 )
@@ -208,7 +232,7 @@ struct NumberSelector: View {
                    minimumValueLabel: Text(String(Int(minValue))),
                    maximumValueLabel: Text(String(Int(maxValue))),
                    label: {})
-            Text(String(value))
+            Text(String(Int(value)))
         }
     }
 }
