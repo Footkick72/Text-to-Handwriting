@@ -58,9 +58,22 @@ struct TemplateSelector: View {
     @State private var selectedBackground = Templates.primary_template
     @State var showingTemplateCreation = false
     @State var showingTemplateDeletionConfirmation = false
+    @State var showingTemplateEditing = false
     private var item_width = CGFloat(180)
     var body: some View {
-        VStack(alignment: .center, spacing: 50) {
+        VStack(alignment: .center, spacing: 20) {
+            HStack(alignment: .center, spacing: 50) {
+                Button("Add template") {
+                    showingTemplateCreation = true
+                }
+                Button("Edit slected template") {
+                    showingTemplateEditing = true
+                }
+                Button("Delete selected template") {
+                    showingTemplateDeletionConfirmation = true
+                }
+                .foregroundColor(.red)
+            }
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 0) {
                     ForEach(Array(Templates.templates.keys), id: \.self) { option in
@@ -78,15 +91,6 @@ struct TemplateSelector: View {
                     }
                 }
             }.frame(width: min(CGFloat(Templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
-            HStack(alignment: .center, spacing: 50) {
-                Button("Add template") {
-                    showingTemplateCreation = true
-                }
-                Button("Delete selected template") {
-                    showingTemplateDeletionConfirmation = true
-                }
-                .foregroundColor(.red)
-            }
         }
         .sheet(isPresented: $showingTemplateCreation) {
             TemplateCreator(shown: $showingTemplateCreation)
