@@ -8,18 +8,27 @@
 import Foundation
 import SwiftUI
 
-struct Template {
-    let background: String
+struct Template: Codable {
+    let background: Data
     let margins: Array<Int>
     let font_size: Int
+    let name: String
     
-    init(bg: String, margins: Array<Int>, size: Int) {
-        self.background = bg
+    init(name: String, bg: UIImage, margins: Array<Int>, size: Int) {
+        self.background = bg.pngData()!
         self.margins = margins
         self.font_size = size
+        self.name = name
     }
     
     func get_bg() -> UIImage {
-        return UIImage(contentsOfFile: Bundle.main.resourcePath! + "/" + background)!
+        return UIImage(data: background)!
+    }
+    
+    func get_json_data() throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let data = try encoder.encode(self)
+        return data
     }
 }
