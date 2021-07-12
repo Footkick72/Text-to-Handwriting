@@ -50,4 +50,11 @@ class FilesManager {
         }
         throw Error.invalidDirectory
     }
+    
+    func delete(fileNamed: String) throws {
+        guard let url = makeURL(forFileNamed: fileNamed) else {
+            throw Error.invalidDirectory
+        }
+        try fileManager.removeItem(at: url)
+    }
 }

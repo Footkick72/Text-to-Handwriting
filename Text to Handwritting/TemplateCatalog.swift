@@ -41,10 +41,18 @@ struct TemplateCatalog {
         self.save_templates()
     }
     
+    mutating func delete_template(name: String) {
+        self.templates.removeValue(forKey: name)
+        let manager = FilesManager()
+        do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
+        self.primary_template = self.templates.keys.first!
+        save_templates()
+    }
+    
     func save_templates() {
         let manager = FilesManager()
         do { try manager.save(fileNamed: "templates.txt", data: templates.values.map({$0.name}).joined(separator: " ").data(using: .utf8)!) } catch {
-            print("failed to save templates.txt: ")
+            print("Failed to save templates.txt: ")
             print(error)
         }
         for k in self.templates.keys {
