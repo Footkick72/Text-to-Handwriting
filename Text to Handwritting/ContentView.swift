@@ -109,7 +109,7 @@ struct TemplateCreator: View {
     @State var selected_image: UIImage?
     @State var image_draw_rect = CGRect(x: 0, y: 0, width: 100, height: 100)
     @State var showingImagePicker = false
-    @State var font_size = 20
+    @State var font_size: Float = 20
     @State var showingSaveDialog = false
     @State var templateName = ""
     @Binding var shown: Bool
@@ -128,10 +128,8 @@ struct TemplateCreator: View {
             if selected_image != nil {
                 ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, font_size: $font_size)
             }
-            HStack(alignment: .center, spacing: 10) {
-                Text("Font size:")
-                NumberSelector(value: $font_size, minValue: 5, maxValue: 200)
-            }
+            NumberSelector(value: $font_size, minValue: 5, maxValue: 200, label: "Font size")
+                .frame(width: 300)
             Button("Save Template") {
                 showingSaveDialog = true
             }
@@ -171,28 +169,27 @@ struct TemplateCreator: View {
         Templates.create_template(name: templateName,
                                   image: self.selected_image!,
                                   margins: margins,
-                                  font_size: self.font_size)
+                                  font_size: Int(self.font_size))
     }
 }
 
 struct NumberSelector: View {
-    @Binding var value: Int
-    @State var minValue: Int
-    @State var maxValue: Int
+    @Binding var value: Float
+    @State var minValue: Float
+    @State var maxValue: Float
+    @State var label: String
     
     var body: some View {
-        HStack(alignment: .center, spacing: 5) {
+        VStack(alignment: .center, spacing: 0) {
+            Text(label)
+            Slider(value: $value,
+                   in: minValue...maxValue,
+                   step: 1.0,
+                   onEditingChanged: {_ in },
+                   minimumValueLabel: Text(String(Int(minValue))),
+                   maximumValueLabel: Text(String(Int(maxValue))),
+                   label: {})
             Text(String(value))
-            VStack(alignment: .leading, spacing: 5) {
-                Button("+1") {
-                    value += 1
-                    value = min(maxValue, max(minValue, value))
-                }
-                Button("-1") {
-                    value -= 1
-                    value = min(maxValue, max(minValue, value))
-                }
-            }
         }
     }
 }
@@ -209,7 +206,7 @@ struct ImageOptionsDisplay: View {
     }
     
     @Binding var rect: CGRect
-    @Binding var font_size: Int
+    @Binding var font_size: Float
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
@@ -275,7 +272,7 @@ struct ImageOptionsDisplay: View {
                     .position(x: rect.midX, y: rect.midY)
                     .overlay(
                         VStack(alignment: .center, spacing: CGFloat(Double(font_size)*display_scale)) {
-                            ForEach(1..<Int(rect.height/(CGFloat(Double(font_size)*display_scale))), id: \.self) {i in
+                            ForEach(1..<max(1,Int(rect.height/(CGFloat(Double(font_size)*display_scale)))), id: \.self) {i in
                                 Rectangle()
                                     .stroke(Color.red, lineWidth: 1)
                                     .frame(width: rect.width, height: 1)
