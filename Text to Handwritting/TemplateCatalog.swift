@@ -45,7 +45,17 @@ struct TemplateCatalog {
         self.templates.removeValue(forKey: name)
         let manager = FilesManager()
         do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
-        self.primary_template = self.templates.keys.first!
+        if name == self.primary_template {
+            self.primary_template = self.templates.keys.first!
+        }
+        save_templates()
+    }
+    
+    mutating func edit_template(originalName: String, name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
+        self.templates.removeValue(forKey: originalName)
+        let manager = FilesManager()
+        do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
+        self.create_template(name: name, image: image, margins: margins, font_size: font_size)
         save_templates()
     }
     

@@ -25,6 +25,14 @@ struct Template: Codable {
         return UIImage(data: background)!
     }
     
+    func get_margin_rect() -> CGRect {
+        return CGRect(x: margins[0],
+                      y: margins[2],
+                      width: Int(get_bg().size.width) - margins[1] - margins[0],
+                      height: Int(get_bg().size.height) - margins[3] - margins[2])
+        
+    }
+    
     func get_json_data() throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted

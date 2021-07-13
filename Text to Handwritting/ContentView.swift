@@ -137,23 +137,82 @@ struct FontSelector: View {
 }
 
 struct TemplateEditor: View {
+    @State var selected_image = Templates.get_template().get_bg() as UIImage?
+    @State var image_draw_rect = Templates.get_template().get_margin_rect()
+    @State var image_draw_rect_scaled: CGRect? = nil
+    @State var showingImagePicker = false
+    @State var font_size: Float = Float(Templates.get_template().font_size)
+    @State var showingSaveDialog = false
+    @State var templateName = Templates.get_template().name
+    @State var originalName = Templates.get_template().name
     @Binding var shown: templateViews?
     
     var body: some View {
-        Text("Edit template")
+        VStack(alignment: .center, spacing: 10) {
+            Text("Edit Template")
+            TextField("Template Name", text: $templateName)
+                .frame(width: 200)
+                .multilineTextAlignment(.center)
+            Button("Select Image") {
+                showingImagePicker = true
+            }
+            ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, real_rect: $image_draw_rect_scaled, font_size: $font_size)
+            NumberSelector(value: $font_size, minValue: 5, maxValue: 200, label: "Font size")
+                .frame(width: 300)
+            Button("Save Changes") {
+                showingSaveDialog = true
+            }
+            .foregroundColor(.green)
+            Button("Cancel") {
+                shown = nil
+            }
+            .foregroundColor(.red)
+        }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(sourceType: .photoLibrary) { image in
+                self.selected_image = image
+                showingImagePicker = false
+            }
+        }
+        .alert(isPresented: $showingSaveDialog) {
+            if templateName == "" {
+                return Alert(title: Text("Save"), message: Text("Cannot save, name the template first"), dismissButton: .cancel())
+            }
+            else {
+                return Alert(title: Text("Save"),
+                      message: Text("Are you sure you want to save changes to template " + templateName + "?"),
+                      primaryButton: .default(Text("Save")) {
+                        self.save_template()
+                        shown = nil
+                      },
+                      secondaryButton: .cancel()
+                )
+            }
+        }
+    }
+    
+    func save_template() {
+        let margins = [Int(image_draw_rect_scaled!.minX),
+                       Int(Templates.get_template().get_bg().size.width - image_draw_rect_scaled!.maxX),
+                       Int(image_draw_rect_scaled!.minY),
+                       Int(Templates.get_template().get_bg().size.height - image_draw_rect_scaled!.maxY)]
+        Templates.edit_template(originalName: originalName,
+                                name: templateName,
+                                image: selected_image!,
+                                margins: margins,
+                                font_size: Int(font_size))
     }
 }
 
 struct TemplateCreator: View {
     @State var selected_image: UIImage?
     @State var image_draw_rect = CGRect(x: 0, y: 0, width: 100, height: 100)
+    @State var image_draw_rect_scaled: CGRect? = nil
     @State var showingImagePicker = false
     @State var font_size: Float = 20
     @State var showingSaveDialog = false
     @State var templateName = ""
     @Binding var shown: templateViews?
-    
-    var imageScale = 0.5
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -165,7 +224,7 @@ struct TemplateCreator: View {
                 showingImagePicker = true
             }
             if selected_image != nil {
-                ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, font_size: $font_size)
+                ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, real_rect: $image_draw_rect_scaled, font_size: $font_size)
             }
             NumberSelector(value: $font_size, minValue: 5, maxValue: 200, label: "Font size")
                 .frame(width: 300)
@@ -205,14 +264,14 @@ struct TemplateCreator: View {
     }
     
     func save_template() {
-        let margins = [Int(image_draw_rect.minX/CGFloat(imageScale)),
-                       Int((image_draw_rect.width - image_draw_rect.maxX)/CGFloat(imageScale)),
-                       Int(image_draw_rect.minY/CGFloat(imageScale)),
-                       Int((image_draw_rect.height - image_draw_rect.maxY)/CGFloat(imageScale))]
+        let margins = [Int(image_draw_rect_scaled!.minX),
+                       Int(image_draw_rect_scaled!.width - image_draw_rect_scaled!.maxX),
+                       Int(image_draw_rect_scaled!.minY),
+                       Int(image_draw_rect_scaled!.height - image_draw_rect_scaled!.maxY)]
         Templates.create_template(name: templateName,
-                                  image: self.selected_image!,
+                                  image: selected_image!,
                                   margins: margins,
-                                  font_size: Int(self.font_size))
+                                  font_size: Int(font_size))
     }
 }
 
@@ -249,11 +308,12 @@ struct ImageOptionsDisplay: View {
     }
     
     @Binding var rect: CGRect
+    @Binding var real_rect: CGRect?
     @Binding var font_size: Float
+    @State var display_scale = 0.5
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
-        let display_scale = 500/Double(image!.size.width)
         let width = Double(image!.size.width) * display_scale
         let height = Double(image!.size.height) * display_scale
         return Image(uiImage: image!)
@@ -303,6 +363,7 @@ struct ImageOptionsDisplay: View {
                             print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
                         rect = closest_valid_rect(oldRect: rect, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: width, height: height), minSize: CGSize(width: 50, height: 50))
+                        update_real_rect()
                     }
                     .onEnded {_ in
                         selectedCorner = nil
@@ -327,6 +388,21 @@ struct ImageOptionsDisplay: View {
                                 y: CGFloat(-height*0.5) + rect.height/2 + rect.origin.y)
                     )
             )
+            .onAppear(perform: {
+                display_scale = 500/Double(image!.size.width)
+                rect = CGRect(x: Int(rect.origin.x * CGFloat(display_scale)),
+                              y: Int(rect.origin.y * CGFloat(display_scale)),
+                              width: Int(rect.width * CGFloat(display_scale)),
+                              height: Int(rect.height * CGFloat(display_scale)))
+                update_real_rect()
+            })
+    }
+    
+    func update_real_rect() {
+        real_rect = CGRect(x: Int(rect.origin.x / CGFloat(display_scale)),
+                           y: Int(rect.origin.y / CGFloat(display_scale)),
+                           width: Int(rect.width / CGFloat(display_scale)),
+                           height: Int(rect.height / CGFloat(display_scale)))
     }
     
     func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize) -> CGRect{
