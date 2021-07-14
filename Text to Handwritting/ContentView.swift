@@ -63,7 +63,7 @@ enum templateViews: Identifiable {
 }
 
 struct TemplateSelector: View {
-    @State private var selectedBackground = Templates.primary_template
+    @ObservedObject var templates = Templates
     @State var templateViewState: templateViews?
     @State var showingTemplateDeletionConfirmation = false
     private var item_width = CGFloat(180)
@@ -93,11 +93,11 @@ struct TemplateSelector: View {
                                 .frame(width: item_width)
                                 .tag(option)
                         }
-                        .foregroundColor(selectedBackground == option ? .red : .black)
-                        .gesture(TapGesture().onEnded({ Templates.primary_template = option; selectedBackground = option}))
+                        .foregroundColor(templates.primary_template == option ? .red : .black)
+                        .gesture(TapGesture().onEnded({ templates.primary_template = option }))
                     }
                 }
-            }.frame(width: min(CGFloat(Templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
+            }.frame(width: min(CGFloat(templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
         }
         .sheet(item: $templateViewState) { item in
             switch item {
@@ -109,9 +109,9 @@ struct TemplateSelector: View {
         }
         .alert(isPresented: $showingTemplateDeletionConfirmation) {
             Alert(title: Text("Delete Template"),
-                  message: Text("Are you sure you want to delete template \"" + Templates.get_template().name + "\"?"),
+                  message: Text("Are you sure you want to delete template \"" + templates.get_template().name + "\"?"),
                   primaryButton: .destructive(Text("Yes")) {
-                    Templates.delete_template(name: Templates.get_template().name)
+                    templates.delete_template(name: templates.get_template().name)
                   },
                   secondaryButton: .cancel())
         }

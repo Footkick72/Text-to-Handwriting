@@ -10,9 +10,9 @@ import SwiftUI
 
 var Templates = TemplateCatalog()
 
-struct TemplateCatalog {
-    var primary_template: String
-    var templates: Dictionary<String,Template>
+class TemplateCatalog: ObservableObject {
+    @Published var primary_template: String
+    @Published var templates: Dictionary<String,Template>
     
     let savePath = Bundle.main.resourcePath! + "/Templates/"
     
@@ -39,7 +39,7 @@ struct TemplateCatalog {
         return templates[primary_template]!
     }
     
-    mutating func create_template(name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
+    func create_template(name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
         self.templates[name] = Template(name: name,
                                         bg: image,
                                         margins: margins,
@@ -47,7 +47,7 @@ struct TemplateCatalog {
         self.save_templates()
     }
     
-    mutating func delete_template(name: String) {
+    func delete_template(name: String) {
         self.templates.removeValue(forKey: name)
         let manager = FilesManager()
         do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
@@ -57,7 +57,7 @@ struct TemplateCatalog {
         save_templates()
     }
     
-    mutating func edit_template(originalName: String, name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
+    func edit_template(originalName: String, name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
         self.templates.removeValue(forKey: originalName)
         let manager = FilesManager()
         do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
@@ -79,7 +79,7 @@ struct TemplateCatalog {
         }
     }
     
-    mutating func load_templates() {
+    func load_templates() {
         let manager = FilesManager()
         do {
             for name in String(data: try manager.read(fileNamed: "templates.txt"), encoding: .utf8)!.split(separator: " ") {
