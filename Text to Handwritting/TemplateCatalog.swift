@@ -17,16 +17,22 @@ struct TemplateCatalog {
     let savePath = Bundle.main.resourcePath! + "/Templates/"
     
     init() {
-        self.primary_template = "lined"
-        self.templates = ["lined": Template(name: "lined",
-                                            bg: UIImage(imageLiteralResourceName: "linedpaper.png"),
-                                            margins: [40,20,100,160],
-                                            size: 28),
-                          "blank": Template(name: "blank",
-                                            bg: UIImage(imageLiteralResourceName: "blankpaper.png"),
-                                            margins: [50,50,50,50],
-                                            size: 28)]
+        self.primary_template = ""
+        self.templates = Dictionary()
         self.load_templates()
+        if (self.templates.keys.firstIndex(of: "lined") == nil) {
+            self.create_template(name: "lined",
+                                image: UIImage(imageLiteralResourceName: "linedpaper.png"),
+                                margins: [40,20,100,160],
+                                font_size: 28)
+        }
+        if (self.templates.keys.firstIndex(of: "blank") == nil) {
+            self.create_template(name: "blank",
+                                image: UIImage(imageLiteralResourceName: "blankpaper.png"),
+                                margins: [50,50,50,50],
+                                font_size: 28)
+        }
+        self.primary_template = self.templates.first!.key
     }
     
     func get_template() -> Template{
