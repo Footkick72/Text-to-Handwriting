@@ -82,7 +82,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
         let bottom_margin = template.margins[3]
         
         let line_spacing = font_size + 4
-        let letter_spacing = Int(Double(font_size) * 0.2)
+        let letter_spacing: Int = Int(Double(font_size) * 0.2)
         let space_length = Int(Double(font_size) * 0.8)
         let line_end_buffer = Int(font_size * 2)
         
@@ -98,22 +98,10 @@ struct Text_to_HandwrittingDocument: FileDocument {
         let min_hardness:Float = 0.7
         var line_offset:Float = 0
 
-        var charlens: Dictionary<String,Float> = [:]
-        for char in CharSets.get_set().availiable_chars {
-            var charlen: Float = 0
-            let images: Array<UIImage>
-            do {
-                images = try CharSets.get_set().getImages(char: String(char))!
-            } catch {
-                print("Charset failed to return image on character " + String(char) + " during charlens calculation, aborting...")
-                return
-            }
-            for file in images {
-                let box = file.cropAlpha(cropVertical: true, cropHorizontal: true).size
-                let scaler: Float = Float(font_size)/Float(file.size.width)
-                charlen += Float(Int(box.width) + letter_spacing) * scaler
-            }
-            charlens[String(char)] = charlen/Float(images.count)
+        var charlens: Dictionary<String,Float> = CharSets.get_set().charlens
+        for k in charlens.keys {
+            charlens[k] = charlens[k]! * Float(font_size)
+            charlens[k] = charlens[k]! +  Float(letter_spacing) * Float(font_size) / 256.0
         }
         
         for word in words {
@@ -159,8 +147,6 @@ struct Text_to_HandwrittingDocument: FileDocument {
                 }
                 letter = letter.cropAlpha(cropVertical: false, cropHorizontal: true)
                 let scaler = Float(letter.size.height)/Float(font_size)
-//                let scaler = 10
-//                var letter = letter.resize((max(1,int(letter.size[0] * scaler)), font_size), resample = Image.LANCZOS)
                 letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
                 var letterlength = Float(letter.size.width)
                 let s = CGSize(width: size[0], height: size[1])
