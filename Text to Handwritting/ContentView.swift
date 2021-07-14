@@ -140,7 +140,6 @@ struct TemplateEditor: View {
     @State var selected_image = Templates.get_template().get_bg() as UIImage?
     @State var image_draw_rect = Templates.get_template().get_margin_rect()
     @State var image_draw_rect_scaled: CGRect? = nil
-    @State var showingImagePicker = false
     @State var font_size: Float = Float(Templates.get_template().font_size)
     @State var showingSaveDialog = false
     @State var templateName = Templates.get_template().name
@@ -153,9 +152,7 @@ struct TemplateEditor: View {
             TextField("Template Name", text: $templateName)
                 .frame(width: 200)
                 .multilineTextAlignment(.center)
-            Button("Select Image") {
-                showingImagePicker = true
-            }
+                .autocapitalization(.none)
             ImageOptionsDisplay(image: $selected_image, rect: $image_draw_rect, real_rect: $image_draw_rect_scaled, font_size: $font_size)
             NumberSelector(value: $font_size, minValue: 5, maxValue: 200, label: "Font size")
                 .frame(width: 300)
@@ -167,12 +164,6 @@ struct TemplateEditor: View {
                 shown = nil
             }
             .foregroundColor(.red)
-        }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(sourceType: .photoLibrary) { image in
-                self.selected_image = image
-                showingImagePicker = false
-            }
         }
         .alert(isPresented: $showingSaveDialog) {
             if templateName == "" {
@@ -193,9 +184,9 @@ struct TemplateEditor: View {
     
     func save_template() {
         let margins = [Int(image_draw_rect_scaled!.minX),
-                       Int(Templates.get_template().get_bg().size.width - image_draw_rect_scaled!.maxX),
+                       Int(selected_image!.size.width - image_draw_rect_scaled!.maxX),
                        Int(image_draw_rect_scaled!.minY),
-                       Int(Templates.get_template().get_bg().size.height - image_draw_rect_scaled!.maxY)]
+                       Int(selected_image!.size.height - image_draw_rect_scaled!.maxY)]
         Templates.edit_template(originalName: originalName,
                                 name: templateName,
                                 image: selected_image!,
@@ -220,6 +211,7 @@ struct TemplateCreator: View {
             TextField("Template Name", text: $templateName)
                 .frame(width: 200)
                 .multilineTextAlignment(.center)
+                .autocapitalization(.none)
             Button("Select Image") {
                 showingImagePicker = true
             }
@@ -265,9 +257,9 @@ struct TemplateCreator: View {
     
     func save_template() {
         let margins = [Int(image_draw_rect_scaled!.minX),
-                       Int(image_draw_rect_scaled!.width - image_draw_rect_scaled!.maxX),
+                       Int(selected_image!.size.width - image_draw_rect_scaled!.maxX),
                        Int(image_draw_rect_scaled!.minY),
-                       Int(image_draw_rect_scaled!.height - image_draw_rect_scaled!.maxY)]
+                       Int(selected_image!.size.height - image_draw_rect_scaled!.maxY)]
         Templates.create_template(name: templateName,
                                   image: selected_image!,
                                   margins: margins,
