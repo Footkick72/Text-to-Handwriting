@@ -75,7 +75,7 @@ class TemplateCatalog: ObservableObject {
             let template = self.templates[k]
             do {
                 try manager.save(fileNamed: template!.name + ".template", data: template!.get_json_data())
-            } catch { print(template!.name + "failed to save, continuing..."); continue }
+            } catch { print(template!.name + " failed to save, continuing..."); continue }
         }
     }
     
