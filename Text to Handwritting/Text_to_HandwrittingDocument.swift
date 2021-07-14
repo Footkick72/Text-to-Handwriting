@@ -138,13 +138,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
             }
             
             for char in word {
-                var letter: UIImage
-                do {
-                    try letter = CharSets.get_set().getImage(char: String(char))!
-                } catch {
-                    print("Charset failed to return image on character " + String(char) + " during image generation, aborting...")
-                    return
-                }
+                var letter: UIImage = CharSets.get_set().getImage(char: String(char))
                 letter = letter.cropAlpha(cropVertical: false, cropHorizontal: true)
                 let scaler = Float(letter.size.height)/Float(font_size)
                 letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
