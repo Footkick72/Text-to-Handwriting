@@ -31,6 +31,7 @@
 		1AA1E2D3269F28E4007DAE76 /* TemplateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */; };
 		1AA1E2D8269F8A43007DAE76 /* space.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D7269F8A43007DAE76 /* space.png */; };
 		1AA1E2DB26A0B07E007DAE76 /* writingbackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */; };
+		1AA1E2DF26A0B32C007DAE76 /* FontCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* FontCreator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditor.swift; sourceTree = "<group>"; };
 		1AA1E2D7269F8A43007DAE76 /* space.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = space.png; sourceTree = "<group>"; };
 		1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = writingbackground.png; sourceTree = "<group>"; };
+		1AA1E2DE26A0B32C007DAE76 /* FontCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontCreator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */,
 				1AA1E2CE269F2891007DAE76 /* ImageOptionsDisplay.swift */,
 				1AA1E2C5269F2815007DAE76 /* FontSelector.swift */,
+				1AA1E2DE26A0B32C007DAE76 /* FontCreator.swift */,
 				1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */,
 				1A3F92D0268CB75800710E99 /* Extensions.swift */,
 				1AA1E2B9269B8D9A007DAE76 /* FilesManager.swift */,
@@ -242,6 +245,7 @@
 				1A3F92CD268BEA4C00710E99 /* CharSetCatalog.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageOptionsDisplay.swift in Sources */,
 				1AA1E2C9269F2847007DAE76 /* TemplateCreator.swift in Sources */,
+				1AA1E2DF26A0B32C007DAE76 /* FontCreator.swift in Sources */,
 				1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */,
 				1AA1E2C0269F2766007DAE76 /* OptionsView.swift in Sources */,
 				1A3F8D54268B701100710E99 /* CharSet.swift in Sources */,

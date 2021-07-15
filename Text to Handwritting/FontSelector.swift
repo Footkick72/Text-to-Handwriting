@@ -27,5 +27,8 @@ struct FontSelector: View {
                 }
             }
         }.frame(width: min(CGFloat(sets.sets.count) * item_width, CGFloat(item_width * 4)), alignment: .center)
+        .sheet(isPresented: $showingCharSetCreator) {
+            FontCreator()
+        }
     }
 }

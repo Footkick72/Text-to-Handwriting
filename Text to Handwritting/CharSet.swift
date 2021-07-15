@@ -28,6 +28,10 @@ struct CharSet: Codable {
         }
     }
     
+    func has_character(char: String) -> Bool {
+        return (self.availiable_chars.firstIndex(of: Character(char)) != nil)
+    }
+    
     func getImage(char: String) -> UIImage {
         let images = getImages(char: char)
         if images.count > 0 {
