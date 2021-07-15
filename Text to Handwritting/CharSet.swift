@@ -12,59 +12,20 @@ struct CharSet: Codable {
     var name: String
     var availiable_chars: String
     var characters: Dictionary<String,Array<Data>>
-//    var substitutions: Dictionary<String,String>
     var charlens: Dictionary<String,Float> = [:]
     
-    init(name: String, characters: Dictionary<String,Array<Data>>) {
+    init(name: String, characters: Dictionary<String,Array<Data>>, charlens: Dictionary<String,Float>? = nil) {
         self.name = name
         self.characters = characters
         self.availiable_chars = ""
         for char in characters.keys {
             availiable_chars += char
         }
-//        self.availiable_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz’‘':,![(.?])\"”;"
-//        self.substitutions = ["A":"aa",
-//                              "B":"bb",
-//                              "C":"cc",
-//                              "D":"dd",
-//                              "E":"ee",
-//                              "F":"ff",
-//                              "G":"gg",
-//                              "H":"hh",
-//                              "I":"ii",
-//                              "J":"jj",
-//                              "K":"kk",
-//                              "L":"ll",
-//                              "M":"mm",
-//                              "N":"nn",
-//                              "O":"oo",
-//                              "P":"pp",
-//                              "Q":"qq",
-//                              "R":"rr",
-//                              "S":"ss",
-//                              "T":"tt",
-//                              "U":"uu",
-//                              "V":"vv",
-//                              "W":"ww",
-//                              "X":"xx",
-//                              "Y":"yy",
-//                              "Z":"zz",
-//                              "’":"apostrophe",
-//                              "‘":"apostrophe",
-//                              "'":"apostrophe",
-//                              ":":"colon",
-//                              ",":"comma",
-//                              "!":"exmark",
-//                              "[":"lbracket",
-//                              "(":"lparentheses",
-//                              ".":"period",
-//                              "?":"qmark",
-//                              "]":"rbracket",
-//                              ")":"rparentheses",
-//                              "\"":"qoute",
-//                              "”":"qoute",
-//                              ";":"semicolon"]
-        self.charlens = self.get_charlens()!
+        if charlens == nil {
+            self.charlens = self.get_charlens()!
+        } else {
+            self.charlens = charlens!
+        }
     }
     
     func getImage(char: String) -> UIImage {
@@ -88,7 +49,7 @@ struct CharSet: Codable {
     }
     
     func get_charlens() -> Dictionary<String,Float>? {
-        //multiply by Float(font_size), add letter_spacing * Float(font_size) / 256 to convert to accurate sizes
+        //multiply by Float(font_size), add letter_spacing * Float(font_size) / 256 to convert to accurate sizes upon generation
         var lengths: Dictionary<String,Float> = [:]
         for char in availiable_chars {
             var charlen: Float = 0

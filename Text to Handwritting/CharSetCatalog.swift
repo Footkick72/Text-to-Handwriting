@@ -81,8 +81,8 @@ class CharSetCatalog {
                 
                 charlist[String(char)] = images
             }
-            
-            self.sets["default"] = CharSet(name:"letters", characters: charlist)
+            self.sets["default"] = CharSet(name:"default", characters: charlist)
+            self.save_sets()
         }
         self.primary_set = self.sets.first!.key
     }

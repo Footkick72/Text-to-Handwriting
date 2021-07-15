@@ -30,6 +30,7 @@
 		1AA1E2CF269F2891007DAE76 /* ImageOptionsDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2CE269F2891007DAE76 /* ImageOptionsDisplay.swift */; };
 		1AA1E2D3269F28E4007DAE76 /* TemplateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */; };
 		1AA1E2D8269F8A43007DAE76 /* space.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D7269F8A43007DAE76 /* space.png */; };
+		1AA1E2DB26A0B07E007DAE76 /* writingbackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		1AA1E2CE269F2891007DAE76 /* ImageOptionsDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOptionsDisplay.swift; sourceTree = "<group>"; };
 		1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditor.swift; sourceTree = "<group>"; };
 		1AA1E2D7269F8A43007DAE76 /* space.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = space.png; sourceTree = "<group>"; };
+		1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = writingbackground.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 		1A3F92C8268BD0BA00710E99 /* Backgrounds */ = {
 			isa = PBXGroup;
 			children = (
+				1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */,
 				1A59E4B52691F05E00F93D58 /* blankpaper.png */,
 				1A3F92C9268BD0E200710E99 /* linedpaper.png */,
 			);
@@ -215,6 +218,7 @@
 				1A3F8D4B268B684200710E99 /* Preview Assets.xcassets in Resources */,
 				1A3F8D48268B684200710E99 /* Assets.xcassets in Resources */,
 				1A3F92CA268BD0E200710E99 /* linedpaper.png in Resources */,
+				1AA1E2DB26A0B07E007DAE76 /* writingbackground.png in Resources */,
 				1AA1E2D8269F8A43007DAE76 /* space.png in Resources */,
 				1A3F984A268E2EC100710E99 /* letters in Resources */,
 			);
