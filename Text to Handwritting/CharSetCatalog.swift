@@ -10,9 +10,9 @@ import SwiftUI
 
 var CharSets = CharSetCatalog()
 
-class CharSetCatalog {
-    var primary_set: String
-    var sets: Dictionary<String,CharSet>
+class CharSetCatalog: ObservableObject {
+    @Published var primary_set: String
+    @Published var sets: Dictionary<String,CharSet>
     
     init() {
         self.primary_set = ""
