@@ -51,6 +51,16 @@ class CharSet: Codable {
         }
     }
     
+    func getSameImage(char: String) -> UIImage {
+        // returns the same image always for UI display purposes
+        let images = getImages(char: char)
+        if images.count > 0 {
+            return images.first!
+        } else {
+            return UIImage(imageLiteralResourceName: "space.png")
+        }
+    }
+    
     func getImages(char: String) -> Array<UIImage> {
         guard let data = self.characters[char] else {
             return Array<UIImage>()
