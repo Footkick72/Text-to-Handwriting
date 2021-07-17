@@ -28,8 +28,8 @@ class CharSet: Codable {
         }
     }
     
-    func has_character(char: String) -> Bool {
-        return (self.availiable_chars.firstIndex(of: Character(char)) != nil)
+    func number_of_character(char: String) -> Int {
+        return self.getImages(char: char).count
     }
     
     func add_characters(char: String, images: Array<UIImage>) {

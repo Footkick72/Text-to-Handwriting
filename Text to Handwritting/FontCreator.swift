@@ -25,7 +25,7 @@ struct FontCreator: View {
                     let char: String = String(allchars[i])
                     VStack {
                         Text(char)
-                        if set.has_character(char: char) {
+                        if set.number_of_character(char: char) != 0 {
                             Image(uiImage: set.getSameImage(char: char))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -38,17 +38,17 @@ struct FontCreator: View {
                     .font(.title2)
                     .overlay(
                         Rectangle()
-                            .foregroundColor(set.has_character(char: char) ? .green : .red)
+                            .foregroundColor(set.number_of_character(char: char) == 0 ? .red : set.number_of_character(char: char) < 5 ? .yellow : .green)
                             .opacity(0.2)
                     )
                     .scaleEffect(scale)
                     .gesture(TapGesture()
                                 .onEnded({ _ in
                                     // This entire "scale" thing is to avoid some very weird behavior where the TapGesture.onEnded closure fails to save changes to the struct's state variables unless the view itself is dependant on those changes. As a result, I have the view be dependant on the @State variable scale, which is (technically) changed by the closure. No idea why and I don't really understand it, but this seems to work for now.
-                                    scale += 0.000001
+                                    scale += 1.0
                                     scale = 1.0
                                     self.currentLetter = char
-                                    self.showingWritingView = set.has_character(char: char) ? false : true
+                                    self.showingWritingView = true
                                 })
                     )
                 }
