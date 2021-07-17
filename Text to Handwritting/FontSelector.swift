@@ -11,9 +11,18 @@ import SwiftUI
 struct FontSelector: View {
     @ObservedObject var sets = CharSets
     @State var showingCharSetCreator = false
+    @State var showingDeletionConfirmation = false
+    
     private var item_width = CGFloat(150)
+    
     var body: some View {
         Button("Create new character set") {
+            sets.create_set()
+        }
+        Button("Delete selected character set") {
+            showingDeletionConfirmation = true
+        }
+        Button("Edit character set") {
             showingCharSetCreator = true
         }
         ScrollView(.horizontal, showsIndicators: false) {
@@ -29,7 +38,15 @@ struct FontSelector: View {
         }
         .frame(width: min(CGFloat(sets.sets.count) * item_width, CGFloat(item_width * 4)), alignment: .center)
         .sheet(isPresented: $showingCharSetCreator) {
-            FontCreator()
+            FontEditor()
+        }
+        .alert(isPresented: $showingDeletionConfirmation) {
+            Alert(title: Text("Delete set"),
+                  message: Text("Are you sure you want to delete the character set '" + sets.get_set().name + "'?"),
+                  primaryButton: .default(Text("Delete")) {
+                    sets.delete_set()
+                  },
+                  secondaryButton: .cancel())
         }
     }
 }

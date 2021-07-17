@@ -1,5 +1,5 @@
 //
-//  FontCreator.swift
+//  FontEditor.swift
 //  Text to Handwritting
 //
 //  Created by Daniel Long on 7/15/21.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct FontCreator: View {
+struct FontEditor: View {
     @ObservedObject var sets = CharSets
     @State var showingWritingView = false
     @State var currentLetter: String = ""

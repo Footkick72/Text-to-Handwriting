@@ -96,6 +96,22 @@ class CharSetCatalog: ObservableObject {
         get_set().add_characters(char: char, images: images)
     }
     
+    func create_set() {
+        let names = self.sets.keys
+        var i = 0
+        while names.firstIndex(of: "Untitled" + String(i)) != nil {
+            i += 1
+        }
+        let name = "Untitled" + String(i)
+        self.sets[name] = CharSet(name: name, characters: Dictionary<String, Array<Data>>())
+    }
+    
+    func delete_set() {
+        self.sets.removeValue(forKey: self.primary_set)
+        let manager = FilesManager()
+        do { try manager.delete(fileNamed: self.primary_set + ".charset") } catch { print("Failed to delete charset " + self.primary_set) }
+    }
+    
     func save_sets() {
         let manager = FilesManager()
         do { try manager.save(fileNamed: "charsets.txt", data: sets.values.map({$0.name}).joined(separator: " ").data(using: .utf8)!) } catch {
