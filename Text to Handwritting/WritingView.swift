@@ -23,16 +23,22 @@ struct WritingView: View {
         VStack {
             Text("Write a " + selection)
                 .font(.title)
-            HStack(alignment: .center, spacing: 10) {
-                ForEach(0..<images.count, id: \.self) { i in
-                    Image(uiImage: images[i])
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 50, height: 50)
-                        .border(Color.black, width: 2)
+            let scrollWidth = max(min(50 * images.count + 10 * (images.count - 1), 350), 10)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .center, spacing: 10) {
+                    ForEach(0..<images.count, id: \.self) { i in
+                        Image(uiImage: images[i])
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 50, height: 50)
+                            .border(Color.black, width: 2)
+                            .onTapGesture {
+                                images.remove(at: i)
+                            }
+                    }
                 }
             }
-            .frame(height: 50)
+            .frame(width: CGFloat(scrollWidth), height: 50)
             Canvas(canvasView: $canvas)
                 .opacity(0.5)
                 .background(
@@ -44,7 +50,7 @@ struct WritingView: View {
                 .border(Color.black, width: 2)
                 .scaleEffect(0.8)
             HStack(alignment: .center, spacing: 50) {
-                Button("Save character") {
+                Button("Save") {
                     let drawing = canvas.drawing
                     let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
                     let scaler = canvas.bounds.width / 256.0
@@ -52,7 +58,7 @@ struct WritingView: View {
                     images.append(scaled)
                     canvas.drawing = PKDrawing()
                 }
-                Button("Next character") {
+                Button("Next") {
                     if images.count < 5 {
                         showingSaveConfirmation = true
                     }
@@ -60,7 +66,7 @@ struct WritingView: View {
                         self.next_character()
                     }
                 }
-                Button("Clear drawing space") {
+                Button("Clear") {
                     canvas.drawing = PKDrawing()
                 }
                 .foregroundColor(.red)
