@@ -15,8 +15,9 @@ struct FontCreator: View {
     
     @State var scale: CGFloat = 1.0
     
+    let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz’‘':,![(.?])\"”;1234567890-"
+    
     var body: some View {
-        let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz’‘':,![(.?])\"”;1234567890-"
         let columns: [GridItem] = Array(repeating: GridItem.init(.flexible(), spacing: 20), count: 6)
         ScrollView(showsIndicators: false) {
             LazyVGrid(columns: columns) {
@@ -44,7 +45,7 @@ struct FontCreator: View {
                     .scaleEffect(scale)
                     .gesture(TapGesture()
                                 .onEnded({ _ in
-                                    // This entire "scale" thing is to avoid some very weird behavior where the TapGesture.onEnded closure fails to save changes to the struct's state variables unless the view itself is dependant on those changes. As a result, I have the view be dependant on the @State variable scale, which is (technically) changed by the closure. No idea why and I don't really understand it, but this seems to work for now.
+                                    // This entire seemingly extraneous "scale" thing is to avoid some very weird behavior where the TapGesture.onEnded closure fails to save changes to the struct's state variables unless the view itself is dependant on those changes. As a result, I have the view be dependant on the @State variable scale, which is (technically) changed by the closure. No idea why and I don't really understand it, but this works for now.
                                     scale += 1.0
                                     scale = 1.0
                                     self.currentLetter = char
