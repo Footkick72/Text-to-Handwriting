@@ -72,9 +72,7 @@ struct WritingView: View {
                 .foregroundColor(.red)
                 Button("Exit") {
                     shown = false
-                    if images.count >= 5 {
-                        CharSets.add_characters_to_set(char: selection, images: images)
-                    }
+                    CharSets.add_characters_to_set(char: selection, images: images)
                 }
                 .foregroundColor(.red)
             }
