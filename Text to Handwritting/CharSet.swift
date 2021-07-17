@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct CharSet: Codable {
+class CharSet: Codable {
     var name: String
     var availiable_chars: String
     var characters: Dictionary<String,Array<Data>>
@@ -30,6 +30,16 @@ struct CharSet: Codable {
     
     func has_character(char: String) -> Bool {
         return (self.availiable_chars.firstIndex(of: Character(char)) != nil)
+    }
+    
+    func add_characters(char: String, images: Array<UIImage>) {
+        self.availiable_chars += char
+        var data = Array<Data>()
+        for i in images {
+            data.append(i.pngData()!)
+        }
+        self.characters[char] = data
+        self.charlens[char] = get_charlen(char: Character(char))
     }
     
     func getImage(char: String) -> UIImage {
@@ -56,17 +66,20 @@ struct CharSet: Codable {
         //multiply by Float(font_size), add letter_spacing * Float(font_size) / 256 to convert to accurate sizes upon generation
         var lengths: Dictionary<String,Float> = [:]
         for char in availiable_chars {
-            var charlen: Float = 0
-            let images: Array<UIImage>
-            images = getImages(char: String(char))
-            for file in images {
-                let box = file.cropAlpha(cropVertical: true, cropHorizontal: true).size
-                let scaler: Float = 1.0/Float(file.size.width)
-                charlen += Float(box.width) * scaler
-            }
-            lengths[String(char)] = charlen/Float(images.count)
+            lengths[String(char)] = self.get_charlen(char: char)
         }
         return lengths
+    }
+    
+    func get_charlen(char: Character) -> Float {
+        var charlen: Float = 0
+        let images = getImages(char: String(char))
+        for file in images {
+            let box = file.cropAlpha(cropVertical: true, cropHorizontal: true).size
+            let scaler: Float = 1.0/Float(file.size.width)
+            charlen += Float(box.width) * scaler
+        }
+        return charlen/Float(images.count)
     }
     
     func get_json_data() throws -> Data {

@@ -87,8 +87,13 @@ class CharSetCatalog: ObservableObject {
         self.primary_set = self.sets.first!.key
     }
     
-    func get_set() -> CharSet{
+    func get_set() -> CharSet {
         return sets[primary_set]!
+    }
+    
+    func add_characters_to_set(char: String, images: Array<UIImage>) {
+        objectWillChange.send()
+        get_set().add_characters(char: char, images: images)
     }
     
     func save_sets() {

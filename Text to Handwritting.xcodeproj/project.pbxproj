@@ -32,6 +32,7 @@
 		1AA1E2D8269F8A43007DAE76 /* space.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D7269F8A43007DAE76 /* space.png */; };
 		1AA1E2DB26A0B07E007DAE76 /* writingbackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */; };
 		1AA1E2DF26A0B32C007DAE76 /* FontCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* FontCreator.swift */; };
+		1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		1AA1E2D7269F8A43007DAE76 /* space.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = space.png; sourceTree = "<group>"; };
 		1AA1E2DA26A0B07E007DAE76 /* writingbackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = writingbackground.png; sourceTree = "<group>"; };
 		1AA1E2DE26A0B32C007DAE76 /* FontCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontCreator.swift; sourceTree = "<group>"; };
+		1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				1AA1E2CE269F2891007DAE76 /* ImageOptionsDisplay.swift */,
 				1AA1E2C5269F2815007DAE76 /* FontSelector.swift */,
 				1AA1E2DE26A0B32C007DAE76 /* FontCreator.swift */,
+				1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */,
 				1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */,
 				1A3F92D0268CB75800710E99 /* Extensions.swift */,
 				1AA1E2B9269B8D9A007DAE76 /* FilesManager.swift */,
@@ -236,6 +239,7 @@
 			files = (
 				1A59E4AC2690F8A700F93D58 /* TemplateCatalog.swift in Sources */,
 				1AA1E2BA269B8D9A007DAE76 /* FilesManager.swift in Sources */,
+				1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */,
 				1A3F8D42268B684200710E99 /* Text_to_HandwrittingApp.swift in Sources */,
 				1A3F92D1268CB75800710E99 /* Extensions.swift in Sources */,
 				1AA1E2CC269F2863007DAE76 /* NumberSelector.swift in Sources */,

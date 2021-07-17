@@ -26,7 +26,8 @@ struct FontSelector: View {
                         .border(Color.black, width: 2)
                 }
             }
-        }.frame(width: min(CGFloat(sets.sets.count) * item_width, CGFloat(item_width * 4)), alignment: .center)
+        }
+        .frame(width: min(CGFloat(sets.sets.count) * item_width, CGFloat(item_width * 4)), alignment: .center)
         .sheet(isPresented: $showingCharSetCreator) {
             FontCreator()
         }
