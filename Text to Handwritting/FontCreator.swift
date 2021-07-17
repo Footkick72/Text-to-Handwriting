@@ -56,7 +56,7 @@ struct FontCreator: View {
         }
         .scaleEffect(CGFloat(0.8))
         .sheet(isPresented: $showingWritingView) {
-            WritingView(chars: allchars, selection: currentLetter, shown: $showingWritingView)
+            WritingView(chars: allchars, selection: currentLetter, shown: $showingWritingView, images: sets.get_set().getImages(char: currentLetter))
         }
     }
 }

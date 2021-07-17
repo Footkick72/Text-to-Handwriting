@@ -14,7 +14,8 @@ struct WritingView: View {
     @State var chars: String
     @State var selection: String
     @Binding var shown: Bool
-    @State var images: Array<UIImage> = []
+    @State var images: Array<UIImage>
+    @State var showingSaveConfirmation = false
     
     @State var canvas = PKCanvasView()
     
@@ -23,11 +24,12 @@ struct WritingView: View {
             Text("Write a " + selection)
                 .font(.title)
             HStack(alignment: .center, spacing: 10) {
-                ForEach(0...4, id: \.self) { i in
-                    Rectangle()
-                        .foregroundColor(images.count <= i ? .red : .green)
-                        .opacity(0.8)
+                ForEach(0..<images.count, id: \.self) { i in
+                    Image(uiImage: images[i])
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                         .frame(width: 50, height: 50)
+                        .border(Color.black, width: 2)
                 }
             }
             .frame(height: 50)
@@ -39,21 +41,25 @@ struct WritingView: View {
                         .aspectRatio(contentMode: .fit)
                 )
                 .aspectRatio(CGFloat(1.0), contentMode: .fit)
-                .border(Color.black, width: CGFloat(2))
+                .border(Color.black, width: 2)
                 .scaleEffect(0.8)
             HStack(alignment: .center, spacing: 50) {
                 Button("Save character") {
                     let drawing = canvas.drawing
-                    images.append(drawing.image(from: drawing.bounds, scale: 1.0))
+                    let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
+                    let scaler = canvas.bounds.width / 256.0
+                    let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+                    images.append(scaled)
                     canvas.drawing = PKDrawing()
                 }
                 Button("Next character") {
-                    CharSets.add_characters_to_set(char: selection, images: images)
-                    let index = chars.firstIndex(of: Character(selection))!
-                    selection = String(chars[chars.index(after: index)])
-                    images = []
+                    if images.count < 5 {
+                        showingSaveConfirmation = true
+                    }
+                    else {
+                        self.next_character()
+                    }
                 }
-                .disabled(images.count < 5 ? true : false)
                 Button("Clear drawing space") {
                     canvas.drawing = PKDrawing()
                 }
@@ -68,6 +74,21 @@ struct WritingView: View {
             }
             .font(.title)
         }
+        .alert(isPresented: $showingSaveConfirmation) {
+            let msgText = Text("Are you sure you want to save changes to character '" + selection + "' with " + String(images.count) + " saved versions? It is reccomended to write at least 5 versions of each character for variety in the generated text.")
+            return Alert(title: Text("Save Character"),
+                  message: msgText,
+                  primaryButton: .default(Text("Save anyway"), action: { self.next_character() }),
+                  secondaryButton: .cancel())
+        }
+    }
+    
+    func next_character() {
+        canvas.drawing = PKDrawing()
+        CharSets.add_characters_to_set(char: selection, images: images)
+        let index = chars.firstIndex(of: Character(selection))!
+        selection = String(chars[chars.index(after: index)])
+        images = []
     }
 }
 
@@ -87,6 +108,6 @@ struct Canvas: UIViewRepresentable {
 
 struct WritingView_Previews: PreviewProvider {
     static var previews: some View {
-        WritingView(chars: "123456789-", selection: "1", shown: .constant(true))
+        WritingView(chars: "123456789-", selection: "1", shown: .constant(true), images: [])
     }
 }

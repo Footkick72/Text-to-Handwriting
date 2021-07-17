@@ -33,6 +33,9 @@ class CharSet: Codable {
     }
     
     func add_characters(char: String, images: Array<UIImage>) {
+        if images.count == 0 {
+            return
+        }
         self.availiable_chars += char
         var data = Array<Data>()
         for i in images {
