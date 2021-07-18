@@ -13,11 +13,11 @@ struct FontSelector: View {
     @State var showingCharSetCreator = false
     @State var showingDeletionConfirmation = false
     
-    private var item_width = CGFloat(150)
+    private var itemWidth = CGFloat(150)
     
     var body: some View {
         Button("Create new character set") {
-            sets.create_set()
+            sets.createSet()
         }
         Button("Delete selected character set") {
             showingDeletionConfirmation = true
@@ -28,23 +28,23 @@ struct FontSelector: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(Array(CharSets.sets.keys), id: \.self) { option in
-                    Text(option)
-                        .foregroundColor(sets.primary_set == option ? .red : .black)
-                        .gesture(TapGesture().onEnded({ sets.primary_set = option }))
-                        .frame(width: item_width, height: 50)
+                    Text(sets.sets[option]!.name)
+                        .foregroundColor(sets.primarySet == option ? .red : .black)
+                        .gesture(TapGesture().onEnded({ sets.primarySet = option }))
+                        .frame(width: itemWidth, height: 50)
                         .border(Color.black, width: 2)
                 }
             }
         }
-        .frame(width: min(CGFloat(sets.sets.count) * item_width, CGFloat(item_width * 4)), alignment: .center)
+        .frame(width: min(CGFloat(sets.sets.count) * itemWidth, CGFloat(itemWidth * 4)), alignment: .center)
         .sheet(isPresented: $showingCharSetCreator) {
             FontEditor()
         }
         .alert(isPresented: $showingDeletionConfirmation) {
             Alert(title: Text("Delete set"),
-                  message: Text("Are you sure you want to delete the character set '" + sets.get_set().name + "'?"),
+                  message: Text("Are you sure you want to delete the character set '" + sets.getSet().name + "'?"),
                   primaryButton: .default(Text("Delete")) {
-                    sets.delete_set()
+                    sets.deleteSet()
                   },
                   secondaryButton: .cancel())
         }

@@ -98,7 +98,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
         let min_hardness:Float = 0.7
         var line_offset:Float = 0
 
-        var charlens: Dictionary<String,Float> = CharSets.get_set().charlens
+        var charlens: Dictionary<String,Float> = CharSets.getSet().charlens
         for k in charlens.keys {
             charlens[k] = charlens[k]! * Float(font_size)
             charlens[k] = charlens[k]! +  Float(letter_spacing) * Float(font_size) / 256.0
@@ -138,7 +138,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
             }
             
             for char in word {
-                var letter: UIImage = CharSets.get_set().getImage(char: String(char))
+                var letter: UIImage = CharSets.getSet().getImage(char: String(char))
                 letter = letter.cropAlpha(cropVertical: false, cropHorizontal: true)
                 let scaler = Float(letter.size.height)/Float(font_size)
                 letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)

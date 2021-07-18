@@ -28,7 +28,7 @@ class CharSet: Codable {
         }
     }
     
-    func number_of_character(char: String) -> Int {
+    func numberOfCharacters(char: String) -> Int {
         return self.getImages(char: char).count
     }
     

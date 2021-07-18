@@ -67,7 +67,7 @@ struct WritingView: View {
                         selection = String(chars.first!)
                     }
                     chars.remove(at: index)
-                    images = CharSets.get_set().getImages(char: selection)
+                    images = CharSets.getSet().getImages(char: selection)
                 }
                 Button("Clear") {
                     canvas.drawing = PKDrawing()

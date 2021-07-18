@@ -11,11 +11,11 @@ import SwiftUI
 var CharSets = CharSetCatalog()
 
 class CharSetCatalog: ObservableObject {
-    @Published var primary_set: String
+    @Published var primarySet: String
     @Published var sets: Dictionary<String,CharSet>
     
     init() {
-        self.primary_set = ""
+        self.primarySet = ""
         self.sets = Dictionary()
         self.load_sets()
         if (self.sets.keys.firstIndex(of: "default") == nil) {
@@ -84,36 +84,59 @@ class CharSetCatalog: ObservableObject {
             self.sets["default"] = CharSet(name:"default", characters: charlist)
             self.save_sets()
         }
-        self.primary_set = self.sets.first!.key
+        self.primarySet = self.sets.first!.key
     }
     
-    func get_set() -> CharSet {
-        return sets[primary_set]!
+    func getSet() -> CharSet {
+        return sets[primarySet]!
     }
     
     func add_characters_to_set(char: String, images: Array<UIImage>) {
         objectWillChange.send()
-        get_set().add_characters(char: char, images: images)
+        getSet().add_characters(char: char, images: images)
     }
     
-    func create_set() {
-        let names = self.sets.keys
+    func selectSet(name: String) {
+        for key in self.sets.keys {
+            if self.sets[key]!.name == name {
+                self.primarySet = key
+                return
+            }
+        }
+    }
+    
+    func createSet() {
         var i = 0
-        while names.firstIndex(of: "Untitled" + String(i)) != nil {
+        while self.sets.keys.firstIndex(of: "Untitled" + String(i)) != nil {
             i += 1
         }
         let name = "Untitled" + String(i)
         self.sets[name] = CharSet(name: name, characters: Dictionary<String, Array<Data>>())
+        self.primarySet = name
     }
     
-    func delete_set() {
-        self.sets.removeValue(forKey: self.primary_set)
-        let manager = FilesManager()
-        do { try manager.delete(fileNamed: self.primary_set + ".charset") } catch { print("Failed to delete charset " + self.primary_set) }
+    func deleteSet() {
+        self.sets.removeValue(forKey: self.primarySet)
+        self.primarySet = self.sets.keys.first!
+    }
+    
+    func renameSet(name: String) {
+        objectWillChange.send()
+        getSet().name = name
     }
     
     func save_sets() {
         let manager = FilesManager()
+        do {
+            for name in String(data: try manager.read(fileNamed: "charsets.txt"), encoding: .utf8)!.split(separator: " ") {
+                if sets.values.map({$0.name}).firstIndex(of: String(name)) == nil {
+                    try manager.delete(fileNamed: name + ".charset")
+                }
+            }
+        } catch {
+            print("Failed to delete old charsets: ")
+            print(error)
+        }
         do { try manager.save(fileNamed: "charsets.txt", data: sets.values.map({$0.name}).joined(separator: " ").data(using: .utf8)!) } catch {
             print("Failed to save charsets.txt: ")
             print(error)
