@@ -59,10 +59,10 @@ struct TemplateEditor: View {
                        Int(selected_image!.size.width - image_draw_rect_scaled!.maxX),
                        Int(image_draw_rect_scaled!.minY),
                        Int(selected_image!.size.height - image_draw_rect_scaled!.maxY)]
-        Templates.edit_template(originalName: originalName,
+        Templates.editTemplate(originalName: originalName,
                                 name: templateName,
                                 image: selected_image!,
                                 margins: margins,
-                                font_size: Int(font_size))
+                                fontSize: Int(font_size))
     }
 }

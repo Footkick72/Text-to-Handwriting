@@ -17,7 +17,7 @@ class CharSetCatalog: ObservableObject {
     init() {
         self.primarySet = ""
         self.sets = Dictionary()
-        self.load_sets()
+        self.loadSets()
         if (self.sets.keys.firstIndex(of: "default") == nil) {
             
             let availiable_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz’‘':,![(.?])\"”;"
@@ -82,7 +82,7 @@ class CharSetCatalog: ObservableObject {
                 charlist[String(char)] = images
             }
             self.sets["default"] = CharSet(name:"default", characters: charlist)
-            self.save_sets()
+            self.saveSets()
         }
         self.primarySet = self.sets.first!.key
     }
@@ -125,7 +125,7 @@ class CharSetCatalog: ObservableObject {
         getSet().name = name
     }
     
-    func save_sets() {
+    func saveSets() {
         let manager = FilesManager()
         do {
             for name in String(data: try manager.read(fileNamed: "charsets.txt"), encoding: .utf8)!.split(separator: " ") {
@@ -149,7 +149,7 @@ class CharSetCatalog: ObservableObject {
         }
     }
     
-    func load_sets() {
+    func loadSets() {
         let manager = FilesManager()
         do {
             for name in String(data: try manager.read(fileNamed: "charsets.txt"), encoding: .utf8)!.split(separator: " ") {

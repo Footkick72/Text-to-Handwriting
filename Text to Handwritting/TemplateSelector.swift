@@ -47,8 +47,8 @@ struct TemplateSelector: View {
                                 .frame(width: item_width)
                                 .tag(option)
                         }
-                        .foregroundColor(templates.primary_template == option ? .red : .black)
-                        .gesture(TapGesture().onEnded({ templates.primary_template = option }))
+                        .foregroundColor(templates.primaryTemplate == option ? .red : .black)
+                        .gesture(TapGesture().onEnded({ templates.primaryTemplate = option }))
                     }
                 }
             }.frame(width: min(CGFloat(templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
@@ -65,7 +65,7 @@ struct TemplateSelector: View {
             Alert(title: Text("Delete Template"),
                   message: Text("Are you sure you want to delete template \"" + templates.get_template().name + "\"?"),
                   primaryButton: .destructive(Text("Yes")) {
-                    templates.delete_template(name: templates.get_template().name)
+                    templates.deleteTemplate()
                   },
                   secondaryButton: .cancel())
         }

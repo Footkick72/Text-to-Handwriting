@@ -73,9 +73,9 @@ struct TemplateCreator: View {
                        Int(selected_image!.size.width - image_draw_rect_scaled!.maxX),
                        Int(image_draw_rect_scaled!.minY),
                        Int(selected_image!.size.height - image_draw_rect_scaled!.maxY)]
-        Templates.create_template(name: templateName,
+        Templates.createTemplate(name: templateName,
                                   image: selected_image!,
                                   margins: margins,
-                                  font_size: Int(font_size))
+                                  fontSize: Int(font_size))
     }
 }

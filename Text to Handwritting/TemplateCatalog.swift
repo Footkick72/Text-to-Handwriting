@@ -11,62 +11,63 @@ import SwiftUI
 var Templates = TemplateCatalog()
 
 class TemplateCatalog: ObservableObject {
-    @Published var primary_template: String
+    @Published var primaryTemplate: String
     @Published var templates: Dictionary<String,Template>
     
     let savePath = Bundle.main.resourcePath! + "/Templates/"
     
     init() {
-        self.primary_template = ""
+        self.primaryTemplate = ""
         self.templates = Dictionary()
-        self.load_templates()
+        self.loadTemplates()
         if (self.templates.keys.firstIndex(of: "lined") == nil) {
-            self.create_template(name: "lined",
+            self.createTemplate(name: "lined",
                                 image: UIImage(imageLiteralResourceName: "linedpaper.png"),
                                 margins: [40,20,100,160],
-                                font_size: 28)
+                                fontSize: 28)
         }
         if (self.templates.keys.firstIndex(of: "blank") == nil) {
-            self.create_template(name: "blank",
+            self.createTemplate(name: "blank",
                                 image: UIImage(imageLiteralResourceName: "blankpaper.png"),
                                 margins: [50,50,50,50],
-                                font_size: 28)
+                                fontSize: 28)
         }
-        self.primary_template = self.templates.first!.key
+        self.primaryTemplate = self.templates.first!.key
     }
     
     func get_template() -> Template{
-        return templates[primary_template]!
+        return templates[primaryTemplate]!
     }
     
-    func create_template(name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
+    func createTemplate(name: String, image: UIImage, margins: Array<Int>, fontSize: Int) {
         self.templates[name] = Template(name: name,
                                         bg: image,
                                         margins: margins,
-                                        size: font_size)
-        self.save_templates()
+                                        size: fontSize)
     }
     
-    func delete_template(name: String) {
-        self.templates.removeValue(forKey: name)
-        let manager = FilesManager()
-        do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
-        if name == self.primary_template {
-            self.primary_template = self.templates.keys.first!
-        }
-        save_templates()
+    func deleteTemplate() {
+        self.templates.removeValue(forKey: self.primaryTemplate)
+        self.primaryTemplate = self.templates.keys.first!
     }
     
-    func edit_template(originalName: String, name: String, image: UIImage, margins: Array<Int>, font_size: Int) {
+    func editTemplate(originalName: String, name: String, image: UIImage, margins: Array<Int>, fontSize: Int) {
         self.templates.removeValue(forKey: originalName)
-        let manager = FilesManager()
-        do { try manager.delete(fileNamed: name + ".template") } catch { print("Failed to delete template " + name) }
-        self.create_template(name: name, image: image, margins: margins, font_size: font_size)
-        save_templates()
+        self.createTemplate(name: name, image: image, margins: margins, fontSize: fontSize)
     }
     
-    func save_templates() {
+    func saveTemplates() {
         let manager = FilesManager()
+        do {
+            for name in String(data: try manager.read(fileNamed: "templates.txt"), encoding: .utf8)!.split(separator: " ") {
+                if templates.values.map({$0.name}).firstIndex(of: String(name)) == nil {
+                    try manager.delete(fileNamed: name + ".template")
+                }
+            }
+        } catch {
+            print("Failed to delete old templates: ")
+            print(error)
+        }
         do { try manager.save(fileNamed: "templates.txt", data: templates.values.map({$0.name}).joined(separator: " ").data(using: .utf8)!) } catch {
             print("Failed to save templates.txt: ")
             print(error)
@@ -79,7 +80,7 @@ class TemplateCatalog: ObservableObject {
         }
     }
     
-    func load_templates() {
+    func loadTemplates() {
         let manager = FilesManager()
         do {
             for name in String(data: try manager.read(fileNamed: "templates.txt"), encoding: .utf8)!.split(separator: " ") {

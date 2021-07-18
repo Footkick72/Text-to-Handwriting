@@ -12,9 +12,9 @@ import Photos
 struct Text_to_HandwrittingApp: App {
     init() {
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { _ in return })
-        CharSets.load_sets()
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
-            CharSets.save_sets()
+            CharSets.saveSets()
+            Templates.saveTemplates()
         }
     }
     
