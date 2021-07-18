@@ -12,17 +12,15 @@ import Photos
 struct Text_to_HandwrittingApp: App {
     init() {
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { _ in return })
+        CharSets.load_sets()
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
+            CharSets.save_sets()
+        }
     }
     
     var body: some Scene {
         DocumentGroup(newDocument: Text_to_HandwrittingDocument()) { file in
             ContentView(document: file.$document)
-                .onAppear() {
-                    CharSets.load_sets()
-                }
-                .onDisappear() {
-                    CharSets.save_sets()
-                }
         }
     }
 }
