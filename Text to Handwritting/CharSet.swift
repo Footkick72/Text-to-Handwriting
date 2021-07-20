@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CharSet: Codable {
+struct CharSet: Codable {
     var name: String
     var availiable_chars: String
     var characters: Dictionary<String,Array<Data>>
@@ -32,10 +32,7 @@ class CharSet: Codable {
         return self.getImages(char: char).count
     }
     
-    func add_characters(char: String, images: Array<UIImage>) {
-        if images.count == 0 {
-            return
-        }
+    mutating func add_characters(char: String, images: Array<UIImage>) {
         self.availiable_chars += char
         var data = Array<Data>()
         for i in images {

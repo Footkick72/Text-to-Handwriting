@@ -91,10 +91,10 @@ class CharSetCatalog: ObservableObject {
         return sets[primarySet]!
     }
     
-    func add_characters_to_set(char: String, images: Array<UIImage>) {
-        objectWillChange.send()
-        getSet().add_characters(char: char, images: images)
-    }
+//    func add_characters_to_set(char: String, images: Array<UIImage>) {
+//        objectWillChange.send()
+//        getSet().add_characters(char: char, images: images)
+//    }
     
     func selectSet(name: String) {
         for key in self.sets.keys {
@@ -120,10 +120,10 @@ class CharSetCatalog: ObservableObject {
         self.primarySet = self.sets.keys.first!
     }
     
-    func renameSet(name: String) {
-        objectWillChange.send()
-        getSet().name = name
-    }
+//    func renameSet(name: String) {
+//        objectWillChange.send()
+//        getSet().name = name
+//    }
     
     func saveSets() {
         let manager = FilesManager()

@@ -10,7 +10,7 @@ import SwiftUI
 import PencilKit
 
 struct WritingView: View {
-    
+    @Binding var document: CharSetDocument
     @State var chars: String
     @State var selection: String
     @Binding var shown: Bool
@@ -59,7 +59,7 @@ struct WritingView: View {
                 }
                 Button("Next") {
                     canvas.drawing = PKDrawing()
-                    CharSets.add_characters_to_set(char: selection, images: images)
+                    document.charset.add_characters(char: selection, images: images)
                     let index = chars.firstIndex(of: Character(selection))!
                     if String(chars.last!) != selection {
                         selection = String(chars[chars.index(after: index)])
@@ -67,7 +67,7 @@ struct WritingView: View {
                         selection = String(chars.first!)
                     }
                     chars.remove(at: index)
-                    images = CharSets.getSet().getImages(char: selection)
+                    images = document.charset.getImages(char: selection)
                 }
                 Button("Clear") {
                     canvas.drawing = PKDrawing()
@@ -75,7 +75,7 @@ struct WritingView: View {
                 .foregroundColor(.red)
                 Button("Exit") {
                     shown = false
-                    CharSets.add_characters_to_set(char: selection, images: images)
+                    document.charset.add_characters(char: selection, images: images)
                 }
                 .foregroundColor(.red)
             }
@@ -96,10 +96,4 @@ struct Canvas: UIViewRepresentable {
     }
 
     func updateUIView(_ canvasView: PKCanvasView, context: Context) { }
-}
-
-struct WritingView_Previews: PreviewProvider {
-    static var previews: some View {
-        WritingView(chars: "123456789-", selection: "1", shown: .constant(true), images: [])
-    }
 }

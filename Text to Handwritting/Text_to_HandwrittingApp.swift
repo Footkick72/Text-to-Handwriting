@@ -19,6 +19,9 @@ struct Text_to_HandwrittingApp: App {
     }
     
     var body: some Scene {
+        DocumentGroup(newDocument: CharSetDocument()) { file in
+            FontEditor(document: file.$document)
+        }
         DocumentGroup(newDocument: Text_to_HandwrittingDocument()) { file in
             ContentView(document: file.$document)
         }

@@ -38,7 +38,7 @@ struct FontSelector: View {
         }
         .frame(width: min(CGFloat(sets.sets.count) * itemWidth, CGFloat(itemWidth * 4)), alignment: .center)
         .sheet(isPresented: $showingCharSetCreator) {
-            FontEditor()
+//            FontEditor()
         }
         .alert(isPresented: $showingDeletionConfirmation) {
             Alert(title: Text("Delete set"),

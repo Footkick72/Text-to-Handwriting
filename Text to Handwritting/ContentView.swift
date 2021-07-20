@@ -13,17 +13,16 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .center) {
-            HStack(alignment: .center, spacing: 10) {
-                Button("generate image") {
-                    showingGenerationOptions.toggle()
-                }
-            }
             TextEditor(text: $document.text)
         }
-        
         .sheet(isPresented: $showingGenerationOptions) {
             OptionsView(document: $document, shown: $showingGenerationOptions)
         }
+        .navigationBarItems(trailing:
+                                Button("generate image") {
+                                    showingGenerationOptions.toggle()
+                                }
+        )
     }
 }
 
