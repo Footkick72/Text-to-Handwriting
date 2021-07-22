@@ -12,7 +12,8 @@ var CharSets = CharSetCatalog()
 
 class CharSetCatalog: ObservableObject {
     @Published var document: CharSetDocument? = nil
-    var documents: Array<String> = []
+    @Published var documents: Array<String> = []
+    
     
     func saveSets() {
         let manager = FilesManager()

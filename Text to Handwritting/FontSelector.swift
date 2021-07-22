@@ -47,6 +47,12 @@ struct FontSelector: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black, width: 1)
+                                .overlay(
+                                    Button("Delete") {
+                                        charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                                    }
+                                    .foregroundColor(.red)
+                                    ,alignment: .topTrailing)
                         }
                     }
                     .gesture(TapGesture().onEnded({ charsets.document = set }))
