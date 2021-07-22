@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct CharSet: Codable {
+struct CharSet: Equatable, Codable {
     var name: String
     var availiable_chars: String
     var characters: Dictionary<String,Array<Data>>
@@ -33,7 +33,9 @@ struct CharSet: Codable {
     }
     
     mutating func add_characters(char: String, images: Array<UIImage>) {
-        self.availiable_chars += char
+        if self.availiable_chars.firstIndex(of: Character(char)) != nil {
+            self.availiable_chars += char
+        }
         var data = Array<Data>()
         for i in images {
             data.append(i.pngData()!)
@@ -97,5 +99,30 @@ struct CharSet: Codable {
         encoder.outputFormatting = .prettyPrinted
         let data = try encoder.encode(self)
         return data
+    }
+    
+    func get_preview() -> UIImage {
+        if availiable_chars.count == 0 {
+            return UIImage(cgImage: UIImage(imageLiteralResourceName: "space.png").cgImage!, scale: 4.0, orientation: .up)
+        }
+        UIGraphicsBeginImageContext(CGSize(width: 256*4, height: 256*4))
+        var i = 0
+        for y in 0..<4 {
+            for x in 0..<4 {
+                var char = getSameImage(char: String(availiable_chars[i]))
+                char = UIImage(cgImage: char.cgImage!, scale: 1.0, orientation: char.imageOrientation)
+                let rect = CGRect(x: x*256, y: y*256, width: 256, height: 256)
+                char.draw(in: rect, blendMode: .normal, alpha: 1.0)
+                i += 1
+                if i >= availiable_chars.count {
+                    let image = UIGraphicsGetImageFromCurrentImageContext()!
+                    UIGraphicsEndImageContext()
+                    return image
+                }
+            }
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return image
     }
 }

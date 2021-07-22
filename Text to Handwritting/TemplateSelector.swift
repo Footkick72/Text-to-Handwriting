@@ -20,7 +20,7 @@ struct TemplateSelector: View {
     @ObservedObject var templates = Templates
     @State var templateViewState: templateViews?
     @State var showingTemplateDeletionConfirmation = false
-    private var item_width = CGFloat(180)
+    private var item_width: CGFloat = 150
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
             VStack(alignment: .center, spacing: 10) {
@@ -36,7 +36,7 @@ struct TemplateSelector: View {
                 .foregroundColor(.red)
             }
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center, spacing: 0) {
+                HStack(alignment: .center, spacing: 10) {
                     ForEach(Array(Templates.templates.keys), id: \.self) { option in
                         VStack(alignment: .center, spacing: 5) {
                             Text(option)
@@ -51,7 +51,7 @@ struct TemplateSelector: View {
                         .gesture(TapGesture().onEnded({ templates.primaryTemplate = option }))
                     }
                 }
-            }.frame(width: min(CGFloat(templates.templates.count) * (item_width), CGFloat((item_width) * 3)), alignment: .center)
+            }.frame(width: max(0, min(CGFloat(templates.templates.count) * item_width + CGFloat(templates.templates.count - 1) * 10, CGFloat(item_width * 3 + 10 * 2))), alignment: .center)
         }
         .sheet(item: $templateViewState) { item in
             switch item {

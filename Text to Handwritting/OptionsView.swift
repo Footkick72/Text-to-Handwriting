@@ -9,11 +9,12 @@ import Foundation
 import SwiftUI
 
 struct OptionsView: View {
+    @ObservedObject var charsets = CharSets
     @Binding var document: Text_to_HandwrittingDocument
     @Binding var shown: Bool
     
     var body: some View {
-        VStack(alignment: .center, spacing: 200) {
+        VStack(alignment: .center, spacing: 50) {
             VStack(alignment: .center, spacing: 20) {
                 Text("Font")
                 FontSelector()
@@ -24,8 +25,9 @@ struct OptionsView: View {
             }
             HStack(alignment: .center, spacing: 50) {
                 Button("generate") {
-                    document.createImage()
+                    document.createImage(charset: charsets.document!.charset, template: Templates.get_template())
                 }
+                .disabled(charsets.document == nil ? true : false)
                 Button("cancel") {
                     shown = false
                 }

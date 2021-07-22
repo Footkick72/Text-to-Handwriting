@@ -9,44 +9,77 @@ import Foundation
 import SwiftUI
 
 struct FontSelector: View {
-    @ObservedObject var sets = CharSets
-    @State var showingCharSetCreator = false
-    @State var showingDeletionConfirmation = false
+    @State var showingSelector = false
+    @State var showingUniquenessAlert = false
+    @ObservedObject var charsets = CharSets
     
-    private var itemWidth = CGFloat(150)
+    private var itemWidth: CGFloat = 150
     
     var body: some View {
         Button("Create new character set") {
-            sets.createSet()
+            do {
+                var name = "Untitled"
+                var i = 0
+                while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".charset").path) {
+                    i += 1
+                    name = "Untitled " + String(i)
+                }
+                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".charset")
+                let set = CharSetDocument(name: "Untitled", characters: Dictionary<String, Array<Data>>(), charlens: Dictionary<String, Float>()).charset
+                let data = try JSONEncoder().encode(set)
+                try data.write(to: path)
+            } catch { print(error) }
+            //TODO: open the new document, if possible
         }
-        Button("Delete selected character set") {
-            showingDeletionConfirmation = true
-        }
-        Button("Edit character set") {
-            showingCharSetCreator = true
+        Button("Import character set") {
+            showingSelector = true
         }
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(Array(CharSets.sets.keys), id: \.self) { option in
-                    Text(sets.sets[option]!.name)
-                        .foregroundColor(sets.primarySet == option ? .red : .black)
-                        .gesture(TapGesture().onEnded({ sets.primarySet = option }))
-                        .frame(width: itemWidth, height: 50)
-                        .border(Color.black, width: 2)
+            HStack(alignment: .center, spacing: 10) {
+                ForEach(charsets.documents, id: \.self) { file in
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+                    let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                    VStack {
+                        Text(verbatim: set.charset.name)
+                            .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
+                        if let preview = set.charset.get_preview() {
+                            Image(uiImage: preview)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .border(Color.black, width: 1)
+                        }
+                    }
+                    .gesture(TapGesture().onEnded({ charsets.document = set }))
+                    .frame(width: itemWidth)
                 }
             }
         }
-        .frame(width: min(CGFloat(sets.sets.count) * itemWidth, CGFloat(itemWidth * 4)), alignment: .center)
-        .sheet(isPresented: $showingCharSetCreator) {
-//            FontEditor()
+        .frame(width: max(0, min(CGFloat(charsets.documents.count) * itemWidth + CGFloat(charsets.documents.count - 1) * 10, CGFloat(itemWidth * 3 + 10 * 2))), alignment: .center)
+        .fileImporter(isPresented: $showingSelector, allowedContentTypes: [.charSetDocument]) { url in
+            do {
+                let data = try FileManager.default.contents(atPath: url.get().path)
+                let document = CharSetDocument(from: data!)
+                
+                var isUnique = true
+                for file in charsets.documents {
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+                    let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                    if set.charset == document.charset {
+                        isUnique = false
+                    }
+                }
+                
+                if isUnique {
+                    charsets.document = document
+                    charsets.documents.append(try url.get().lastPathComponent)
+                } else {
+                    showingUniquenessAlert = true
+                }
+                
+            } catch {}
         }
-        .alert(isPresented: $showingDeletionConfirmation) {
-            Alert(title: Text("Delete set"),
-                  message: Text("Are you sure you want to delete the character set '" + sets.getSet().name + "'?"),
-                  primaryButton: .default(Text("Delete")) {
-                    sets.deleteSet()
-                  },
-                  secondaryButton: .cancel())
+        .alert(isPresented: $showingUniquenessAlert) {
+            Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .cancel())
         }
     }
 }

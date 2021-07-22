@@ -12,6 +12,10 @@ import Photos
 struct Text_to_HandwrittingApp: App {
     init() {
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { _ in return })
+        NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: .main) { _ in
+            CharSets.loadSets()
+            
+        }
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
             CharSets.saveSets()
             Templates.saveTemplates()
@@ -19,11 +23,11 @@ struct Text_to_HandwrittingApp: App {
     }
     
     var body: some Scene {
-        DocumentGroup(newDocument: CharSetDocument()) { file in
-            FontEditor(document: file.$document)
-        }
         DocumentGroup(newDocument: Text_to_HandwrittingDocument()) { file in
             ContentView(document: file.$document)
+        }
+        DocumentGroup(newDocument: CharSetDocument()) { file in
+            FontEditor(document: file.$document)
         }
     }
 }
