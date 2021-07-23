@@ -59,7 +59,7 @@ struct WritingView: View {
                 }
                 Button("Next") {
                     canvas.drawing = PKDrawing()
-                    document.charset.add_characters(char: selection, images: images)
+                    document.charset.setCharacters(char: selection, images: images)
                     let index = chars.firstIndex(of: Character(selection))!
                     if String(chars.last!) != selection {
                         selection = String(chars[chars.index(after: index)])
@@ -75,7 +75,7 @@ struct WritingView: View {
                 .foregroundColor(.red)
                 Button("Exit") {
                     shown = false
-                    document.charset.add_characters(char: selection, images: images)
+                    document.charset.setCharacters(char: selection, images: images)
                 }
                 .foregroundColor(.red)
             }

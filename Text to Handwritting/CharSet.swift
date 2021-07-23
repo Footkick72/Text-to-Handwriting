@@ -30,9 +30,14 @@ struct CharSet: Equatable, Codable {
         return self.getImages(char: char).count
     }
     
-    mutating func add_characters(char: String, images: Array<UIImage>) {
+    mutating func setCharacters(char: String, images: Array<UIImage>) {
         if self.availiable_chars.firstIndex(of: Character(char)) == nil {
             self.availiable_chars += char
+        } else if images.count == 0 {
+            self.availiable_chars.remove(at: self.availiable_chars.firstIndex(of: Character(char))!)
+            self.characters.removeValue(forKey: char)
+            self.charlens.removeValue(forKey: char)
+            return
         }
         var data = Array<Data>()
         for i in images {
