@@ -46,16 +46,15 @@ struct FontSelector: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .border(Color.black, width: 1)
-                            .overlay(
-                                Button(action: {
-                                    charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
-                                }) {
-                                    Image(systemName: "xmark.circle")
-                                        .padding(4)
-                                }
-                                .foregroundColor(.red)
-                                ,alignment: .topTrailing)
                     }
+                    .overlay(
+                        Button(action: {
+                            charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                        }) {
+                            Image(systemName: "xmark.circle")
+                        }
+                        .foregroundColor(.red)
+                        ,alignment: .topTrailing)
                     .gesture(TapGesture().onEnded({ charsets.document = set }))
                     .frame(width: itemWidth)
                 }
