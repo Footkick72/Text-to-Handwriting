@@ -97,14 +97,7 @@ struct CharSet: Equatable, Codable {
         return charlen/Float(images.count)
     }
     
-    func get_json_data() throws -> Data {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        let data = try encoder.encode(self)
-        return data
-    }
-    
-    func get_preview() -> UIImage {
+    func getPreview() -> UIImage {
         if availiable_chars.count == 0 {
             return UIImage(cgImage: UIImage(imageLiteralResourceName: "space.png").cgImage!, scale: 4.0, orientation: .up)
         }

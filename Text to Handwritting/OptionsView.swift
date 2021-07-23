@@ -10,6 +10,7 @@ import SwiftUI
 
 struct OptionsView: View {
     @ObservedObject var charsets = CharSets
+    @ObservedObject var templates = Templates
     @Binding var document: Text_to_HandwrittingDocument
     @Binding var shown: Bool
     
@@ -25,7 +26,7 @@ struct OptionsView: View {
             }
             HStack(alignment: .center, spacing: 50) {
                 Button("generate") {
-                    document.createImage(charset: charsets.document!.charset, template: Templates.get_template())
+                    document.createImage(charset: charsets.document!.charset, template: templates.document!.template)
                 }
                 .disabled(charsets.document == nil ? true : false)
                 Button("cancel") {

@@ -14,7 +14,6 @@ class CharSetCatalog: ObservableObject {
     @Published var document: CharSetDocument? = nil
     @Published var documents: Array<String> = []
     
-    
     func saveSets() {
         let manager = FilesManager()
         do {

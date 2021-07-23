@@ -20,12 +20,12 @@ struct FontSelector: View {
             do {
                 var name = "Untitled"
                 var i = 0
-                while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".charset").path) {
+                while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthcharset").path) {
                     i += 1
                     name = "Untitled " + String(i)
                 }
-                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".charset")
-                let set = CharSetDocument(characters: Dictionary<String, Array<Data>>(), charlens: Dictionary<String, Float>()).charset
+                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthcharset")
+                let set = CharSetDocument().charset
                 let data = try JSONEncoder().encode(set)
                 try data.write(to: path)
             } catch { print(error) }
@@ -40,9 +40,9 @@ struct FontSelector: View {
                     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
                     let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
                     VStack {
-                        Text(file.removeExtention(".charset"))
+                        Text(file.removeExtention(".tthcharset"))
                             .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
-                        Image(uiImage: set.charset.get_preview())
+                        Image(uiImage: set.charset.getPreview())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .border(Color.black, width: 1)

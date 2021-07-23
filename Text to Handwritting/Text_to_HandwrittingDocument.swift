@@ -74,17 +74,17 @@ struct Text_to_HandwrittingDocument: FileDocument {
         let words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
         
         let font_size = template.font_size
-        let left_margin = template.margins[0]
-        let right_margin = template.margins[1]
-        let top_margin = template.margins[2]
-        let bottom_margin = template.margins[3]
+        let left_margin = template.getMargins()[0]
+        let right_margin = template.getMargins()[1]
+        let top_margin = template.getMargins()[2]
+        let bottom_margin = template.getMargins()[3]
         
-        let line_spacing = font_size + 4
+        let line_spacing = Int(font_size + 4)
         let letter_spacing: Int = Int(Double(font_size) * 0.2)
         let space_length = Int(Double(font_size) * 0.8)
         let line_end_buffer = Int(font_size * 2)
         
-        var image = template.get_bg()
+        var image = template.getBackground()
         let size = [Int(image.size.width), Int(image.size.height)]
         
         var x_pos = left_margin
@@ -114,7 +114,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
                         if checkPhotoSavePermission() {
                             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                         }
-                        image = template.get_bg()
+                        image = template.getBackground()
                         page_i += 1
                     }
                 }
@@ -130,7 +130,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
                     if checkPhotoSavePermission() {
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     }
-                    image = template.get_bg()
+                    image = template.getBackground()
                     page_i += 1
                 }
             }
