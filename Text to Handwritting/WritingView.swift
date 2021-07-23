@@ -57,6 +57,17 @@ struct WritingView: View {
                     images.append(scaled)
                     canvas.drawing = PKDrawing()
                 }
+                Button("Previous") {
+                    canvas.drawing = PKDrawing()
+                    document.charset.setCharacters(char: selection, images: images)
+                    let index = chars.firstIndex(of: Character(selection))!
+                    if String(chars.first!) != selection {
+                        selection = String(chars[chars.index(before: index)])
+                    } else {
+                        selection = String(chars.last!)
+                    }
+                    images = document.charset.getImages(char: selection)
+                }
                 Button("Next") {
                     canvas.drawing = PKDrawing()
                     document.charset.setCharacters(char: selection, images: images)
@@ -66,7 +77,6 @@ struct WritingView: View {
                     } else {
                         selection = String(chars.first!)
                     }
-                    chars.remove(at: index)
                     images = document.charset.getImages(char: selection)
                 }
                 Button("Clear") {
