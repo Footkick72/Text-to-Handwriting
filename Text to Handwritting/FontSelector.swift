@@ -48,8 +48,11 @@ struct FontSelector: View {
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black, width: 1)
                                 .overlay(
-                                    Button("Delete") {
+                                    Button(action: {
                                         charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                                    }) {
+                                        Image(systemName: "xmark.circle")
+                                            .padding(4)
                                     }
                                     .foregroundColor(.red)
                                     ,alignment: .topTrailing)
