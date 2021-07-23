@@ -9,13 +9,11 @@ import Foundation
 import UIKit
 
 struct CharSet: Equatable, Codable {
-    var name: String
     var availiable_chars: String
     var characters: Dictionary<String,Array<Data>>
     var charlens: Dictionary<String,Float> = [:]
     
-    init(name: String, characters: Dictionary<String,Array<Data>>, charlens: Dictionary<String,Float>? = nil) {
-        self.name = name
+    init(characters: Dictionary<String,Array<Data>>, charlens: Dictionary<String,Float>? = nil) {
         self.characters = characters
         self.availiable_chars = ""
         for char in characters.keys {

@@ -19,8 +19,8 @@ struct CharSetDocument: FileDocument {
         charset = try! JSONDecoder().decode(CharSet.self, from: from)
     }
 
-    init(name: String = "Untitled", characters: Dictionary<String,Array<Data>> = [:], charlens: Dictionary<String,Float> = [:]) {
-        charset = CharSet(name: name, characters: characters, charlens: charlens)
+    init(characters: Dictionary<String,Array<Data>> = [:], charlens: Dictionary<String,Float> = [:]) {
+        charset = CharSet(characters: characters, charlens: charlens)
     }
 
     static var readableContentTypes: [UTType] { [.charSetDocument] }

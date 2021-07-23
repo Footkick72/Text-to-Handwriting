@@ -25,7 +25,7 @@ struct FontSelector: View {
                     name = "Untitled " + String(i)
                 }
                 let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".charset")
-                let set = CharSetDocument(name: name, characters: Dictionary<String, Array<Data>>(), charlens: Dictionary<String, Float>()).charset
+                let set = CharSetDocument(characters: Dictionary<String, Array<Data>>(), charlens: Dictionary<String, Float>()).charset
                 let data = try JSONEncoder().encode(set)
                 try data.write(to: path)
             } catch { print(error) }
