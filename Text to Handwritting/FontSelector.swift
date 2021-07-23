@@ -25,7 +25,7 @@ struct FontSelector: View {
                     name = "Untitled " + String(i)
                 }
                 let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".charset")
-                let set = CharSetDocument(name: "Untitled", characters: Dictionary<String, Array<Data>>(), charlens: Dictionary<String, Float>()).charset
+                let set = CharSetDocument(name: name, characters: Dictionary<String, Array<Data>>(), charlens: Dictionary<String, Float>()).charset
                 let data = try JSONEncoder().encode(set)
                 try data.write(to: path)
             } catch { print(error) }
@@ -40,23 +40,21 @@ struct FontSelector: View {
                     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
                     let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
                     VStack {
-                        Text(verbatim: set.charset.name)
+                        Text(file.removeExtention(".charset"))
                             .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
-                        if let preview = set.charset.get_preview() {
-                            Image(uiImage: preview)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .border(Color.black, width: 1)
-                                .overlay(
-                                    Button(action: {
-                                        charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
-                                    }) {
-                                        Image(systemName: "xmark.circle")
-                                            .padding(4)
-                                    }
-                                    .foregroundColor(.red)
-                                    ,alignment: .topTrailing)
-                        }
+                        Image(uiImage: set.charset.get_preview())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .border(Color.black, width: 1)
+                            .overlay(
+                                Button(action: {
+                                    charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                                }) {
+                                    Image(systemName: "xmark.circle")
+                                        .padding(4)
+                                }
+                                .foregroundColor(.red)
+                                ,alignment: .topTrailing)
                     }
                     .gesture(TapGesture().onEnded({ charsets.document = set }))
                     .frame(width: itemWidth)

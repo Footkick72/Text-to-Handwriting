@@ -71,4 +71,10 @@ extension StringProtocol {
     subscript(offset: Int) -> Character {
         self[index(startIndex, offsetBy: offset)]
     }
+    
+    func removeExtention(_ ext:String) -> String {
+        var s = String(self)
+        s.removeLast(ext.count)
+        return s
+    }
 }
