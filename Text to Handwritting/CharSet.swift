@@ -31,7 +31,7 @@ struct CharSet: Equatable, Codable {
     }
     
     mutating func add_characters(char: String, images: Array<UIImage>) {
-        if self.availiable_chars.firstIndex(of: Character(char)) != nil {
+        if self.availiable_chars.firstIndex(of: Character(char)) == nil {
             self.availiable_chars += char
         }
         var data = Array<Data>()
