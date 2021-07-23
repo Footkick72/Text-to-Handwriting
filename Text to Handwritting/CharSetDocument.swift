@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 extension UTType {
-  static let charSetDocument = UTType(exportedAs: "com.example.charset")
+  static let charSetDocument = UTType(exportedAs: "org.davidlong.charset")
 }
 
 struct CharSetDocument: FileDocument {

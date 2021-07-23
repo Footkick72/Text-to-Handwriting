@@ -76,7 +76,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>com.example.charset</string>
+			<string>org.davidlong.charset</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -95,8 +95,10 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Example Text</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>com.example.plain-text</string>
+			<string>org.davidlong.plain-text</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
