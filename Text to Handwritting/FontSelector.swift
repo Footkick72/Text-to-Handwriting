@@ -52,8 +52,11 @@ struct FontSelector: View {
                                     .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
                                 Button(action: {
                                     if set.charset == charsets.document?.charset {
-                                        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(charsets.documents.first!)
-                                        charsets.document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                        charsets.document = nil
+                                        if charsets.documents.count >= 1 {
+                                            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(charsets.documents.first!)
+                                            charsets.document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                        }
                                     }
                                     charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
                                 }) {

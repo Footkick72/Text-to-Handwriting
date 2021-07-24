@@ -52,10 +52,13 @@ struct TemplateSelector: View {
                                     .foregroundColor(templates.document?.template == template.template ? .red : .black)
                                 Button(action: {
                                     if template.template == templates.document?.template {
-                                        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(templates.documents.first!)
-                                        templates.document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                        templates.document = nil
+                                        if templates.documents.count > 1 {
+                                            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(templates.documents.first!)
+                                            templates.document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                        }
+                                        templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
                                     }
-                                    templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
                                 }) {
                                     Image(systemName: "xmark.circle")
                                 }
