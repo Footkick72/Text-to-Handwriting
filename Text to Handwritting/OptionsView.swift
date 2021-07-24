@@ -28,7 +28,7 @@ struct OptionsView: View {
                 Button("generate") {
                     document.createImage(charset: charsets.document!.charset, template: templates.document!.template)
                 }
-                .disabled(charsets.document == nil ? true : false)
+                .disabled((charsets.document == nil || templates.document == nil) ? true : false)
                 Button("cancel") {
                     shown = false
                 }

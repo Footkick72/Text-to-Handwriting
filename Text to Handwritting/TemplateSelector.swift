@@ -34,59 +34,59 @@ struct TemplateSelector: View {
         Button("Import template") {
             showingSelector = true
         }
-//        ScrollView(.horizontal, showsIndicators: false) {
-//            HStack(alignment: .center, spacing: 10) {
-//                ForEach(templates.documents, id: \.self) { file in
-//                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-//                    let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
-//                    VStack {
-//                        Text(file.removeExtention(".charset"))
-//                            .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
-//                        Image(uiImage: set.charset.get_preview())
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                            .border(Color.black, width: 1)
-//                    }
-//                    .overlay(
-//                        Button(action: {
-//                            charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
-//                        }) {
-//                            Image(systemName: "xmark.circle")
-//                        }
-//                        .foregroundColor(.red)
-//                        ,alignment: .topTrailing)
-//                    .gesture(TapGesture().onEnded({ charsets.document = set }))
-//                    .frame(width: itemWidth)
-//                }
-//            }
-//        }
-//        .frame(width: max(0, min(CGFloat(charsets.documents.count) * itemWidth + CGFloat(charsets.documents.count - 1) * 10, CGFloat(itemWidth * 3 + 10 * 2))), alignment: .center)
-//        .fileImporter(isPresented: $showingSelector, allowedContentTypes: [.charSetDocument]) { url in
-//            do {
-//                let data = try FileManager.default.contents(atPath: url.get().path)
-//                let document = CharSetDocument(from: data!)
-//
-//                var isUnique = true
-//                for file in charsets.documents {
-//                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-//                    let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
-//                    if set.charset == document.charset {
-//                        isUnique = false
-//                    }
-//                }
-//
-//                if isUnique {
-//                    charsets.document = document
-//                    charsets.documents.append(try url.get().lastPathComponent)
-//                } else {
-//                    showingUniquenessAlert = true
-//                }
-//
-//            } catch {}
-//        }
-//        .alert(isPresented: $showingUniquenessAlert) {
-//            Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .cancel())
-//        }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .center, spacing: 10) {
+                ForEach(templates.documents, id: \.self) { file in
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+                    let template = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                    VStack {
+                        Text(file.removeExtention(".tthtemplate"))
+                            .foregroundColor(templates.document?.template == template.template ? .red : .black)
+                        Image(uiImage: template.template.getBackground())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .border(Color.black, width: 1)
+                    }
+                    .overlay(
+                        Button(action: {
+                            templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
+                        }) {
+                            Image(systemName: "xmark.circle")
+                        }
+                        .foregroundColor(.red)
+                        ,alignment: .topTrailing)
+                    .gesture(TapGesture().onEnded({ templates.document = template }))
+                    .frame(width: itemWidth)
+                }
+            }
+        }
+        .frame(width: max(0, min(CGFloat(templates.documents.count) * itemWidth + CGFloat(templates.documents.count - 1) * 10, CGFloat(itemWidth * 3 + 10 * 2))), alignment: .center)
+        .fileImporter(isPresented: $showingSelector, allowedContentTypes: [.templateDocument]) { url in
+            do {
+                let data = try FileManager.default.contents(atPath: url.get().path)
+                let document = TemplateDocument(from: data!)
+
+                var isUnique = true
+                for file in templates.documents {
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+                    let template = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                    if template.template == document.template {
+                        isUnique = false
+                    }
+                }
+
+                if isUnique {
+                    templates.document = document
+                    templates.documents.append(try url.get().lastPathComponent)
+                } else {
+                    showingUniquenessAlert = true
+                }
+
+            } catch {}
+        }
+        .alert(isPresented: $showingUniquenessAlert) {
+            Alert(title: Text("Cannot load template"), message: Text("You have already loaded an identical template"), dismissButton: .cancel())
+        }
     }
 }
 

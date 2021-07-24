@@ -19,16 +19,13 @@ struct ImageRectSelector: View {
         }
     }
     
-    @State var display_scale = 0.5
+    @State var displayScale = 0.5
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
-        let width = Double(document.template.getBackground().size.width) * display_scale
-        let height = Double(document.template.getBackground().size.height) * display_scale
         return Image(uiImage: document.template.getBackground())
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 500)
+//            .resizable()
+//            .aspectRatio(contentMode: .fit)
             .border(Color.black, width: 2)
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -71,7 +68,7 @@ struct ImageRectSelector: View {
                         case .none:
                             print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
-                        document.template.margins = closest_valid_rect(oldRect: document.template.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: width, height: height), minSize: CGSize(width: 50, height: 50))
+                        document.template.margins = closest_valid_rect(oldRect: document.template.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.template.getBackground().size.width, height: document.template.getBackground().size.height), minSize: CGSize(width: 50, height: 50))
                     }
                     .onEnded {_ in
                         selectedCorner = nil
@@ -83,8 +80,8 @@ struct ImageRectSelector: View {
                     .frame(width: document.template.margins.width, height: document.template.margins.height)
                     .position(x: document.template.margins.midX, y: document.template.margins.midY)
                     .overlay(
-                        VStack(alignment: .center, spacing: CGFloat(Double(document.template.font_size)*display_scale)) {
-                            ForEach(1..<max(1,Int(document.template.margins.height/(CGFloat(Double(document.template.font_size)*display_scale)))), id: \.self) {i in
+                        VStack(alignment: .center, spacing: CGFloat(document.template.font_size)) {
+                            ForEach(1..<max(1,Int(document.template.margins.height/(CGFloat(document.template.font_size)))), id: \.self) {i in
                                 Rectangle()
                                     .stroke(Color.red, lineWidth: 1)
                                     .frame(width: document.template.margins.width, height: 1)
@@ -92,12 +89,16 @@ struct ImageRectSelector: View {
                         }
                         .frame(width: document.template.margins.width, height: document.template.margins.height)
                         .clipped()
-                        .offset(x: CGFloat(-width*0.5) + document.template.margins.width/2 + document.template.margins.origin.x,
-                                y: CGFloat(-height*0.5) + document.template.margins.height/2 + document.template.margins.origin.y)
+                        .offset(x: CGFloat(-document.template.getBackground().size.width*0.5) + document.template.margins.width/2 + document.template.margins.origin.x,
+                                y: CGFloat(-document.template.getBackground().size.height*0.5) + document.template.margins.height/2 + document.template.margins.origin.y)
                     )
             )
+            .scaleEffect(CGFloat(displayScale))
             .onAppear(perform: {
-                display_scale = 500/Double(document.template.getBackground().size.width)
+                displayScale = Double(min(
+                    UIScreen.main.bounds.size.width/document.template.getBackground().size.width,
+                    UIScreen.main.bounds.size.height/document.template.getBackground().size.height
+                )) * 0.8
             })
     }
     
