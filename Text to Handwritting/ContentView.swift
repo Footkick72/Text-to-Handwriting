@@ -15,7 +15,7 @@ struct ContentView: View {
         VStack(alignment: .center) {
             TextEditor(text: $document.text)
         }
-        .sheet(isPresented: $showingGenerationOptions) {
+        .fullScreenCover(isPresented: $showingGenerationOptions) {
             OptionsView(document: $document, shown: $showingGenerationOptions)
         }
         .navigationBarItems(trailing:
