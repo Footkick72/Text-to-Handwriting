@@ -66,7 +66,7 @@ struct FontSelector: View {
                 }
             }
         }
-        .frame(width: max(0, min(CGFloat(charsets.documents.count) * itemWidth + CGFloat(charsets.documents.count - 1) * 10, CGFloat(itemWidth * 3 + 10 * 2))), alignment: .center)
+        .frame(width: max(0, min(CGFloat(charsets.documents.count) * itemWidth + CGFloat(charsets.documents.count - 1) * 10, CGFloat(itemWidth * 2 + 10))), alignment: .center)
         .fileImporter(isPresented: $showingSelector, allowedContentTypes: [.charSetDocument]) { url in
             do {
                 let data = try FileManager.default.contents(atPath: url.get().path)

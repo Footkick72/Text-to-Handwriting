@@ -68,7 +68,7 @@ struct TemplateSelector: View {
                 }
             }
         }
-        .frame(width: max(0, min(CGFloat(templates.documents.count) * itemWidth + CGFloat(templates.documents.count - 1) * 10, CGFloat(itemWidth * 3 + 10 * 2))), alignment: .center)
+        .frame(width: max(0, min(CGFloat(templates.documents.count) * itemWidth + CGFloat(templates.documents.count - 1) * 10, CGFloat(itemWidth * 2 + 10))), alignment: .center)
         .fileImporter(isPresented: $showingSelector, allowedContentTypes: [.templateDocument]) { url in
             do {
                 let data = try FileManager.default.contents(atPath: url.get().path)
