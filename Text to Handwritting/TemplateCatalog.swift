@@ -40,5 +40,9 @@ class TemplateCatalog: ObservableObject {
             self.documents = try JSONDecoder().decode(Array<String>.self, from: try manager.read(fileNamed: "templates.json"))
         } catch { print("error loading templates: \(error)") }
         trimTemplates()
+        if documents.count > 0 {
+            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(documents.first!)
+            document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+        }
     }
 }

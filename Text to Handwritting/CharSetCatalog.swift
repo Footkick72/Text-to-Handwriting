@@ -29,5 +29,9 @@ class CharSetCatalog: ObservableObject {
         do {
             self.documents = try JSONDecoder().decode(Array<String>.self, from: try manager.read(fileNamed: "charsets.json"))
         } catch { print("error loading charsets: \(error)") }
+        if documents.count > 0 {
+            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(documents.first!)
+            document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+        }
     }
 }
