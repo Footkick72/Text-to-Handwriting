@@ -93,7 +93,6 @@ struct WritingView: View {
                 .foregroundColor(.red)
                 Button(action: {
                     shown = false
-                    document.charset.setCharacters(char: selection, images: images)
                 }) {
                     Image(systemName: "xmark.circle")
                 }
