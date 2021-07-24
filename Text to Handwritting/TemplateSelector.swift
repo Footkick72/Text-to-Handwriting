@@ -57,8 +57,8 @@ struct TemplateSelector: View {
                                             let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(templates.documents.first!)
                                             templates.document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
                                         }
-                                        templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
                                     }
+                                    templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
                                 }) {
                                     Image(systemName: "xmark.circle")
                                 }
