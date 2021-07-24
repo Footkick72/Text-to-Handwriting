@@ -52,6 +52,8 @@ struct TemplateSelector: View {
                                     .foregroundColor(templates.document?.template == template.template ? .red : .black)
                                 Button(action: {
                                     templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
+                                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(templates.documents.first!)
+                                    templates.document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
                                 }) {
                                     Image(systemName: "xmark.circle")
                                 }

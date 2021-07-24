@@ -51,6 +51,8 @@ struct FontSelector: View {
                                 .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
                             Button(action: {
                                 charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(charsets.documents.first!)
+                                charsets.document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
                             }) {
                                 Image(systemName: "xmark.circle")
                             }
