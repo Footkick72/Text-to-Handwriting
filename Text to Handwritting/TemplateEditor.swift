@@ -16,8 +16,10 @@ struct TemplateEditor: View {
         ZStack {
             ImageRectSelector(document: $document)
             VStack(alignment: .center, spacing: UIScreen.main.bounds.height-200) {
-                Button("Select image") {
+                Button(action: {
                     showingImagePicker = true
+                }) {
+                    Image(systemName: "photo.on.rectangle.angled")
                 }
                 NumberSelector(value: $document.template.font_size, minValue: 5, maxValue: 200, label: "Font size")
                     .frame(width: 300)

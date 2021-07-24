@@ -16,23 +16,29 @@ struct TemplateSelector: View {
     private var itemWidth: CGFloat = 150
     
     var body: some View {
-        Button("Create new template") {
-            do {
-                var name = "Untitled"
-                var i = 0
-                while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthtemplate").path) {
-                    i += 1
-                    name = "Untitled " + String(i)
-                }
-                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthtemplate")
-                let t = TemplateDocument().template
-                let data = try JSONEncoder().encode(t)
-                try data.write(to: path)
-            } catch { print(error) }
-            //TODO: open the new document, if possible
-        }
-        Button("Import template") {
-            showingSelector = true
+        HStack {
+            Button(action: {
+                do {
+                    var name = "Untitled"
+                    var i = 0
+                    while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthtemplate").path) {
+                        i += 1
+                        name = "Untitled " + String(i)
+                    }
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthtemplate")
+                    let t = TemplateDocument().template
+                    let data = try JSONEncoder().encode(t)
+                    try data.write(to: path)
+                } catch { print(error) }
+                //TODO: open the new document, if possible
+            }) {
+                Image(systemName: "doc.badge.plus")
+            }
+            Button(action: {
+                showingSelector = true
+            }) {
+                Image(systemName: "square.and.arrow.down")
+            }
         }
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .center, spacing: 10) {

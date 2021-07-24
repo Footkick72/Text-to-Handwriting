@@ -48,16 +48,18 @@ struct WritingView: View {
                 .aspectRatio(CGFloat(1.0), contentMode: .fit)
                 .border(Color.black, width: 2)
                 .scaleEffect(0.8)
-            HStack(alignment: .center, spacing: 50) {
-                Button("Save") {
+            HStack(alignment: .center, spacing: 10) {
+                Button(action: {
                     let drawing = canvas.drawing
                     let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
                     let scaler = canvas.bounds.width / 256.0
                     let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
                     images.append(scaled)
                     canvas.drawing = PKDrawing()
+                }) {
+                    Image(systemName: "folder.badge.plus")
                 }
-                Button("Previous") {
+                Button(action: {
                     canvas.drawing = PKDrawing()
                     document.charset.setCharacters(char: selection, images: images)
                     let index = chars.firstIndex(of: Character(selection))!
@@ -67,8 +69,10 @@ struct WritingView: View {
                         selection = String(chars.last!)
                     }
                     images = document.charset.getImages(char: selection)
+                }) {
+                    Image(systemName: "backward")
                 }
-                Button("Next") {
+                Button(action: {
                     canvas.drawing = PKDrawing()
                     document.charset.setCharacters(char: selection, images: images)
                     let index = chars.firstIndex(of: Character(selection))!
@@ -78,14 +82,20 @@ struct WritingView: View {
                         selection = String(chars.first!)
                     }
                     images = document.charset.getImages(char: selection)
+                }) {
+                    Image(systemName: "forward")
                 }
-                Button("Clear") {
+                Button(action: {
                     canvas.drawing = PKDrawing()
+                }) {
+                    Image(systemName: "trash")
                 }
                 .foregroundColor(.red)
-                Button("Exit") {
+                Button(action: {
                     shown = false
                     document.charset.setCharacters(char: selection, images: images)
+                }) {
+                    Image(systemName: "xmark.circle")
                 }
                 .foregroundColor(.red)
             }

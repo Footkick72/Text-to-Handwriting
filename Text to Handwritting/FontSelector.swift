@@ -16,23 +16,29 @@ struct FontSelector: View {
     private var itemWidth: CGFloat = 150
     
     var body: some View {
-        Button("Create new character set") {
-            do {
-                var name = "Untitled"
-                var i = 0
-                while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthcharset").path) {
-                    i += 1
-                    name = "Untitled " + String(i)
-                }
-                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthcharset")
-                let set = CharSetDocument().charset
-                let data = try JSONEncoder().encode(set)
-                try data.write(to: path)
-            } catch { print(error) }
-            //TODO: open the new document, if possible
-        }
-        Button("Import character set") {
-            showingSelector = true
+        HStack {
+            Button(action: {
+                do {
+                    var name = "Untitled"
+                    var i = 0
+                    while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthcharset").path) {
+                        i += 1
+                        name = "Untitled " + String(i)
+                    }
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + ".tthcharset")
+                    let set = CharSetDocument().charset
+                    let data = try JSONEncoder().encode(set)
+                    try data.write(to: path)
+                } catch { print(error) }
+                //TODO: open the new document, if possible
+            }) {
+                Image(systemName: "doc.badge.plus")
+            }
+            Button(action: {
+                showingSelector = true
+            }) {
+                Image(systemName: "square.and.arrow.down")
+            }
         }
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .center, spacing: 10) {
