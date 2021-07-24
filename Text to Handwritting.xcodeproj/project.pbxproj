@@ -27,7 +27,6 @@
 		1AA1E2C0269F2766007DAE76 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2BF269F2766007DAE76 /* OptionsView.swift */; };
 		1AA1E2C3269F27E2007DAE76 /* TemplateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2C2269F27E2007DAE76 /* TemplateSelector.swift */; };
 		1AA1E2C6269F2815007DAE76 /* FontSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2C5269F2815007DAE76 /* FontSelector.swift */; };
-		1AA1E2C9269F2847007DAE76 /* TemplateCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2C8269F2847007DAE76 /* TemplateCreator.swift */; };
 		1AA1E2CC269F2863007DAE76 /* NumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */; };
 		1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2CE269F2891007DAE76 /* ImageRectSelector.swift */; };
 		1AA1E2D3269F28E4007DAE76 /* TemplateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */; };
@@ -62,7 +61,6 @@
 		1AA1E2BF269F2766007DAE76 /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		1AA1E2C2269F27E2007DAE76 /* TemplateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateSelector.swift; sourceTree = "<group>"; };
 		1AA1E2C5269F2815007DAE76 /* FontSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSelector.swift; sourceTree = "<group>"; };
-		1AA1E2C8269F2847007DAE76 /* TemplateCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCreator.swift; sourceTree = "<group>"; };
 		1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberSelector.swift; sourceTree = "<group>"; };
 		1AA1E2CE269F2891007DAE76 /* ImageRectSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRectSelector.swift; sourceTree = "<group>"; };
 		1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditor.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 				1A3F8D45268B684200710E99 /* ContentView.swift */,
 				1AA1E2BF269F2766007DAE76 /* OptionsView.swift */,
 				1AA1E2C2269F27E2007DAE76 /* TemplateSelector.swift */,
-				1AA1E2C8269F2847007DAE76 /* TemplateCreator.swift */,
 				1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */,
 				1AA1E2CE269F2891007DAE76 /* ImageRectSelector.swift */,
 				1AA1E2C5269F2815007DAE76 /* FontSelector.swift */,
@@ -254,7 +251,6 @@
 				1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */,
 				1A3F92CD268BEA4C00710E99 /* CharSetCatalog.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */,
-				1AA1E2C9269F2847007DAE76 /* TemplateCreator.swift in Sources */,
 				1AA1E2DF26A0B32C007DAE76 /* FontEditor.swift in Sources */,
 				1A53399C26A71B7E00CC037D /* CharSetDocument.swift in Sources */,
 				1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */,
