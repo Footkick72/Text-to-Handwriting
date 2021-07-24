@@ -44,27 +44,31 @@ struct FontSelector: View {
             HStack(alignment: .center, spacing: 10) {
                 ForEach(charsets.documents, id: \.self) { file in
                     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-                    let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
-                    VStack {
-                        HStack {
-                            Text(file.removeExtention(".tthcharset"))
-                                .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
-                            Button(action: {
-                                charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
-                                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(charsets.documents.first!)
-                                charsets.document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
-                            }) {
-                                Image(systemName: "xmark.circle")
+                    if FileManager.default.fileExists(atPath: path.path) {
+                        let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                        VStack {
+                            HStack {
+                                Text(file.removeExtention(".tthcharset"))
+                                    .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
+                                Button(action: {
+                                    if set.charset == charsets.document?.charset {
+                                        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(charsets.documents.first!)
+                                        charsets.document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                    }
+                                    charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                                }) {
+                                    Image(systemName: "xmark.circle")
+                                }
+                                .foregroundColor(.red)
                             }
-                            .foregroundColor(.red)
+                            Image(uiImage: set.charset.getPreview())
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .border(Color.black, width: 1)
                         }
-                        Image(uiImage: set.charset.getPreview())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .border(Color.black, width: 1)
+                        .gesture(TapGesture().onEnded({ charsets.document = set }))
+                        .frame(width: itemWidth)
                     }
-                    .gesture(TapGesture().onEnded({ charsets.document = set }))
-                    .frame(width: itemWidth)
                 }
             }
         }
