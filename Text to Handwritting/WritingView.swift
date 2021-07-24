@@ -32,6 +32,7 @@ struct WritingView: View {
                             .frame(width: 50, height: 50)
                             .border(Color.black, width: 2)
                             .onTapGesture {
+                                self.deleteImage(image: images[i])
                                 images.remove(at: i)
                             }
                     }
@@ -56,12 +57,12 @@ struct WritingView: View {
                     let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
                     images.append(scaled)
                     canvas.drawing = PKDrawing()
+                    self.saveImage(image: scaled)
                 }) {
                     Image(systemName: "checkmark.circle")
                 }
                 Button(action: {
                     canvas.drawing = PKDrawing()
-                    document.charset.setCharacters(char: selection, images: images)
                     let index = chars.firstIndex(of: Character(selection))!
                     if String(chars.first!) != selection {
                         selection = String(chars[chars.index(before: index)])
@@ -74,7 +75,6 @@ struct WritingView: View {
                 }
                 Button(action: {
                     canvas.drawing = PKDrawing()
-                    document.charset.setCharacters(char: selection, images: images)
                     let index = chars.firstIndex(of: Character(selection))!
                     if String(chars.last!) != selection {
                         selection = String(chars[chars.index(after: index)])
@@ -101,6 +101,47 @@ struct WritingView: View {
             }
             .font(.title)
         }
+    }
+    
+    func saveImage(image: UIImage) {
+        if document.charset.availiable_chars.firstIndex(of: Character(selection)) == nil {
+            document.charset.availiable_chars += selection
+        }
+        
+        if document.charset.characters.keys.firstIndex(of: selection) != nil {
+            document.charset.characters[selection]!.append(image.pngData()!)
+        } else {
+            document.charset.characters[selection] = [image.pngData()!]
+        }
+        
+        if document.charset.charlens.keys.firstIndex(of: selection) != nil {
+            var sum = document.charset.charlens[selection]! * Float(document.charset.characters[selection]!.count - 1)
+            let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
+            let scaler = 1.0 / Float(image.size.width)
+            sum += Float(box.width) * scaler
+            document.charset.charlens[selection]! = sum / Float(document.charset.characters[selection]!.count)
+        } else {
+            let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
+            let scaler = 1.0 / Float(image.size.width)
+            document.charset.charlens[selection] = Float(box.width) * scaler
+        }
+    }
+    
+    func deleteImage(image: UIImage) {
+        if document.charset.characters[selection]!.count <= 1 {
+            document.charset.availiable_chars.remove(at: document.charset.availiable_chars.firstIndex(of: Character(selection))!)
+            document.charset.characters.removeValue(forKey: selection)
+            document.charset.charlens.removeValue(forKey: selection)
+            return
+        }
+        
+        var sum = document.charset.charlens[selection]! * Float(document.charset.characters[selection]!.count)
+        let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
+        let scaler = 1.0 / Float(image.size.width)
+        sum -= Float(box.width) * scaler
+        
+        document.charset.characters[selection]!.remove(at: document.charset.characters[selection]!.firstIndex(of: image.pngData()!)!)
+        document.charset.charlens[selection]! = sum / Float(document.charset.characters[selection]!.count)
     }
 }
 
