@@ -40,21 +40,21 @@ struct FontSelector: View {
                     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
                     let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
                     VStack {
-                        Text(file.removeExtention(".tthcharset"))
-                            .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
+                        HStack {
+                            Text(file.removeExtention(".tthcharset"))
+                                .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
+                            Button(action: {
+                                charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
+                            }) {
+                                Image(systemName: "xmark.circle")
+                            }
+                            .foregroundColor(.red)
+                        }
                         Image(uiImage: set.charset.getPreview())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .border(Color.black, width: 1)
                     }
-                    .overlay(
-                        Button(action: {
-                            charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
-                        }) {
-                            Image(systemName: "xmark.circle")
-                        }
-                        .foregroundColor(.red)
-                        ,alignment: .topTrailing)
                     .gesture(TapGesture().onEnded({ charsets.document = set }))
                     .frame(width: itemWidth)
                 }

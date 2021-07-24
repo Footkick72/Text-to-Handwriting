@@ -41,21 +41,21 @@ struct TemplateSelector: View {
                     if FileManager.default.fileExists(atPath: path.path) {
                         let template = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
                         VStack {
-                            Text(file.removeExtention(".tthtemplate"))
-                                .foregroundColor(templates.document?.template == template.template ? .red : .black)
+                            HStack {
+                                Text(file.removeExtention(".tthtemplate"))
+                                    .foregroundColor(templates.document?.template == template.template ? .red : .black)
+                                Button(action: {
+                                    templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
+                                }) {
+                                    Image(systemName: "xmark.circle")
+                                }
+                                .foregroundColor(.red)
+                            }
                             Image(uiImage: template.template.getBackground())
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black, width: 1)
                         }
-                        .overlay(
-                            Button(action: {
-                                templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
-                            }) {
-                                Image(systemName: "xmark.circle")
-                            }
-                            .foregroundColor(.red)
-                            ,alignment: .topTrailing)
                         .gesture(TapGesture().onEnded({ templates.document = template }))
                         .frame(width: itemWidth)
                     }
