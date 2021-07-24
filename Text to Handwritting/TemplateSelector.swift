@@ -38,25 +38,27 @@ struct TemplateSelector: View {
             HStack(alignment: .center, spacing: 10) {
                 ForEach(templates.documents, id: \.self) { file in
                     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-                    let template = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
-                    VStack {
-                        Text(file.removeExtention(".tthtemplate"))
-                            .foregroundColor(templates.document?.template == template.template ? .red : .black)
-                        Image(uiImage: template.template.getBackground())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .border(Color.black, width: 1)
-                    }
-                    .overlay(
-                        Button(action: {
-                            templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
-                        }) {
-                            Image(systemName: "xmark.circle")
+                    if FileManager.default.fileExists(atPath: path.path) {
+                        let template = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                        VStack {
+                            Text(file.removeExtention(".tthtemplate"))
+                                .foregroundColor(templates.document?.template == template.template ? .red : .black)
+                            Image(uiImage: template.template.getBackground())
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .border(Color.black, width: 1)
                         }
-                        .foregroundColor(.red)
-                        ,alignment: .topTrailing)
-                    .gesture(TapGesture().onEnded({ templates.document = template }))
-                    .frame(width: itemWidth)
+                        .overlay(
+                            Button(action: {
+                                templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
+                            }) {
+                                Image(systemName: "xmark.circle")
+                            }
+                            .foregroundColor(.red)
+                            ,alignment: .topTrailing)
+                        .gesture(TapGesture().onEnded({ templates.document = template }))
+                        .frame(width: itemWidth)
+                    }
                 }
             }
         }
@@ -86,6 +88,9 @@ struct TemplateSelector: View {
         }
         .alert(isPresented: $showingUniquenessAlert) {
             Alert(title: Text("Cannot load template"), message: Text("You have already loaded an identical template"), dismissButton: .cancel())
+        }
+        .onAppear() {
+            templates.trimTemplates()
         }
     }
 }

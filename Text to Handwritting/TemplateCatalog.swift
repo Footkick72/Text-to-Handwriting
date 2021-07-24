@@ -15,7 +15,6 @@ class TemplateCatalog: ObservableObject {
     @Published var documents: Array<String> = []
     
     func trimTemplates() {
-        print("trim")
         for file in documents {
             let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file).path
             if !FileManager.default.fileExists(atPath: path) {
@@ -40,6 +39,7 @@ class TemplateCatalog: ObservableObject {
         do {
             self.documents = try JSONDecoder().decode(Array<String>.self, from: try manager.read(fileNamed: "templates.json"))
         } catch { print("error loading templates: \(error)") }
+        trimTemplates()
     }
 }
 
