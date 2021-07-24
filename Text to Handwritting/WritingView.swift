@@ -57,7 +57,7 @@ struct WritingView: View {
                     images.append(scaled)
                     canvas.drawing = PKDrawing()
                 }) {
-                    Image(systemName: "folder.badge.plus")
+                    Image(systemName: "checkmark.circle")
                 }
                 Button(action: {
                     canvas.drawing = PKDrawing()
