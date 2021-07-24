@@ -15,13 +15,13 @@ struct OptionsView: View {
     @Binding var shown: Bool
     
     var body: some View {
-        VStack(alignment: .center, spacing: 50) {
+        VStack(alignment: .center, spacing: 40) {
             VStack(alignment: .center, spacing: 20) {
                 Text("Font")
                 FontSelector()
             }
             VStack(alignment: .center, spacing: 20) {
-                Text("Paper")
+                Text("Template")
                 TemplateSelector()
             }
             HStack(alignment: .center, spacing: 50) {
