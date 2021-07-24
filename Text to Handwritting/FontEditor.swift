@@ -15,12 +15,16 @@ struct FontEditor: View {
     
     @State var scale: CGFloat = 1.0
     
-    let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz’‘':,![(.?])\"”;1234567890-"
+    let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
     
     var body: some View {
-        let columns: [GridItem] = Array(repeating: GridItem.init(.flexible(), spacing: 20), count: 6)
+        //[ GridItem(.adaptive(minimum: 120, maximum: 360), spacing: 20) ]
+        let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
+                        GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
+                        GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
+                        GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),]
         ScrollView(showsIndicators: false) {
-            LazyVGrid(columns: columns) {
+            LazyVGrid(columns: columns, spacing: 10) {
                 ForEach((0..<allchars.count), id: \.self) { i in
                     let set: CharSet = document.charset
                     let char: String = String(allchars[i])
@@ -29,14 +33,13 @@ struct FontEditor: View {
                         if set.numberOfCharacters(char: char) != 0 {
                             Image(uiImage: set.getSameImage(char: char))
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 80, height: 40)
+                                .scaledToFit()
                         }
                     }
-                    .frame(width: 80, height: 80)
-                    .padding(CGFloat(10))
+                    .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
+                    .aspectRatio(1.0, contentMode: .fit)
                     .border(Color.black, width: 2)
-                    .font(.title2)
+                    .font(UIDevice.current.userInterfaceIdiom == .pad ? .title : .title2)
                     .overlay(
                         Rectangle()
                             .foregroundColor(set.numberOfCharacters(char: char) == 0 ? .red : set.numberOfCharacters(char: char) < 5 ? .yellow : .green)
@@ -54,6 +57,7 @@ struct FontEditor: View {
                     )
                 }
             }
+            .padding(10)
         }
         .sheet(isPresented: $showingWritingView) {
             WritingView(document: $document, chars: allchars, selection: currentLetter, shown: $showingWritingView, images: document.charset.getImages(char: currentLetter))
