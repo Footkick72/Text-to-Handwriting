@@ -23,9 +23,7 @@ struct ImageRectSelector: View {
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
-        return Image(uiImage: document.template.getBackground())
-//            .resizable()
-//            .aspectRatio(contentMode: .fit)
+        Image(uiImage: document.template.getBackground())
             .border(Color.black, width: 2)
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -78,7 +76,6 @@ struct ImageRectSelector: View {
                 Rectangle()
                     .stroke(Color.red, lineWidth: 5)
                     .frame(width: document.template.margins.width, height: document.template.margins.height)
-                    .position(x: document.template.margins.midX, y: document.template.margins.midY)
                     .overlay(
                         VStack(alignment: .center, spacing: CGFloat(document.template.font_size)) {
                             ForEach(1..<max(1,Int(document.template.margins.height/(CGFloat(document.template.font_size)))), id: \.self) {i in
@@ -89,16 +86,15 @@ struct ImageRectSelector: View {
                         }
                         .frame(width: document.template.margins.width, height: document.template.margins.height)
                         .clipped()
-                        .offset(x: CGFloat(-document.template.getBackground().size.width*0.5) + document.template.margins.width/2 + document.template.margins.origin.x,
-                                y: CGFloat(-document.template.getBackground().size.height*0.5) + document.template.margins.height/2 + document.template.margins.origin.y)
                     )
+                    .position(x: document.template.margins.midX, y: document.template.margins.midY)
             )
             .scaleEffect(CGFloat(displayScale))
             .onAppear(perform: {
                 displayScale = Double(min(
                     UIScreen.main.bounds.size.width/document.template.getBackground().size.width,
                     UIScreen.main.bounds.size.height/document.template.getBackground().size.height
-                )) * 0.8
+                )) * 0.7
             })
     }
     
