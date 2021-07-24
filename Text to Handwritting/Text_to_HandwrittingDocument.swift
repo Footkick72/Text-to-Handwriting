@@ -38,10 +38,14 @@ struct Text_to_HandwrittingDocument: FileDocument {
         return .init(regularFileWithContents: data)
     }
     
-    func get_expected_length(word: String, charlens: Dictionary<String,Float>) -> Int{
+    func get_expected_length(word: String, charlens: Dictionary<String,Float>, space_length: Float) -> Int{
         var length: Float = 0.0
         for char in word {
-            length += charlens[String(char)]!
+            if charlens.keys.firstIndex(of: String(char)) != nil {
+                length += charlens[String(char)]!
+            } else {
+                length += space_length
+            }
         }
         return Int(length)
     }
@@ -121,7 +125,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
                 char_i += 1
             }
             
-            let expected_length = get_expected_length(word: String(word), charlens: charlens) + space_length + line_end_buffer
+            let expected_length = get_expected_length(word: String(word), charlens: charlens, space_length: Float(space_length)) + space_length + line_end_buffer
             if x_pos + expected_length >= size[0] - right_margin - left_margin {
                 x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
                 y_pos += line_spacing
@@ -136,27 +140,30 @@ struct Text_to_HandwrittingDocument: FileDocument {
             }
             
             for char in word {
-                var letter: UIImage = charset.getImage(char: String(char))
-                letter = letter.cropAlpha(cropVertical: false, cropHorizontal: true)
-                let scaler = Float(letter.size.height)/Float(font_size)
-                letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
-                var letterlength = Float(letter.size.width)
-                let s = CGSize(width: size[0], height: size[1])
-                UIGraphicsBeginImageContext(s)
-                let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-                image.draw(in: areaSize)
-                let letterRect = CGRect(x: CGFloat(Int(x_pos + 80)), y: CGFloat(y_pos + Int(line_offset) + 64), width: letter.size.width, height: letter.size.height)
-                letter.draw(in: letterRect, blendMode: .normal, alpha: CGFloat(pencil_hardness))
-                image = UIGraphicsGetImageFromCurrentImageContext()!
-                UIGraphicsEndImageContext()
-                letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
-                
-                x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
-                pencil_hardness += (Float.random(in: 0..<1) - 0.5) * 0.2
-                pencil_hardness = max(min(pencil_hardness, max_hardness), min_hardness)
-                line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
-                line_offset = max(min(line_offset, 4), -4)
-                line_offset = 0
+                if var letter = charset.getImage(char: String(char)) {
+                    letter = letter.cropAlpha(cropVertical: false, cropHorizontal: true)
+                    let scaler = Float(letter.size.height)/Float(font_size)
+                    letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
+                    var letterlength = Float(letter.size.width)
+                    let s = CGSize(width: size[0], height: size[1])
+                    UIGraphicsBeginImageContext(s)
+                    let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
+                    image.draw(in: areaSize)
+                    let letterRect = CGRect(x: CGFloat(Int(x_pos + 80)), y: CGFloat(y_pos + Int(line_offset) + 64), width: letter.size.width, height: letter.size.height)
+                    letter.draw(in: letterRect, blendMode: .normal, alpha: CGFloat(pencil_hardness))
+                    image = UIGraphicsGetImageFromCurrentImageContext()!
+                    UIGraphicsEndImageContext()
+                    letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
+                    
+                    x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
+                    pencil_hardness += (Float.random(in: 0..<1) - 0.5) * 0.2
+                    pencil_hardness = max(min(pencil_hardness, max_hardness), min_hardness)
+                    line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
+                    line_offset = max(min(line_offset, 4), -4)
+//                    line_offset = 0
+                } else {
+                    x_pos += space_length
+                }
             }
             
             char_i += word.count

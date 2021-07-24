@@ -30,12 +30,12 @@ struct CharSet: Equatable, Codable {
         return self.getImages(char: char).count
     }
     
-    func getImage(char: String) -> UIImage {
+    func getImage(char: String) -> UIImage? {
         let images = getImages(char: char)
         if images.count > 0 {
             return images.randomElement()!
         } else {
-            return UIImage(imageLiteralResourceName: "space.png")
+            return nil
         }
     }
     
