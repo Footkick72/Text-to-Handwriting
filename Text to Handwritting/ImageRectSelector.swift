@@ -96,6 +96,12 @@ struct ImageRectSelector: View {
                     UIScreen.main.bounds.size.height/document.template.getBackground().size.height
                 )) * 0.7
             })
+            .onChange(of: document.template.background) { _ in
+                displayScale = Double(min(
+                    UIScreen.main.bounds.size.width/document.template.getBackground().size.width,
+                    UIScreen.main.bounds.size.height/document.template.getBackground().size.height
+                )) * 0.7
+            }
     }
     
     
