@@ -1,25 +1,37 @@
 //
-//  TemplateCatalog.swift
+//  Catalog.swift
 //  Text to Handwritting
 //
-//  Created by Daniel Long on 7/3/21.
+//  Created by Daniel Long on 7/25/21.
 //
+
 
 import Foundation
 import SwiftUI
 
+//var Templates = TemplateCatalog()
+
+protocol HandwrittingDocument {
+    static var defaultSaveFile: String { get }
+    init(from: Data)
+}
+
+var CharSets = CharSetCatalog()
 var Templates = TemplateCatalog()
 
-class TemplateCatalog: ObservableObject {
+typealias TemplateCatalog = Catalog<TemplateDocument>
+typealias CharSetCatalog = Catalog<CharSetDocument>
+
+class Catalog<DocType: HandwrittingDocument>: ObservableObject {
     @Published var documentPath: String? = nil
     @Published var documents: Array<String> = []
     
-    func document() -> TemplateDocument? {
-        trimTemplates()
+    func document() -> DocType? {
+        trim()
         if let file = documentPath {
             let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
             if FileManager.default.fileExists(atPath: path.path) {
-                return TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                return DocType(from: FileManager.default.contents(atPath: path.path)!)
             } else {
                 documentPath = nil
                 if documents.count > 0 {
@@ -32,7 +44,7 @@ class TemplateCatalog: ObservableObject {
         }
     }
     
-    func trimTemplates() {
+    func trim() {
         for file in documents {
             let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file).path
             if !FileManager.default.fileExists(atPath: path) {
@@ -41,23 +53,23 @@ class TemplateCatalog: ObservableObject {
         }
     }
     
-    func saveTemplates() {
-        trimTemplates()
+    func save() {
+        trim()
         let manager = FilesManager()
         do {
-            try manager.delete(fileNamed: "templates.json")
-        } catch { print("error saving templates: \(error)") }
+            try manager.delete(fileNamed: DocType.defaultSaveFile)
+        } catch { print("error saving: \(error)") }
         do {
-            try manager.save(fileNamed: "templates.json", data: JSONEncoder().encode(documents))
-        } catch { print("error saving templates: \(error)") }
+            try manager.save(fileNamed: DocType.defaultSaveFile, data: JSONEncoder().encode(documents))
+        } catch { print("error saving: \(error)") }
     }
 
-    func loadTemplates() {
+    func load() {
         let manager = FilesManager()
         do {
-            self.documents = try JSONDecoder().decode(Array<String>.self, from: try manager.read(fileNamed: "templates.json"))
-        } catch { print("error loading templates: \(error)") }
-        trimTemplates()
+            self.documents = try JSONDecoder().decode(Array<String>.self, from: try manager.read(fileNamed: DocType.defaultSaveFile))
+        } catch { print("error loading: \(error)") }
+        trim()
         if documents.count > 0 {
             documentPath = documents.first!
         }

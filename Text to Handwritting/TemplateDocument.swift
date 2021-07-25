@@ -12,8 +12,9 @@ extension UTType {
   static let templateDocument = UTType(exportedAs: "org.davidlong.tthtemplate")
 }
 
-struct TemplateDocument: FileDocument {
+struct TemplateDocument: FileDocument, HandwrittingDocument {
     var template: Template
+    static var defaultSaveFile = "templates.json"
     
     init(from: Data) {
         template = try! JSONDecoder().decode(Template.self, from: from)

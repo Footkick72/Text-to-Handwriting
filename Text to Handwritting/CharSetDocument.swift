@@ -12,8 +12,9 @@ extension UTType {
   static let charSetDocument = UTType(exportedAs: "org.davidlong.tthcharset")
 }
 
-struct CharSetDocument: FileDocument {
+struct CharSetDocument: FileDocument, HandwrittingDocument {
     var charset: CharSet
+    static var defaultSaveFile = "charsets.json"
     
     init(from: Data) {
         charset = try! JSONDecoder().decode(CharSet.self, from: from)

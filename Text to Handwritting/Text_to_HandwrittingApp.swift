@@ -13,12 +13,12 @@ struct Text_to_HandwrittingApp: App {
     init() {
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { _ in return })
         NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: .main) { _ in
-            CharSets.loadSets()
-            Templates.loadTemplates()
+            CharSets.load()
+            Templates.load()
         }
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { _ in
-            CharSets.saveSets()
-            Templates.saveTemplates()
+            CharSets.save()
+            Templates.save()
         }
     }
     

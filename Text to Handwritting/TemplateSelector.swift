@@ -102,7 +102,7 @@ struct TemplateSelector: View {
             Alert(title: Text("Cannot load template"), message: Text("You have already loaded an identical template"), dismissButton: .cancel())
         }
         .onAppear() {
-            templates.trimTemplates()
+            templates.trim()
         }
     }
 }
