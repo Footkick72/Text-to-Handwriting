@@ -17,32 +17,39 @@ struct OptionsView: View {
     @State var generating = false
     
     var body: some View {
-        VStack(alignment: .center, spacing: 40) {
-            VStack(alignment: .center, spacing: 20) {
-                Text("Font")
-                FontSelector()
-            }
-            VStack(alignment: .center, spacing: 20) {
-                Text("Template")
-                TemplateSelector()
-            }
-            HStack(alignment: .center, spacing: 50) {
-                Button("generate") {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        document.createImage(charset: charsets.document!.charset, template: templates.document!.template, updateProgress: { value, going in
-                            generationProgress = value
-                            generating = going
-                        })
+        ZStack {
+            VStack(alignment: .center, spacing: 40) {
+                VStack(alignment: .center, spacing: 20) {
+                    Text("Font")
+                    FontSelector()
+                }
+                VStack(alignment: .center, spacing: 20) {
+                    Text("Template")
+                    TemplateSelector()
+                }
+                HStack(alignment: .center, spacing: 50) {
+                    Button("generate") {
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            document.createImage(charset: charsets.document!.charset, template: templates.document!.template, updateProgress: { value, going in
+                                generationProgress = value
+                                generating = going
+                            })
+                        }
                     }
+                    .disabled((charsets.document == nil || templates.document == nil) ? true : false)
+                    Button("cancel") {
+                        shown = false
+                    }
+                    .foregroundColor(.red)
                 }
-                .popover(isPresented: $generating) {
-                    ProgressView("Generating...", value: generationProgress, total: 1.0)
-                }
-                .disabled((charsets.document == nil || templates.document == nil) ? true : false)
-                Button("cancel") {
-                    shown = false
-                }
-                .foregroundColor(.red)
+            }
+            if generating {
+                ProgressView("Generating...", value: generationProgress, total: 1.0)
+                    .frame(width: 200)
+                    .background(
+                        Rectangle()
+                            .foregroundColor(.white)
+                    )
             }
         }
     }

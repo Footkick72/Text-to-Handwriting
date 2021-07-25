@@ -74,7 +74,10 @@ struct Text_to_HandwrittingDocument: FileDocument {
     }
     
     func createImage(charset: CharSet, template: Template, updateProgress: (Double, Bool) -> Void) -> Void {
-        let words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
+        var words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
+        if words.last! == "" || words.last! == "\n" {
+            words.removeLast()
+        }
         
         let font_size = template.font_size
         let left_margin = template.getMargins()[0]
