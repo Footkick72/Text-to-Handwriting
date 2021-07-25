@@ -84,10 +84,10 @@ struct CharSet: Equatable, Codable {
         if availiable_chars.count == 0 {
             return UIImage(cgImage: UIImage(imageLiteralResourceName: "space.png").cgImage!, scale: 4.0, orientation: .up)
         }
-        UIGraphicsBeginImageContext(CGSize(width: 256*4, height: 256*4))
+        UIGraphicsBeginImageContext(CGSize(width: 256*3, height: 256*3))
         var i = 0
-        for y in 0..<4 {
-            for x in 0..<4 {
+        for y in 0..<3 {
+            for x in 0..<3 {
                 var char = getSameImage(char: String(availiable_chars[i]))
                 char = UIImage(cgImage: char.cgImage!, scale: 1.0, orientation: char.imageOrientation)
                 let rect = CGRect(x: x*256, y: y*256, width: 256, height: 256)
