@@ -43,13 +43,12 @@ struct OptionsView: View {
                     .foregroundColor(.red)
                 }
             }
+            .blur(radius: generating ? 6 : 0)
+            .animation(.spring())
             if generating {
                 ProgressView("Generating...", value: generationProgress, total: 1.0)
                     .frame(width: 200)
-                    .background(
-                        Rectangle()
-                            .foregroundColor(.white)
-                    )
+                    .padding()
             }
         }
     }
