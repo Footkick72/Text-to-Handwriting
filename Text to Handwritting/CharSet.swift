@@ -45,7 +45,7 @@ struct CharSet: Equatable, Codable {
         if images.count > 0 {
             return images.first!
         } else {
-            return UIImage(imageLiteralResourceName: "space.png")
+            return UIImage(named: "space")!
         }
     }
     
@@ -82,7 +82,7 @@ struct CharSet: Equatable, Codable {
     
     func getPreview() -> UIImage {
         if availiable_chars.count == 0 {
-            return UIImage(cgImage: UIImage(imageLiteralResourceName: "space.png").cgImage!, scale: 4.0, orientation: .up)
+            return UIImage(cgImage: UIImage(named: "space")!.cgImage!, scale: 4.0, orientation: .up)
         }
         UIGraphicsBeginImageContext(CGSize(width: 256*3, height: 256*3))
         var i = 0

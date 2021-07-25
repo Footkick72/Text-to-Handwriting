@@ -42,7 +42,7 @@ struct WritingView: View {
             Canvas(canvasView: $canvas)
                 .opacity(0.5)
                 .background(
-                    Image(uiImage: UIImage(imageLiteralResourceName: "writingbackground.png"))
+                    Image("writingbackground")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 )
