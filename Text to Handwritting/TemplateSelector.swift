@@ -49,13 +49,12 @@ struct TemplateSelector: View {
                         VStack {
                             HStack {
                                 Text(file.removeExtention(".tthtemplate"))
-                                    .foregroundColor(templates.document?.template == template.template ? .red : .black)
+                                    .foregroundColor(templates.document()?.template == template.template ? .red : .black)
                                 Button(action: {
-                                    if template.template == templates.document?.template {
-                                        templates.document = nil
+                                    if template.template == templates.document()?.template {
+                                        templates.documentPath = nil
                                         if templates.documents.count > 1 {
-                                            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(templates.documents.first!)
-                                            templates.document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                            templates.documentPath = templates.documents.first!
                                         }
                                     }
                                     templates.documents.remove(at: templates.documents.firstIndex(of: file)!)
@@ -69,7 +68,7 @@ struct TemplateSelector: View {
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black, width: 1)
                         }
-                        .gesture(TapGesture().onEnded({ templates.document = template }))
+                        .gesture(TapGesture().onEnded({ templates.documentPath = file }))
                         .frame(width: itemWidth)
                     }
                 }
@@ -91,7 +90,7 @@ struct TemplateSelector: View {
                 }
 
                 if isUnique {
-                    templates.document = document
+                    templates.documentPath = try url.get().lastPathComponent
                     templates.documents.append(try url.get().lastPathComponent)
                 } else {
                     showingUniquenessAlert = true

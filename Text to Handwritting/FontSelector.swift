@@ -49,13 +49,12 @@ struct FontSelector: View {
                         VStack {
                             HStack {
                                 Text(file.removeExtention(".tthcharset"))
-                                    .foregroundColor(charsets.document?.charset == set.charset ? .red : .black)
+                                    .foregroundColor(charsets.document()?.charset == set.charset ? .red : .black)
                                 Button(action: {
-                                    if set.charset == charsets.document?.charset {
-                                        charsets.document = nil
+                                    if set.charset == charsets.document()?.charset {
+                                        charsets.documentPath = nil
                                         if charsets.documents.count >= 1 {
-                                            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(charsets.documents.first!)
-                                            charsets.document = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
+                                            charsets.documentPath = charsets.documents.first!
                                         }
                                     }
                                     charsets.documents.remove(at: charsets.documents.firstIndex(of: file)!)
@@ -69,7 +68,7 @@ struct FontSelector: View {
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black, width: 1)
                         }
-                        .gesture(TapGesture().onEnded({ charsets.document = set }))
+                        .gesture(TapGesture().onEnded({ charsets.documentPath = file }))
                         .frame(width: itemWidth)
                     }
                 }
@@ -91,7 +90,7 @@ struct FontSelector: View {
                 }
                 
                 if isUnique {
-                    charsets.document = document
+                    charsets.documentPath = try url.get().lastPathComponent
                     charsets.documents.append(try url.get().lastPathComponent)
                 } else {
                     showingUniquenessAlert = true

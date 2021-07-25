@@ -30,13 +30,13 @@ struct OptionsView: View {
                 HStack(alignment: .center, spacing: 50) {
                     Button("generate") {
                         DispatchQueue.global(qos: .userInitiated).async {
-                            document.createImage(charset: charsets.document!.charset, template: templates.document!.template, updateProgress: { value, going in
+                            document.createImage(charset: charsets.document()!.charset, template: templates.document()!.template, updateProgress: { value, going in
                                 generationProgress = value
                                 generating = going
                             })
                         }
                     }
-                    .disabled((charsets.document == nil || templates.document == nil) ? true : false)
+                    .disabled((charsets.document() == nil || templates.document() == nil) ? true : false)
                     Button("cancel") {
                         shown = false
                     }

@@ -11,8 +11,26 @@ import SwiftUI
 var Templates = TemplateCatalog()
 
 class TemplateCatalog: ObservableObject {
-    @Published var document: TemplateDocument? = nil
+    @Published var documentPath: String? = nil
     @Published var documents: Array<String> = []
+    
+    func document() -> TemplateDocument? {
+        trimTemplates()
+        if let file = documentPath {
+            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+            if FileManager.default.fileExists(atPath: path.path) {
+                return TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+            } else {
+                documentPath = nil
+                if documents.count > 0 {
+                    documentPath = documents.first!
+                }
+                return document()
+            }
+        } else {
+            return nil
+        }
+    }
     
     func trimTemplates() {
         for file in documents {
@@ -41,8 +59,7 @@ class TemplateCatalog: ObservableObject {
         } catch { print("error loading templates: \(error)") }
         trimTemplates()
         if documents.count > 0 {
-            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(documents.first!)
-            document = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
+            documentPath = documents.first!
         }
     }
 }
