@@ -91,6 +91,11 @@ struct Text_to_HandwrittingDocument: FileDocument {
         var image = template.getBackground()
         let size = [Int(image.size.width), Int(image.size.height)]
         
+        let s = CGSize(width: size[0], height: size[1])
+        UIGraphicsBeginImageContext(s)
+        let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
+        image.draw(in: areaSize)
+        
         var x_pos = left_margin
         var y_pos = top_margin
         var page_i:Int = 1
@@ -116,9 +121,16 @@ struct Text_to_HandwrittingDocument: FileDocument {
                     if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                         y_pos = top_margin
                         if checkPhotoSavePermission() {
+                            image = UIGraphicsGetImageFromCurrentImageContext()!
                             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                         }
+                        UIGraphicsEndImageContext()
                         image = template.getBackground()
+                        let s = CGSize(width: size[0], height: size[1])
+                        UIGraphicsBeginImageContext(s)
+                        let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
+                        image.draw(in: areaSize)
+                        
                         page_i += 1
                     }
                 }
@@ -132,9 +144,16 @@ struct Text_to_HandwrittingDocument: FileDocument {
                 if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                     y_pos = top_margin
                     if checkPhotoSavePermission() {
+                        image = UIGraphicsGetImageFromCurrentImageContext()!
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     }
+                    UIGraphicsEndImageContext()
                     image = template.getBackground()
+                    let s = CGSize(width: size[0], height: size[1])
+                    UIGraphicsBeginImageContext(s)
+                    let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
+                    image.draw(in: areaSize)
+                    
                     page_i += 1
                 }
             }
@@ -145,14 +164,8 @@ struct Text_to_HandwrittingDocument: FileDocument {
                     let scaler = Float(letter.size.height)/Float(font_size)
                     letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
                     var letterlength = Float(letter.size.width)
-                    let s = CGSize(width: size[0], height: size[1])
-                    UIGraphicsBeginImageContext(s)
-                    let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-                    image.draw(in: areaSize)
                     let letterRect = CGRect(x: CGFloat(Int(x_pos + 80)), y: CGFloat(y_pos + Int(line_offset) + 64), width: letter.size.width, height: letter.size.height)
                     letter.draw(in: letterRect, blendMode: .normal, alpha: CGFloat(pencil_hardness))
-                    image = UIGraphicsGetImageFromCurrentImageContext()!
-                    UIGraphicsEndImageContext()
                     letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
                     
                     x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
@@ -169,6 +182,8 @@ struct Text_to_HandwrittingDocument: FileDocument {
             char_i += word.count
         }
         if checkPhotoSavePermission() {
+            image = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
         return
