@@ -75,8 +75,10 @@ struct Text_to_HandwrittingDocument: FileDocument {
     
     func createImage(charset: CharSet, template: Template, updateProgress: (Double, Bool) -> Void) -> Void {
         var words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
-        if words.last! == "" || words.last! == "\n" {
-            words.removeLast()
+        for word in words {
+            if word == "" || word == "\n" {
+                words.remove(at: words.firstIndex(of: word)!)
+            }
         }
         
         let font_size = template.font_size
@@ -87,8 +89,8 @@ struct Text_to_HandwrittingDocument: FileDocument {
         
         let line_spacing = Int(font_size + 4)
         let letter_spacing: Int = Int(Double(font_size) * 0.2)
-        let space_length = Int(Double(font_size) * 0.8)
-        let line_end_buffer = Int(font_size * 2)
+        let space_length = Int(Double(font_size) * 0.5)
+        let line_end_buffer = Int(font_size)
         
         var image = template.getBackground()
         let size = [Int(image.size.width), Int(image.size.height)]
@@ -143,10 +145,10 @@ struct Text_to_HandwrittingDocument: FileDocument {
             }
             
             let expected_length = get_expected_length(word: String(word), charlens: charlens, space_length: Float(space_length)) + space_length + line_end_buffer
-            if x_pos + expected_length >= size[0] - right_margin - left_margin {
+            if x_pos + expected_length >= size[0] - right_margin {
                 x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
                 y_pos += line_spacing
-                if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
+                if y_pos >= size[1] - line_spacing - bottom_margin {
                     y_pos = top_margin
                     if checkPhotoSavePermission() {
                         image = UIGraphicsGetImageFromCurrentImageContext()!
@@ -169,7 +171,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
                     let scaler = Float(letter.size.height)/Float(font_size)
                     letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
                     var letterlength = Float(letter.size.width)
-                    let letterRect = CGRect(x: CGFloat(Int(x_pos + 80)), y: CGFloat(y_pos + Int(line_offset) + 64), width: letter.size.width, height: letter.size.height)
+                    let letterRect = CGRect(x: CGFloat(Int(x_pos)), y: CGFloat(y_pos + Int(line_offset)), width: letter.size.width, height: letter.size.height)
                     letter.draw(in: letterRect, blendMode: .normal, alpha: CGFloat(pencil_hardness))
                     letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
                     
