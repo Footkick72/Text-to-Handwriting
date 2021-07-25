@@ -73,8 +73,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
         }
     }
     
-    func createImage(charset: CharSet, template: Template) -> Void {
-//        let words = self.text.split(separator: " ")
+    func createImage(charset: CharSet, template: Template, updateProgress: (Double, Bool) -> Void) -> Void {
         let words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
         
         let font_size = template.font_size
@@ -111,6 +110,9 @@ struct Text_to_HandwrittingDocument: FileDocument {
             charlens[k] = charlens[k]! +  Float(letter_spacing) * Float(font_size) / 256.0
         }
         
+        updateProgress(0.0, true)
+        
+        var word_i = 0
         for word in words {
             while self.text[char_i] == " " || self.text[char_i] == "\n" {
                 if self.text[char_i] == " " {
@@ -173,19 +175,21 @@ struct Text_to_HandwrittingDocument: FileDocument {
                     pencil_hardness = max(min(pencil_hardness, max_hardness), min_hardness)
                     line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
                     line_offset = max(min(line_offset, 4), -4)
-//                    line_offset = 0
                 } else {
                     x_pos += space_length
                 }
             }
             
             char_i += word.count
+            word_i += 1
+            updateProgress(Double(word_i)/Double(words.count), true)
         }
         if checkPhotoSavePermission() {
             image = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
+        updateProgress(0.0, false)
         return
     }
 }

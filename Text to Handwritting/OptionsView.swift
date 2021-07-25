@@ -13,6 +13,8 @@ struct OptionsView: View {
     @ObservedObject var templates = Templates
     @Binding var document: Text_to_HandwrittingDocument
     @Binding var shown: Bool
+    @State var generationProgress: Double = 0
+    @State var generating = false
     
     var body: some View {
         VStack(alignment: .center, spacing: 40) {
@@ -26,7 +28,15 @@ struct OptionsView: View {
             }
             HStack(alignment: .center, spacing: 50) {
                 Button("generate") {
-                    document.createImage(charset: charsets.document!.charset, template: templates.document!.template)
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        document.createImage(charset: charsets.document!.charset, template: templates.document!.template, updateProgress: { value, going in
+                            generationProgress = value
+                            generating = going
+                        })
+                    }
+                }
+                .popover(isPresented: $generating) {
+                    ProgressView("Generating...", value: generationProgress, total: 1.0)
                 }
                 .disabled((charsets.document == nil || templates.document == nil) ? true : false)
                 Button("cancel") {
