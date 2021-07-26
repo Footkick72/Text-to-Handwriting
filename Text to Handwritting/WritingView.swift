@@ -14,7 +14,6 @@ struct WritingView: View {
     @State var chars: String
     @State var selection: String
     @Binding var shown: Bool
-    @State var images: Array<UIImage>
     
     @State var canvas = PKCanvasView()
     
@@ -22,18 +21,17 @@ struct WritingView: View {
         VStack {
             Text("Write a " + selection)
                 .font(.title)
-            let scrollWidth = max(min(50 * images.count + 10 * (images.count - 1), 350), 10)
+            let scrollWidth = max(min(50 * document.charset.getImages(char: selection).count + 10 * (document.charset.getImages(char: selection).count - 1), 350), 10)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 10) {
-                    ForEach(0..<images.count, id: \.self) { i in
-                        Image(uiImage: images[i])
+                    ForEach(0..<document.charset.getImages(char: selection).count, id: \.self) { i in
+                        Image(uiImage: document.charset.getImages(char: selection)[i])
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
                             .border(Color.black, width: 2)
                             .onTapGesture {
                                 self.deleteImage(imageIndex: i)
-                                images.remove(at: i)
                             }
                     }
                 }
@@ -55,7 +53,6 @@ struct WritingView: View {
                         let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
                         let scaler = canvas.bounds.width / 256.0
                         let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
-                        images.append(scaled)
                         canvas.drawing = PKDrawing()
                         self.saveImage(image: scaled)
                     }
@@ -77,7 +74,6 @@ struct WritingView: View {
                     } else {
                         selection = String(chars.last!)
                     }
-                    images = document.charset.getImages(char: selection)
                 }) {
                     Image(systemName: "backward")
                 }
@@ -96,7 +92,6 @@ struct WritingView: View {
                     } else {
                         selection = String(chars.first!)
                     }
-                    images = document.charset.getImages(char: selection)
                 }) {
                     Image(systemName: "forward")
                 }
