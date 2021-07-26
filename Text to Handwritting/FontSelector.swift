@@ -1,6 +1,6 @@
 //
 //  FontSelector.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/14/21.
 //
@@ -49,7 +49,7 @@ struct FontSelector: View {
                         let set = CharSetDocument(from: FileManager.default.contents(atPath: path.path)!)
                         VStack {
                             HStack {
-                                Text(file.removeExtention(".tthcharset"))
+                                Text(file.removeExtension(".tthcharset"))
                                     .foregroundColor(charsets.document()?.charset == set.charset ? .red : .black)
                                 Button(action: {
                                     if set.charset == charsets.document()?.charset {

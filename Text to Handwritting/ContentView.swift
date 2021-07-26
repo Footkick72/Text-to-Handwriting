@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 6/29/21.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Binding var document: Text_to_HandwrittingDocument
+    @Binding var document: Text_to_HandwritingDocument
     @State private var showingGenerationOptions = false
     
     var body: some View {
@@ -28,6 +28,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(document: .constant(Text_to_HandwrittingDocument()))
+        ContentView(document: .constant(Text_to_HandwritingDocument()))
     }
 }

@@ -1,6 +1,6 @@
 //
 //  NumberSelector.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/14/21.
 //

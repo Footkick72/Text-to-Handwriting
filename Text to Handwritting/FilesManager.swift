@@ -1,6 +1,6 @@
 //
 //  FilesManager.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/11/21.
 //
@@ -13,7 +13,7 @@ class FilesManager {
     enum Error: Swift.Error {
         case fileAlreadyExists
         case invalidDirectory
-        case writtingFailed
+        case writingFailed
         case fileNotExists
     }
     let fileManager: FileManager
@@ -31,7 +31,7 @@ class FilesManager {
             try data.write(to: url)
         } catch {
             debugPrint(error)
-            throw Error.writtingFailed
+            throw Error.writingFailed
         }
     }
     

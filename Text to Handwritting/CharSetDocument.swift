@@ -1,6 +1,6 @@
 //
 //  CharSetDocument.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/20/21.
 //
@@ -12,7 +12,7 @@ extension UTType {
   static let charSetDocument = UTType(exportedAs: "org.davidlong.tthcharset")
 }
 
-struct CharSetDocument: FileDocument, HandwrittingDocument {
+struct CharSetDocument: FileDocument, HandwritingDocument {
     var charset: CharSet
     static var defaultSaveFile = "charsets.json"
     

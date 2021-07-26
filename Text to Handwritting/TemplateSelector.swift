@@ -1,6 +1,6 @@
 //
 //  TemplateSelector.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/14/21.
 //
@@ -48,7 +48,7 @@ struct TemplateSelector: View {
                         let template = TemplateDocument(from: FileManager.default.contents(atPath: path.path)!)
                         VStack {
                             HStack {
-                                Text(file.removeExtention(".tthtemplate"))
+                                Text(file.removeExtension(".tthtemplate"))
                                     .foregroundColor(templates.document()?.template == template.template ? .red : .black)
                                 Button(action: {
                                     if template.template == templates.document()?.template {

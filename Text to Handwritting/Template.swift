@@ -1,6 +1,6 @@
 //
 //  Template.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/3/21.
 //

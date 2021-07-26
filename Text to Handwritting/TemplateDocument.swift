@@ -1,6 +1,6 @@
 //
 //  TemplateDocument.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/23/21.
 //
@@ -12,7 +12,7 @@ extension UTType {
   static let templateDocument = UTType(exportedAs: "org.davidlong.tthtemplate")
 }
 
-struct TemplateDocument: FileDocument, HandwrittingDocument {
+struct TemplateDocument: FileDocument, HandwritingDocument {
     var template: Template
     static var defaultSaveFile = "templates.json"
     

@@ -34,7 +34,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Text to Handwritting needs permission to save generated images to your photo library, and allow for custom template creation.</string>
+	<string>Text to Handwriting needs permission to save generated images to your photo library, and allow for custom template creation.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

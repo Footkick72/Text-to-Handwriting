@@ -1,6 +1,6 @@
 //
-//  Text_to_HandwrittingDocument.swift
-//  Text to Handwritting
+//  Text_to_HandwritingDocument.swift
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 6/29/21.
 //
@@ -15,7 +15,7 @@ extension UTType {
     }
 }
 
-struct Text_to_HandwrittingDocument: FileDocument {
+struct Text_to_HandwritingDocument: FileDocument {
     var text: String
 
     init(text: String = "Hello, world!") {

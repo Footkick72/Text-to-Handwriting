@@ -1,6 +1,6 @@
 //
-//  Text_to_HandwrittingApp.swift
-//  Text to Handwritting
+//  Text_to_HandwritingApp.swift
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 6/29/21.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import Photos
 
 @main
-struct Text_to_HandwrittingApp: App {
+struct Text_to_HandwritingApp: App {
     init() {
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { _ in return })
         NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: .main) { _ in
@@ -23,7 +23,7 @@ struct Text_to_HandwrittingApp: App {
     }
     
     var body: some Scene {
-        DocumentGroup(newDocument: Text_to_HandwrittingDocument()) { file in
+        DocumentGroup(newDocument: Text_to_HandwritingDocument()) { file in
             ContentView(document: file.$document)
         }
         DocumentGroup(newDocument: CharSetDocument()) { file in

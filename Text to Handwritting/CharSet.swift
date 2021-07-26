@@ -1,6 +1,6 @@
 //
 //  CharSet.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 6/29/21.
 //

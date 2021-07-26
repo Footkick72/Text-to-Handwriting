@@ -1,6 +1,6 @@
 //
 //  Catalog.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/25/21.
 //
@@ -11,7 +11,7 @@ import SwiftUI
 
 //var Templates = TemplateCatalog()
 
-protocol HandwrittingDocument {
+protocol HandwritingDocument {
     static var defaultSaveFile: String { get }
     init(from: Data)
 }
@@ -22,7 +22,7 @@ var Templates = TemplateCatalog()
 typealias TemplateCatalog = Catalog<TemplateDocument>
 typealias CharSetCatalog = Catalog<CharSetDocument>
 
-class Catalog<DocType: HandwrittingDocument>: ObservableObject {
+class Catalog<DocType: HandwritingDocument>: ObservableObject {
     @Published var documentPath: String? = nil
     @Published var documents: Array<String> = []
     

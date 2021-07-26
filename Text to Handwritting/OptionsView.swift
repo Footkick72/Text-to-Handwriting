@@ -1,6 +1,6 @@
 //
 //  OptionsView.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/14/21.
 //
@@ -11,7 +11,7 @@ import SwiftUI
 struct OptionsView: View {
     @ObservedObject var charsets = CharSets
     @ObservedObject var templates = Templates
-    @Binding var document: Text_to_HandwrittingDocument
+    @Binding var document: Text_to_HandwritingDocument
     @Binding var shown: Bool
     @State var generationProgress: Double = 0
     @State var generating = false

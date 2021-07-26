@@ -1,6 +1,6 @@
 //
 //  Extensions.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 6/30/21.
 //
@@ -72,7 +72,7 @@ extension StringProtocol {
         self[index(startIndex, offsetBy: offset)]
     }
     
-    func removeExtention(_ ext:String) -> String {
+    func removeExtension(_ ext:String) -> String {
         var s = String(self)
         s.removeLast(ext.count)
         return s
