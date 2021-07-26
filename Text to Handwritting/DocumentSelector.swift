@@ -14,6 +14,7 @@ typealias CharSetSelector = DocumentSelector<CharSetDocument>
 struct DocumentSelector<DocType: HandwritingDocument>: View {
     @State var showingSelector = false
     @State var showingUniquenessAlert = false
+    @State var showingFileCreatedAlert = false
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
     
@@ -30,14 +31,21 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                 }
                 let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + DocType.fileExtension)
                 DocType.createNew(path: path)
+                showingFileCreatedAlert = true
                 //TODO: open the new document, if possible
             }) {
                 Image(systemName: "doc.badge.plus")
+            }
+            .alert(isPresented: $showingFileCreatedAlert) {
+                Alert(title: Text("File created"), message: Text("The file has been added to you documents directory"), dismissButton: .default(Text("OK")))
             }
             Button(action: {
                 showingSelector = true
             }) {
                 Image(systemName: "square.and.arrow.down")
+            }
+            .alert(isPresented: $showingUniquenessAlert) {
+                Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .default(Text("OK")))
             }
         }
         ScrollView(.horizontal, showsIndicators: false) {
@@ -79,7 +87,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
             }
         }
         .frame(width: max(0, min(CGFloat(objectCatalog.documents.count) * itemWidth + CGFloat(objectCatalog.documents.count - 1) * 10, CGFloat(itemWidth * 2 + 10))), alignment: .center)
-        .fileImporter(isPresented: $showingSelector, allowedContentTypes: [.charSetDocument]) { url in
+        .fileImporter(isPresented: $showingSelector, allowedContentTypes: [DocType.fileType]) { url in
             do {
                 let data = try FileManager.default.contents(atPath: url.get().path)
                 let document = DocType(from: data!)
@@ -101,9 +109,6 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                 }
 
             } catch {}
-        }
-        .alert(isPresented: $showingUniquenessAlert) {
-            Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .cancel())
         }
         .onAppear() {
             objectCatalog.trim()

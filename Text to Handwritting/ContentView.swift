@@ -25,9 +25,3 @@ struct ContentView: View {
         )
     }
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(document: .constant(Text_to_HandwritingDocument()))
-    }
-}

@@ -18,7 +18,6 @@ struct FontEditor: View {
     let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
     
     var body: some View {
-        //[ GridItem(.adaptive(minimum: 120, maximum: 360), spacing: 20) ]
         let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                         GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                         GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),

@@ -27,6 +27,7 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     
     static var defaultSaveFile = "templates.json"
     static var fileExtension = ".tthtemplate"
+    static var fileType = UTType.templateDocument
     
     init(from: Data) {
         object = try! JSONDecoder().decode(Template.self, from: from)
