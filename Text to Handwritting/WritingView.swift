@@ -21,11 +21,11 @@ struct WritingView: View {
         VStack {
             Text("Write a " + selection)
                 .font(.title)
-            let scrollWidth = max(min(50 * document.charset.getImages(char: selection).count + 10 * (document.charset.getImages(char: selection).count - 1), 350), 10)
+            let scrollWidth = max(min(50 * document.object.getImages(char: selection).count + 10 * (document.object.getImages(char: selection).count - 1), 350), 10)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 10) {
-                    ForEach(0..<document.charset.getImages(char: selection).count, id: \.self) { i in
-                        Image(uiImage: document.charset.getImages(char: selection)[i])
+                    ForEach(0..<document.object.getImages(char: selection).count, id: \.self) { i in
+                        Image(uiImage: document.object.getImages(char: selection)[i])
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
@@ -114,45 +114,45 @@ struct WritingView: View {
     
     func saveImage(image: UIImage) {
         print(image.pngData()!)
-        if document.charset.availiable_chars.firstIndex(of: Character(selection)) == nil {
-            document.charset.availiable_chars += selection
+        if document.object.availiable_chars.firstIndex(of: Character(selection)) == nil {
+            document.object.availiable_chars += selection
         }
         
-        if document.charset.characters.keys.firstIndex(of: selection) != nil {
-            document.charset.characters[selection]!.append(image.pngData()!)
+        if document.object.characters.keys.firstIndex(of: selection) != nil {
+            document.object.characters[selection]!.append(image.pngData()!)
         } else {
-            document.charset.characters[selection] = [image.pngData()!]
+            document.object.characters[selection] = [image.pngData()!]
         }
         
-        if document.charset.charlens.keys.firstIndex(of: selection) != nil {
-            var sum = document.charset.charlens[selection]! * Float(document.charset.characters[selection]!.count - 1)
+        if document.object.charlens.keys.firstIndex(of: selection) != nil {
+            var sum = document.object.charlens[selection]! * Float(document.object.characters[selection]!.count - 1)
             let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
             let scaler = 1.0 / Float(image.size.width)
             sum += Float(box.width) * scaler
-            document.charset.charlens[selection]! = sum / Float(document.charset.characters[selection]!.count)
+            document.object.charlens[selection]! = sum / Float(document.object.characters[selection]!.count)
         } else {
             let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
             let scaler = 1.0 / Float(image.size.width)
-            document.charset.charlens[selection] = Float(box.width) * scaler
+            document.object.charlens[selection] = Float(box.width) * scaler
         }
     }
     
     func deleteImage(imageIndex: Int) {
-        if document.charset.characters[selection]!.count <= 1 {
-            document.charset.availiable_chars.remove(at: document.charset.availiable_chars.firstIndex(of: Character(selection))!)
-            document.charset.characters.removeValue(forKey: selection)
-            document.charset.charlens.removeValue(forKey: selection)
+        if document.object.characters[selection]!.count <= 1 {
+            document.object.availiable_chars.remove(at: document.object.availiable_chars.firstIndex(of: Character(selection))!)
+            document.object.characters.removeValue(forKey: selection)
+            document.object.charlens.removeValue(forKey: selection)
             return
         }
         
-        var sum = document.charset.charlens[selection]! * Float(document.charset.characters[selection]!.count)
-        let image = UIImage(data: document.charset.characters[selection]![imageIndex])!
+        var sum = document.object.charlens[selection]! * Float(document.object.characters[selection]!.count)
+        let image = UIImage(data: document.object.characters[selection]![imageIndex])!
         let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
         let scaler = 1.0 / Float(image.size.width)
         sum -= Float(box.width) * scaler
         
-        document.charset.characters[selection]!.remove(at: imageIndex)
-        document.charset.charlens[selection]! = sum / Float(document.charset.characters[selection]!.count)
+        document.object.characters[selection]!.remove(at: imageIndex)
+        document.object.charlens[selection]! = sum / Float(document.object.characters[selection]!.count)
     }
 }
 

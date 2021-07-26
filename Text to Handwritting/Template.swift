@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Template: Equatable, Codable {
+struct Template: Equatable, Codable, HandwritingDocumentResource {
     var background: Data
     var margins: CGRect
     var font_size: Float
@@ -25,5 +25,13 @@ struct Template: Equatable, Codable {
     
     func getMargins() -> Array<Int> {
         return [margins.minX, getBackground().size.width - margins.maxX, margins.minY, getBackground().size.height - margins.maxY].map { Int($0) }
+    }
+    
+    func getPreview() -> UIImage {
+        return getBackground()
+    }
+    
+    func isCompleteFor(text: String) -> Bool {
+        return true
     }
 }

@@ -22,16 +22,16 @@ struct OptionsView: View {
             VStack(alignment: .center, spacing: 40) {
                 VStack(alignment: .center, spacing: 20) {
                     Text("Font")
-                    FontSelector(textToGenerate: document.text)
+                    CharSetSelector(textToGenerate: document.text, objectCatalog: charsets)
                 }
                 VStack(alignment: .center, spacing: 20) {
                     Text("Template")
-                    TemplateSelector()
+                    TemplateSelector(textToGenerate: document.text, objectCatalog: templates)
                 }
                 HStack(alignment: .center, spacing: 50) {
                     Button("generate") {
                         DispatchQueue.global(qos: .userInitiated).async {
-                            document.createImage(charset: charsets.document()!.charset, template: templates.document()!.template, updateProgress: { value, going, done in
+                            document.createImage(charset: charsets.document()!.object, template: templates.document()!.object, updateProgress: { value, going, done in
                                 generationProgress = value
                                 generating = going
                                 finished = done

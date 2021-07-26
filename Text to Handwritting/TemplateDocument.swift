@@ -13,15 +13,27 @@ extension UTType {
 }
 
 struct TemplateDocument: FileDocument, HandwritingDocument {
-    var template: Template
+    
+    var object: Template
+    
+    static func createNew(path: URL) {
+        do {
+            let data = try JSONEncoder().encode(TemplateDocument().object)
+            try data.write(to: path)
+        } catch {}
+    }
+    
+    typealias ObjectType = Template
+    
     static var defaultSaveFile = "templates.json"
+    static var fileExtension = ".tthtemplate"
     
     init(from: Data) {
-        template = try! JSONDecoder().decode(Template.self, from: from)
+        object = try! JSONDecoder().decode(Template.self, from: from)
     }
 
     init(bg: UIImage = UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect = CGRect(x: 50, y: 50, width: 750, height: 1000), size: Float = 30) {
-        template = Template(bg: bg, margins: margins, size: size)
+        object = Template(bg: bg, margins: margins, size: size)
     }
 
     static var readableContentTypes: [UTType] { [.templateDocument] }
@@ -30,11 +42,11 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
         guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        template = try JSONDecoder().decode(Template.self, from: data)
+        object = try JSONDecoder().decode(Template.self, from: data)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = try JSONEncoder().encode(template)
+        let data = try JSONEncoder().encode(object)
         return .init(regularFileWithContents: data)
     }
 }

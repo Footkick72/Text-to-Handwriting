@@ -23,16 +23,16 @@ struct ImageRectSelector: View {
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
-        Image(uiImage: document.template.getBackground())
+        Image(uiImage: document.object.getBackground())
             .border(Color.black, width: 2)
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged { pos in
                         if selectedCorner == nil {
-                            let toTopLeft = sqrt(pow(pos.location.x - document.template.margins.minX,2) + pow(pos.location.y - document.template.margins.minY,2))
-                            let toTopRight = sqrt(pow(pos.location.x - document.template.margins.maxX,2) + pow(pos.location.y - document.template.margins.minY,2))
-                            let toBottomLeft = sqrt(pow(pos.location.x - document.template.margins.minX,2) + pow(pos.location.y - document.template.margins.maxY,2))
-                            let toBottomRight = sqrt(pow(pos.location.x - document.template.margins.maxX,2) + pow(pos.location.y - document.template.margins.maxY,2))
+                            let toTopLeft = sqrt(pow(pos.location.x - document.object.margins.minX,2) + pow(pos.location.y - document.object.margins.minY,2))
+                            let toTopRight = sqrt(pow(pos.location.x - document.object.margins.maxX,2) + pow(pos.location.y - document.object.margins.minY,2))
+                            let toBottomLeft = sqrt(pow(pos.location.x - document.object.margins.minX,2) + pow(pos.location.y - document.object.margins.maxY,2))
+                            let toBottomRight = sqrt(pow(pos.location.x - document.object.margins.maxX,2) + pow(pos.location.y - document.object.margins.maxY,2))
                             let closest = min(toTopLeft, min(toTopRight, min(toBottomLeft, toBottomRight)))
                             if closest > 25 {
                                 selectedCorner = .fullRect
@@ -49,24 +49,24 @@ struct ImageRectSelector: View {
                             else if closest == toBottomRight {
                                 selectedCorner = .bottomRight
                             }
-                            initial_rel_dist = CGPoint(x: document.template.margins.origin.x - pos.location.x, y: document.template.margins.origin.y - pos.location.y)
+                            initial_rel_dist = CGPoint(x: document.object.margins.origin.x - pos.location.x, y: document.object.margins.origin.y - pos.location.y)
                         }
                         var rect2: CGRect?
                         switch selectedCorner {
                         case .topLeft:
-                            rect2 = CGRect(x: pos.location.x, y: pos.location.y, width: document.template.margins.size.width + (document.template.margins.origin.x - pos.location.x), height: document.template.margins.size.height + (document.template.margins.origin.y - pos.location.y))
+                            rect2 = CGRect(x: pos.location.x, y: pos.location.y, width: document.object.margins.size.width + (document.object.margins.origin.x - pos.location.x), height: document.object.margins.size.height + (document.object.margins.origin.y - pos.location.y))
                         case .topRight:
-                            rect2 = CGRect(x: document.template.margins.origin.x, y: pos.location.y, width: pos.location.x - document.template.margins.origin.x, height: document.template.margins.size.height + (document.template.margins.origin.y - pos.location.y))
+                            rect2 = CGRect(x: document.object.margins.origin.x, y: pos.location.y, width: pos.location.x - document.object.margins.origin.x, height: document.object.margins.size.height + (document.object.margins.origin.y - pos.location.y))
                         case .bottomLeft:
-                            rect2 = CGRect(x: pos.location.x, y: document.template.margins.origin.y, width: document.template.margins.size.width + (document.template.margins.origin.x - pos.location.x), height: pos.location.y - document.template.margins.origin.y)
+                            rect2 = CGRect(x: pos.location.x, y: document.object.margins.origin.y, width: document.object.margins.size.width + (document.object.margins.origin.x - pos.location.x), height: pos.location.y - document.object.margins.origin.y)
                         case.bottomRight:
-                            rect2 = CGRect(x: document.template.margins.origin.x, y: document.template.margins.origin.y, width: pos.location.x - document.template.margins.origin.x, height: pos.location.y - document.template.margins.origin.y)
+                            rect2 = CGRect(x: document.object.margins.origin.x, y: document.object.margins.origin.y, width: pos.location.x - document.object.margins.origin.x, height: pos.location.y - document.object.margins.origin.y)
                         case .fullRect:
-                            rect2 = CGRect(x: pos.location.x + initial_rel_dist!.x, y: pos.location.y + initial_rel_dist!.y, width: document.template.margins.width, height: document.template.margins.height)
+                            rect2 = CGRect(x: pos.location.x + initial_rel_dist!.x, y: pos.location.y + initial_rel_dist!.y, width: document.object.margins.width, height: document.object.margins.height)
                         case .none:
                             print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
-                        document.template.margins = closest_valid_rect(oldRect: document.template.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.template.getBackground().size.width, height: document.template.getBackground().size.height), minSize: CGSize(width: 50, height: 50))
+                        document.object.margins = closest_valid_rect(oldRect: document.object.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.object.getBackground().size.width, height: document.object.getBackground().size.height), minSize: CGSize(width: 50, height: 50))
                     }
                     .onEnded {_ in
                         selectedCorner = nil
@@ -75,31 +75,31 @@ struct ImageRectSelector: View {
             .overlay(
                 Rectangle()
                     .stroke(Color.red, lineWidth: 5)
-                    .frame(width: document.template.margins.width, height: document.template.margins.height)
+                    .frame(width: document.object.margins.width, height: document.object.margins.height)
                     .overlay(
-                        VStack(alignment: .center, spacing: CGFloat(document.template.font_size)) {
-                            ForEach(1..<max(1,Int(document.template.margins.height/(CGFloat(document.template.font_size)))), id: \.self) {i in
+                        VStack(alignment: .center, spacing: CGFloat(document.object.font_size)) {
+                            ForEach(1..<max(1,Int(document.object.margins.height/(CGFloat(document.object.font_size)))), id: \.self) {i in
                                 Rectangle()
                                     .stroke(Color.red, lineWidth: 1)
-                                    .frame(width: document.template.margins.width, height: 1)
+                                    .frame(width: document.object.margins.width, height: 1)
                             }
                         }
-                        .frame(width: document.template.margins.width, height: document.template.margins.height)
+                        .frame(width: document.object.margins.width, height: document.object.margins.height)
                         .clipped()
                     )
-                    .position(x: document.template.margins.midX, y: document.template.margins.midY)
+                    .position(x: document.object.margins.midX, y: document.object.margins.midY)
             )
             .scaleEffect(CGFloat(displayScale))
             .onAppear(perform: {
                 displayScale = Double(min(
-                    UIScreen.main.bounds.size.width/document.template.getBackground().size.width,
-                    UIScreen.main.bounds.size.height/document.template.getBackground().size.height
+                    UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
+                    UIScreen.main.bounds.size.height/document.object.getBackground().size.height
                 )) * 0.7
             })
-            .onChange(of: document.template.background) { _ in
+            .onChange(of: document.object.background) { _ in
                 displayScale = Double(min(
-                    UIScreen.main.bounds.size.width/document.template.getBackground().size.width,
-                    UIScreen.main.bounds.size.height/document.template.getBackground().size.height
+                    UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
+                    UIScreen.main.bounds.size.height/document.object.getBackground().size.height
                 )) * 0.7
             }
     }

@@ -21,13 +21,13 @@ struct TemplateEditor: View {
                 }) {
                     Image(systemName: "photo.on.rectangle.angled")
                 }
-                NumberSelector(value: $document.template.font_size, minValue: 5, maxValue: 200, label: "Font size")
+                NumberSelector(value: $document.object.font_size, minValue: 5, maxValue: 200, label: "Font size")
                     .frame(width: 300)
             }
         }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary) { image in
-                document.template.background = image.pngData()!
+                document.object.background = image.pngData()!
                 showingImagePicker = false
             }
         }

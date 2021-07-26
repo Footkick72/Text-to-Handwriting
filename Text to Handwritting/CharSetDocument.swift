@@ -13,15 +13,26 @@ extension UTType {
 }
 
 struct CharSetDocument: FileDocument, HandwritingDocument {
-    var charset: CharSet
+    var object: CharSet
+    
+    static func createNew(path: URL) {
+        do {
+            let data = try JSONEncoder().encode(CharSetDocument().object)
+            try data.write(to: path)
+        } catch {}
+    }
+    
+    typealias ObjectType = CharSet
+    
     static var defaultSaveFile = "charsets.json"
+    static var fileExtension = ".tthcharset"
     
     init(from: Data) {
-        charset = try! JSONDecoder().decode(CharSet.self, from: from)
+        object = try! JSONDecoder().decode(CharSet.self, from: from)
     }
 
     init(characters: Dictionary<String,Array<Data>> = [:], charlens: Dictionary<String,Float> = [:]) {
-        charset = CharSet(characters: characters, charlens: charlens)
+        object = CharSet(characters: characters, charlens: charlens)
     }
 
     static var readableContentTypes: [UTType] { [.charSetDocument] }
@@ -30,11 +41,11 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
         guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        charset = try JSONDecoder().decode(CharSet.self, from: data)
+        object = try JSONDecoder().decode(CharSet.self, from: data)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = try JSONEncoder().encode(charset)
+        let data = try JSONEncoder().encode(object)
         return .init(regularFileWithContents: data)
     }
 }

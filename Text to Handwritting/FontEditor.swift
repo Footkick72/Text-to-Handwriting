@@ -26,7 +26,7 @@ struct FontEditor: View {
         ScrollView(showsIndicators: false) {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach((0..<allchars.count), id: \.self) { i in
-                    let set: CharSet = document.charset
+                    let set: CharSet = document.object
                     let char: String = String(allchars[i])
                     VStack {
                         Text(char)

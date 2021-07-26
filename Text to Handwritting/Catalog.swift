@@ -9,13 +9,6 @@
 import Foundation
 import SwiftUI
 
-//var Templates = TemplateCatalog()
-
-protocol HandwritingDocument {
-    static var defaultSaveFile: String { get }
-    init(from: Data)
-}
-
 var CharSets = CharSetCatalog()
 var Templates = TemplateCatalog()
 
@@ -42,6 +35,21 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         } else {
             return nil
         }
+    }
+    
+    func deleteObject(fileNamed: String) {
+        if fileNamed == documentPath {
+            documentPath = nil
+            if documents.count >= 1 {
+                documentPath = documents.first!
+            }
+        }
+        documents.remove(at: documents.firstIndex(of: fileNamed)!)
+    }
+    func isSelectedDocument(fileNamed: String) -> Bool {
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(fileNamed)
+        let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
+        return set.object == document()?.object
     }
     
     func trim() {

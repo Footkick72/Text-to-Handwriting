@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct CharSet: Equatable, Codable {
+struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     var availiable_chars: String
     var characters: Dictionary<String,Array<Data>>
     var charlens: Dictionary<String,Float> = [:]
