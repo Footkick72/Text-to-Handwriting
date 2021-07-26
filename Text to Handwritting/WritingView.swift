@@ -18,34 +18,32 @@ struct WritingView: View {
     @State var canvas = PKCanvasView()
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center, spacing: 25) {
             Text("Write a " + selection)
                 .font(.title)
-            let scrollWidth = max(min(50 * document.object.getImages(char: selection).count + 10 * (document.object.getImages(char: selection).count - 1), 350), 10)
+            let scrollWidth = max(min(67 * document.object.getImages(char: selection).count + 25 * (document.object.getImages(char: selection).count - 1), 370), 0)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center, spacing: 10) {
+                HStack(alignment: .center, spacing: 25) {
                     ForEach(0..<document.object.getImages(char: selection).count, id: \.self) { i in
                         Image(uiImage: document.object.getImages(char: selection)[i])
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
                             .border(Color.black, width: 2)
-                            .onTapGesture {
-                                self.deleteImage(imageIndex: i)
-                            }
+                            .overlay(
+                                Button(action: {
+                                    self.deleteImage(imageIndex: i)
+                                }) {
+                                    Image(systemName: "xmark.circle")
+                                        .foregroundColor(.red)
+                                }
+                                .offset(x: 25, y: -25)
+                            )
                     }
                 }
+                .frame(width: CGFloat(scrollWidth), height: 70)
             }
-            .frame(width: CGFloat(scrollWidth), height: 50)
-            Canvas(canvasView: $canvas)
-                .background(
-                    Image("writingbackground")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                )
-                .aspectRatio(CGFloat(1.0), contentMode: .fit)
-                .border(Color.black, width: 2)
-                .scaleEffect(0.8)
+            .frame(width: CGFloat(scrollWidth), height: 70)
             HStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     let drawing = canvas.drawing
@@ -117,11 +115,19 @@ struct WritingView: View {
                 .foregroundColor(.red)
             }
             .font(.title)
+            Canvas(canvasView: $canvas)
+                .background(
+                    Image("writingbackground")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                )
+                .aspectRatio(CGFloat(1.0), contentMode: .fit)
+                .border(Color.black, width: 2)
+//                .scaleEffect(0.8)
         }
     }
     
     func saveImage(image: UIImage) {
-        print(image.pngData()!)
         if document.object.availiable_chars.firstIndex(of: Character(selection)) == nil {
             document.object.availiable_chars += selection
         }
