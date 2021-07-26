@@ -102,6 +102,14 @@ struct WritingView: View {
                 }
                 .foregroundColor(.red)
                 Button(action: {
+                    let drawing = canvas.drawing
+                    if drawing.strokes.count != 0 {
+                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
+                        let scaler = canvas.bounds.width / 256.0
+                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+                        canvas.drawing = PKDrawing()
+                        self.saveImage(image: scaled)
+                    }
                     shown = false
                 }) {
                     Image(systemName: "xmark.circle")
