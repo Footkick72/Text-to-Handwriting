@@ -32,7 +32,7 @@ struct WritingView: View {
                             .frame(width: 50, height: 50)
                             .border(Color.black, width: 2)
                             .onTapGesture {
-                                self.deleteImage(image: images[i])
+                                self.deleteImage(imageIndex: i)
                                 images.remove(at: i)
                             }
                     }
@@ -51,16 +51,25 @@ struct WritingView: View {
             HStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     let drawing = canvas.drawing
-                    let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
-                    let scaler = canvas.bounds.width / 256.0
-                    let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
-                    images.append(scaled)
-                    canvas.drawing = PKDrawing()
-                    self.saveImage(image: scaled)
+                    if drawing.strokes.count != 0 {
+                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
+                        let scaler = canvas.bounds.width / 256.0
+                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+                        images.append(scaled)
+                        canvas.drawing = PKDrawing()
+                        self.saveImage(image: scaled)
+                    }
                 }) {
                     Image(systemName: "checkmark.circle")
                 }
                 Button(action: {
+                    let drawing = canvas.drawing
+                    if drawing.strokes.count != 0 {
+                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
+                        let scaler = canvas.bounds.width / 256.0
+                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+                        self.saveImage(image: scaled)
+                    }
                     canvas.drawing = PKDrawing()
                     let index = chars.firstIndex(of: Character(selection))!
                     if String(chars.first!) != selection {
@@ -73,6 +82,13 @@ struct WritingView: View {
                     Image(systemName: "backward")
                 }
                 Button(action: {
+                    let drawing = canvas.drawing
+                    if drawing.strokes.count != 0 {
+                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
+                        let scaler = canvas.bounds.width / 256.0
+                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+                        self.saveImage(image: scaled)
+                    }
                     canvas.drawing = PKDrawing()
                     let index = chars.firstIndex(of: Character(selection))!
                     if String(chars.last!) != selection {
@@ -102,6 +118,7 @@ struct WritingView: View {
     }
     
     func saveImage(image: UIImage) {
+        print(image.pngData()!)
         if document.charset.availiable_chars.firstIndex(of: Character(selection)) == nil {
             document.charset.availiable_chars += selection
         }
@@ -125,7 +142,7 @@ struct WritingView: View {
         }
     }
     
-    func deleteImage(image: UIImage) {
+    func deleteImage(imageIndex: Int) {
         if document.charset.characters[selection]!.count <= 1 {
             document.charset.availiable_chars.remove(at: document.charset.availiable_chars.firstIndex(of: Character(selection))!)
             document.charset.characters.removeValue(forKey: selection)
@@ -134,11 +151,12 @@ struct WritingView: View {
         }
         
         var sum = document.charset.charlens[selection]! * Float(document.charset.characters[selection]!.count)
+        let image = UIImage(data: document.charset.characters[selection]![imageIndex])!
         let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
         let scaler = 1.0 / Float(image.size.width)
         sum -= Float(box.width) * scaler
         
-        document.charset.characters[selection]!.remove(at: document.charset.characters[selection]!.firstIndex(of: image.pngData()!)!)
+        document.charset.characters[selection]!.remove(at: imageIndex)
         document.charset.charlens[selection]! = sum / Float(document.charset.characters[selection]!.count)
     }
 }
