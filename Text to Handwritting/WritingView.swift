@@ -40,7 +40,6 @@ struct WritingView: View {
             }
             .frame(width: CGFloat(scrollWidth), height: 50)
             Canvas(canvasView: $canvas)
-                .opacity(0.5)
                 .background(
                     Image("writingbackground")
                         .resizable()
@@ -149,8 +148,9 @@ struct Canvas: UIViewRepresentable {
     @Binding var canvasView: PKCanvasView
 
     func makeUIView(context: Context) -> PKCanvasView {
+        canvasView.isOpaque = false
         canvasView.drawingPolicy = .anyInput
-        canvasView.tool = PKInkingTool(.pen, color: .black, width: 15)
+        canvasView.tool = PKInkingTool(.pen, color: .black, width: 20)
         canvasView.drawingPolicy = .anyInput
         return canvasView
     }
