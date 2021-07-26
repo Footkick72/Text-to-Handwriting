@@ -112,5 +112,8 @@ struct FontSelector: View {
         .alert(isPresented: $showingUniquenessAlert) {
             Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .cancel())
         }
+        .onAppear() {
+            charsets.trim()
+        }
     }
 }
