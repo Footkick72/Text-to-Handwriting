@@ -13,7 +13,7 @@ struct TemplateSelector: View {
     @State var showingUniquenessAlert = false
     @ObservedObject var templates = Templates
     
-    private var itemWidth: CGFloat = 150
+    var itemWidth: CGFloat = 150
     
     var body: some View {
         HStack {

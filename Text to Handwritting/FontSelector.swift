@@ -11,9 +11,10 @@ import SwiftUI
 struct FontSelector: View {
     @State var showingSelector = false
     @State var showingUniquenessAlert = false
+    @State var textToGenerate: String
     @ObservedObject var charsets = CharSets
     
-    private var itemWidth: CGFloat = 150
+    var itemWidth: CGFloat = 150
     
     var body: some View {
         HStack {
@@ -68,6 +69,16 @@ struct FontSelector: View {
                                 .aspectRatio(contentMode: .fit)
                                 .border(Color.black, width: 1)
                         }
+                        .overlay(
+                            Text(set.charset.isCompleteFor(text: textToGenerate) ? "" : "Warning:\nCharset\nis incomplete\nfor text!")
+                                .foregroundColor(.red)
+                                .multilineTextAlignment(.center)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                                        .foregroundColor(.white)
+                                        .opacity(set.charset.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                                )
+                        )
                         .gesture(TapGesture().onEnded({ charsets.documentPath = file }))
                         .frame(width: itemWidth)
                     }

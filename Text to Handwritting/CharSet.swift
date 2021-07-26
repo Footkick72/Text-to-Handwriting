@@ -104,4 +104,13 @@ struct CharSet: Equatable, Codable {
         UIGraphicsEndImageContext()
         return image
     }
+    
+    func isCompleteFor(text: String) -> Bool {
+        for char in text {
+            if numberOfCharacters(char: String(char)) == 0 && char != " " && char != "\n"{
+                return false
+            }
+        }
+        return true
+    }
 }

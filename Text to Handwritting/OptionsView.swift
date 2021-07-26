@@ -21,7 +21,7 @@ struct OptionsView: View {
             VStack(alignment: .center, spacing: 40) {
                 VStack(alignment: .center, spacing: 20) {
                     Text("Font")
-                    FontSelector()
+                    FontSelector(textToGenerate: document.text)
                 }
                 VStack(alignment: .center, spacing: 20) {
                     Text("Template")
