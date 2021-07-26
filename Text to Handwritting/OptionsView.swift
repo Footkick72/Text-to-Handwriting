@@ -15,6 +15,7 @@ struct OptionsView: View {
     @Binding var shown: Bool
     @State var generationProgress: Double = 0
     @State var generating = false
+    @State var finished = false
     
     var body: some View {
         ZStack {
@@ -30,9 +31,10 @@ struct OptionsView: View {
                 HStack(alignment: .center, spacing: 50) {
                     Button("generate") {
                         DispatchQueue.global(qos: .userInitiated).async {
-                            document.createImage(charset: charsets.document()!.charset, template: templates.document()!.template, updateProgress: { value, going in
+                            document.createImage(charset: charsets.document()!.charset, template: templates.document()!.template, updateProgress: { value, going, done in
                                 generationProgress = value
                                 generating = going
+                                finished = done
                             })
                         }
                     }
@@ -42,6 +44,9 @@ struct OptionsView: View {
                     }
                     .foregroundColor(.red)
                 }
+            }
+            .alert(isPresented: $finished) {
+                Alert(title: Text("Image saved to photos"), message: nil, dismissButton: .default(Text("Ok")))
             }
             .blur(radius: generating ? 6 : 0)
             .animation(.spring())

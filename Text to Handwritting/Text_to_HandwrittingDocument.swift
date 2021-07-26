@@ -73,7 +73,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
         }
     }
     
-    func createImage(charset: CharSet, template: Template, updateProgress: (Double, Bool) -> Void) -> Void {
+    func createImage(charset: CharSet, template: Template, updateProgress: (Double, Bool, Bool) -> Void) -> Void {
         var words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
         for word in words {
             if word == "" || word == "\n" {
@@ -115,7 +115,7 @@ struct Text_to_HandwrittingDocument: FileDocument {
             charlens[k] = charlens[k]! +  Float(letter_spacing) * Float(font_size) / 256.0
         }
         
-        updateProgress(0.0, true)
+        updateProgress(0.0, true, false)
         
         var word_i = 0
         for word in words {
@@ -187,14 +187,14 @@ struct Text_to_HandwrittingDocument: FileDocument {
             
             char_i += word.count
             word_i += 1
-            updateProgress(Double(word_i)/Double(words.count), true)
+            updateProgress(Double(word_i)/Double(words.count), true, false)
         }
         if checkPhotoSavePermission() {
             image = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
-        updateProgress(0.0, false)
+        updateProgress(0.0, false, true)
         return
     }
 }
