@@ -34,7 +34,7 @@ struct ImageRectSelector: View {
                             let toBottomLeft = sqrt(pow(pos.location.x - document.object.margins.minX,2) + pow(pos.location.y - document.object.margins.maxY,2))
                             let toBottomRight = sqrt(pow(pos.location.x - document.object.margins.maxX,2) + pow(pos.location.y - document.object.margins.maxY,2))
                             let closest = min(toTopLeft, min(toTopRight, min(toBottomLeft, toBottomRight)))
-                            if closest > 25 {
+                            if closest > CGFloat(25) / CGFloat(displayScale) {
                                 selectedCorner = .fullRect
                             }
                             else if closest == toTopLeft {
