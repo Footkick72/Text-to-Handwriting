@@ -14,7 +14,6 @@ typealias CharSetSelector = DocumentSelector<CharSetDocument>
 struct DocumentSelector<DocType: HandwritingDocument>: View {
     @State var showingSelector = false
     @State var showingUniquenessAlert = false
-    @State var showingFileCreatedAlert = false
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
     
@@ -22,23 +21,6 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     
     var body: some View {
         HStack {
-            Button(action: {
-                var name = "Untitled"
-                var i = 0
-                while FileManager.default.fileExists(atPath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + DocType.fileExtension).path) {
-                    i += 1
-                    name = "Untitled " + String(i)
-                }
-                let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(name + DocType.fileExtension)
-                DocType.createNew(path: path)
-                showingFileCreatedAlert = true
-                //TODO: open the new document, if possible
-            }) {
-                Image(systemName: "doc.badge.plus")
-            }
-            .alert(isPresented: $showingFileCreatedAlert) {
-                Alert(title: Text("File created"), message: Text("The file has been added to you documents directory"), dismissButton: .default(Text("OK")))
-            }
             Button(action: {
                 showingSelector = true
             }) {
