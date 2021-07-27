@@ -62,13 +62,13 @@ struct CharSetEditor: View {
             WritingView(document: $document, chars: allchars, selection: currentLetter)
         }
         .navigationBarItems(trailing:
-                                Button("Erase charset data") {
+                                Button("Erase chracter set data") {
                                     showingDeleteDataConfirmation = true
                                 }
                                 .foregroundColor(.red)
                                 .alert(isPresented: $showingDeleteDataConfirmation) {
-                                    Alert(title: Text("Erase charset data"),
-                                          message: Text("Are you sure you want to erase all of this charset's data?"),
+                                    Alert(title: Text("Erase character set data"),
+                                          message: Text("Are you sure you want to erase all of this character set's data?"),
                                           primaryButton: .destructive(Text("Erase data")) {
                                             document.object = CharSet(characters: Dictionary<String, Array<Data>>())
                                           },
