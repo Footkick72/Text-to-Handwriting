@@ -101,6 +101,7 @@ struct ImageRectSelector: View {
                     UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
                     UIScreen.main.bounds.size.height/document.object.getBackground().size.height
                 )) * 0.7
+                document.object.margins = CGRect(origin: CGPoint(x: 0, y: 0), size: document.object.getBackground().size)
             }
     }
     
