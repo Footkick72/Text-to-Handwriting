@@ -78,13 +78,13 @@ struct ImageRectSelector: View {
                     .frame(width: document.object.margins.width, height: document.object.margins.height)
                     .overlay(
                         VStack(alignment: .center, spacing: CGFloat(document.object.font_size)) {
-                            ForEach(1..<max(1,Int(document.object.margins.height/(CGFloat(document.object.font_size)))), id: \.self) {i in
+                            ForEach(0..<max(1,Int(document.object.margins.height/(CGFloat(document.object.font_size)))) + 1, id: \.self) {i in
                                 Rectangle()
                                     .stroke(Color.red, lineWidth: 1)
                                     .frame(width: document.object.margins.width, height: 1)
                             }
                         }
-                        .frame(width: document.object.margins.width, height: document.object.margins.height)
+                        .frame(width: document.object.margins.width, height: document.object.margins.height, alignment: .top)
                         .clipped()
                     )
                     .position(x: document.object.margins.midX, y: document.object.margins.midY)
