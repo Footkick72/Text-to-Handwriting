@@ -66,7 +66,7 @@ struct ImageRectSelector: View {
                         case .none:
                             print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
-                        document.object.margins = closest_valid_rect(oldRect: document.object.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.object.getBackground().size.width, height: document.object.getBackground().size.height), minSize: CGSize(width: 50, height: 50))
+                        document.object.margins = closest_valid_rect(oldRect: document.object.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.object.getBackground().size.width, height: document.object.getBackground().size.height), minSize: CGSize(width: 50, height: 50), isDrag: selectedCorner == .fullRect)
                     }
                     .onEnded {_ in
                         selectedCorner = nil
@@ -106,32 +106,36 @@ struct ImageRectSelector: View {
     }
     
     
-    func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize) -> CGRect{
+    func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize, isDrag: Bool) -> CGRect{
         //logic that deals with constraining the CGRect to a real rectangle with positive area. Could be condensed, but this is by far the clearest way to write it.
         var resultRect = newRect
         if resultRect.minX < boundingRect.minX {
-            resultRect.origin.x = 0
-            resultRect.size.width = oldRect.width
+            if isDrag {
+                resultRect.size.width = oldRect.width
+            } else {
+                resultRect.size.width = oldRect.width + (oldRect.minX - boundingRect.minX)
+            }
+            resultRect.origin.x = boundingRect.minX
         }
         if resultRect.minY < boundingRect.minY {
-            resultRect.origin.y = 0
-            resultRect.size.height = oldRect.height
+            if isDrag {
+                resultRect.size.height = oldRect.height
+            } else {
+                resultRect.size.height = oldRect.height + (oldRect.minY - boundingRect.minY)
+            }
+            resultRect.origin.y = boundingRect.minY
         }
         if resultRect.maxX > boundingRect.maxX {
-            resultRect.origin.x = boundingRect.maxX - oldRect.width
+            if isDrag {
+                resultRect.origin.x = boundingRect.maxX - oldRect.width
+            }
             resultRect.size.width = oldRect.width
         }
         if newRect.maxY > boundingRect.maxY {
-            resultRect.origin.y = boundingRect.maxY - oldRect.height
+            if isDrag {
+                resultRect.origin.y = boundingRect.maxY - oldRect.height
+            }
             resultRect.size.height = oldRect.height
-        }
-        if resultRect.size.width < minSize.width {
-            resultRect.origin.x = oldRect.origin.x
-            resultRect.size.width = minSize.width
-        }
-        if resultRect.size.height < minSize.height {
-            resultRect.origin.y = oldRect.origin.y
-            resultRect.size.height = minSize.height
         }
         return resultRect
     }
