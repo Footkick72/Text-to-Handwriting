@@ -13,13 +13,12 @@ struct WritingView: View {
     @Binding var document: CharSetDocument
     @State var chars: String
     @State var selection: String
-    @Binding var shown: Bool
-    
     @State var canvas = PKCanvasView()
+    @State var canvasScale: Double = 1.0
     
     var body: some View {
         VStack(alignment: .center, spacing: 25) {
-            Text("Write a " + selection)
+            Text("Write " + selection)
                 .font(.title)
             let scrollWidth = max(min(67 * document.object.getImages(char: selection).count + 25 * (document.object.getImages(char: selection).count - 1), 370), 0)
             ScrollView(.horizontal, showsIndicators: false) {
@@ -99,20 +98,6 @@ struct WritingView: View {
                     Image(systemName: "trash")
                 }
                 .foregroundColor(.red)
-                Button(action: {
-                    let drawing = canvas.drawing
-                    if drawing.strokes.count != 0 {
-                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
-                        let scaler = canvas.bounds.width / 256.0
-                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
-                        canvas.drawing = PKDrawing()
-                        self.saveImage(image: scaled)
-                    }
-                    shown = false
-                }) {
-                    Image(systemName: "xmark.circle")
-                }
-                .foregroundColor(.red)
             }
             .font(.title)
             Canvas(canvasView: $canvas)
@@ -123,7 +108,28 @@ struct WritingView: View {
                 )
                 .aspectRatio(CGFloat(1.0), contentMode: .fit)
                 .border(Color.black, width: 2)
-//                .scaleEffect(0.8)
+                .frame(maxWidth: 500 * CGFloat(canvasScale), maxHeight: 500 * CGFloat(canvasScale))
+            VStack {
+                Slider(value: $canvasScale, in: 0.2...1, step: 0.01, onEditingChanged: {_ in
+                    UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
+                }, label: {})
+                    .padding(.horizontal, 50)
+                Text("Writing Canvas Scale")
+            }
+        }
+        .padding(25)
+        .onDisappear() {
+            let drawing = canvas.drawing
+            if drawing.strokes.count != 0 {
+                let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
+                let scaler = canvas.bounds.width / 256.0
+                let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+                canvas.drawing = PKDrawing()
+                self.saveImage(image: scaled)
+            }
+        }
+        .onAppear() {
+            canvasScale = UserDefaults.standard.double(forKey: "writingViewCanvasScale")
         }
     }
     

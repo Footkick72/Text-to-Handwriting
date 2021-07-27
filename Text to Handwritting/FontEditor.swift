@@ -59,7 +59,7 @@ struct FontEditor: View {
             .padding(10)
         }
         .sheet(isPresented: $showingWritingView) {
-            WritingView(document: $document, chars: allchars, selection: currentLetter, shown: $showingWritingView)
+            WritingView(document: $document, chars: allchars, selection: currentLetter)
         }
     }
 }
