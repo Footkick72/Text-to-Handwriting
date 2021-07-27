@@ -12,7 +12,7 @@ struct CharSetEditor: View {
     @Binding var document: CharSetDocument
     @State var showingWritingView = false
     @State var currentLetter: String = ""
-    
+    @State var showingDeleteDataConfirmation = false
     @State var scale: CGFloat = 1.0
     
     let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
@@ -61,5 +61,19 @@ struct CharSetEditor: View {
         .sheet(isPresented: $showingWritingView) {
             WritingView(document: $document, chars: allchars, selection: currentLetter)
         }
+        .navigationBarItems(trailing:
+                                Button("Erase charset data") {
+                                    showingDeleteDataConfirmation = true
+                                }
+                                .foregroundColor(.red)
+                                .alert(isPresented: $showingDeleteDataConfirmation) {
+                                    Alert(title: Text("Erase charset data"),
+                                          message: Text("Are you sure you want to erase all of this charset's data?"),
+                                          primaryButton: .destructive(Text("Erase data")) {
+                                            document.object = CharSet(characters: Dictionary<String, Array<Data>>())
+                                          },
+                                          secondaryButton: .cancel())
+                                }
+        )
     }
 }
