@@ -17,7 +17,7 @@ struct ContentView: View {
             OptionsView(document: $document, shown: $showingGenerationOptions)
         }
         .navigationBarItems(trailing:
-                                Button("generate image") {
+                                Button("Convert to Handwriting") {
                                     showingGenerationOptions.toggle()
                                 }
         )

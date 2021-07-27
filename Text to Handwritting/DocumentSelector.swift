@@ -12,6 +12,7 @@ typealias TemplateSelector = DocumentSelector<TemplateDocument>
 typealias CharSetSelector = DocumentSelector<CharSetDocument>
 
 struct DocumentSelector<DocType: HandwritingDocument>: View {
+    @State var title: Text
     @State var showingSelector = false
     @State var showingUniquenessAlert = false
     @State var textToGenerate: String
@@ -20,16 +21,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     var itemWidth: CGFloat = 150
     
     var body: some View {
-        HStack {
-            Button(action: {
-                showingSelector = true
-            }) {
-                Image(systemName: "square.and.arrow.down")
-            }
-            .alert(isPresented: $showingUniquenessAlert) {
-                Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .default(Text("OK")))
-            }
-        }
+        title
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .center, spacing: 10) {
                 ForEach(objectCatalog.documents, id: \.self) { file in
@@ -66,9 +58,25 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                         .frame(width: itemWidth)
                     }
                 }
+                VStack(spacing: 12.5) {
+                    Text("Import")
+                        .foregroundColor(.blue)
+                    Button(action: {
+                        showingSelector = true
+                    }) {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                    }
+                    .frame(minWidth: itemWidth, maxHeight: itemWidth)
+                    .border(Color.black, width: 1)
+                    .alert(isPresented: $showingUniquenessAlert) {
+                        Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .default(Text("OK")))
+                    }
+                }
             }
         }
-        .frame(width: max(0, min(CGFloat(objectCatalog.documents.count) * itemWidth + CGFloat(objectCatalog.documents.count - 1) * 10, CGFloat(itemWidth * 2 + 10))), alignment: .center)
+        .frame(width: max(0, min(CGFloat(objectCatalog.documents.count + 1) * itemWidth + CGFloat(objectCatalog.documents.count) * 10, CGFloat(itemWidth * 2 + 10))), alignment: .center)
         .fileImporter(isPresented: $showingSelector, allowedContentTypes: [DocType.fileType]) { url in
             do {
                 let data = try FileManager.default.contents(atPath: url.get().path)

@@ -76,15 +76,13 @@ struct OptionsView: View {
         ZStack {
             VStack(alignment: .center, spacing: 40) {
                 VStack(alignment: .center, spacing: 20) {
-                    Text("Font")
-                    CharSetSelector(textToGenerate: document.text, objectCatalog: charsets)
+                    CharSetSelector(title: Text("Choose Font:"), textToGenerate: document.text, objectCatalog: charsets)
                 }
                 VStack(alignment: .center, spacing: 20) {
-                    Text("Template")
-                    TemplateSelector(textToGenerate: document.text, objectCatalog: templates)
+                    TemplateSelector(title: Text("Choose template:"), textToGenerate: document.text, objectCatalog: templates)
                 }
                 HStack(alignment: .center, spacing: 50) {
-                    Button("generate") {
+                    Button("Save to Photos") {
                         DispatchQueue.global(qos: .userInitiated).async {
                             document.createImage(charset: charsets.document()!.object, template: templates.document()!.object, updateProgress: { value, going, done in
                                 generationProgress = value
@@ -95,7 +93,7 @@ struct OptionsView: View {
                     }
                     .disabled((charsets.document() == nil || templates.document() == nil) ? true : false)
                     .alert(isPresented: $finished) {
-                        Alert(title: Text("Image saved to photos"), message: nil, dismissButton: .default(Text("Ok")))
+                        Alert(title: Text("Image saved to photos"), message: nil, dismissButton: .default(Text("Ok")) { shown = false })
                     }
                     Button("cancel") {
                         shown = false
