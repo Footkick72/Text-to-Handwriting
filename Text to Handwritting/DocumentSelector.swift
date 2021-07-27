@@ -18,91 +18,169 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
     
-    var itemWidth: CGFloat = 150
+    var itemWidth: CGFloat = 200
     
     var body: some View {
         title
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .center, spacing: 10) {
-                ForEach(objectCatalog.documents, id: \.self) { file in
-                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-                    if FileManager.default.fileExists(atPath: path.path) {
-                        let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
-                        VStack {
-                            HStack {
-                                Text(file.removeExtension(DocType.fileExtension))
-                                    .foregroundColor(objectCatalog.isSelectedDocument(fileNamed: file) ? .red : .black)
-                                Button(action: {
-                                    objectCatalog.deleteObject(fileNamed: file)
-                                }) {
-                                    Image(systemName: "xmark.circle")
-                                }
-                                .foregroundColor(.red)
-                            }
-                            Image(uiImage: set.object.getPreview())
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .border(Color.black, width: 1)
-                        }
+        VStack {
+            Text(verbatim: objectCatalog.documentPath!.removeExtension(DocType.fileExtension))
+            Image(uiImage: objectCatalog.document()!.object.getPreview())
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: itemWidth)
+                .border(Color.black, width: 1)
+                .overlay(
+                    Text(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .background(
+                            RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                                .foregroundColor(.white)
+                                .opacity(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                        )
+                )
+        }
+        .onTapGesture {
+            showingSelector = true
+        }
+        .popover(isPresented: $showingSelector) {
+            HStack {
+                UserFilesView<DocType>(showingSelector: $showingSelector, textToGenerate: textToGenerate, objectCatalog: objectCatalog)
+                Rectangle()
+                    .frame(width: 1)
+                    .padding()
+                    .foregroundColor(.black)
+                    .opacity(0.2)
+                DefaultsFilesView<DocType>(textToGenerate: textToGenerate, objectCatalog: objectCatalog)
+            }
+            .padding()
+        }
+    }
+}
+
+struct DefaultsFilesView<DocType: HandwritingDocument>: View {
+    @State var textToGenerate: String
+    @ObservedObject var objectCatalog: Catalog<DocType>
+    
+    var itemWidth: CGFloat = 200
+    
+    var body: some View {
+        VStack(spacing: 50) {
+            Text("Defaults")
+            ForEach(Array(DocType.defaults.keys), id: \.self) { key in
+                let set = DocType.defaults[key]
+                VStack {
+                    Text(verbatim: key)
+                    Image(uiImage: set!.getPreview())
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: itemWidth * 0.7)
+                        .border(Color.black, width: 1)
                         .overlay(
-                            Text(set.object.isCompleteFor(text: textToGenerate) ? "" : "Warning:\nCharset\nis incomplete\nfor text!")
+                            Text(set!.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
                                 .foregroundColor(.red)
                                 .multilineTextAlignment(.center)
                                 .background(
                                     RoundedRectangle(cornerRadius: 25.0, style: .continuous)
                                         .foregroundColor(.white)
-                                        .opacity(set.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                                        .opacity(set!.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
                                 )
                         )
-                        .gesture(TapGesture().onEnded({ objectCatalog.documentPath = file }))
-                        .frame(width: itemWidth)
+                }
+            }
+        }
+    }
+}
+
+struct UserFilesView<DocType: HandwritingDocument>: View {
+    @Binding var showingSelector: Bool
+    @State var showingImporter = false
+    @State var showingUniquenessAlert = false
+    @State var textToGenerate: String
+    @ObservedObject var objectCatalog: Catalog<DocType>
+    
+    var itemWidth: CGFloat = 200
+    
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            let columns = [ GridItem(.flexible(minimum: itemWidth * 0.7, maximum: 360), spacing: 10),
+                            GridItem(.flexible(minimum: itemWidth * 0.7, maximum: 360), spacing: 10),]
+            LazyVGrid(columns: columns, alignment: .center, spacing: 10) {
+                ForEach(0..<objectCatalog.documents.count, id: \.self) { i in
+                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(objectCatalog.documents[i])
+                    let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
+                    VStack {
+                        HStack {
+                            Text(verbatim: objectCatalog.documents[i].removeExtension(DocType.fileExtension))
+                                .foregroundColor(objectCatalog.isSelectedDocument(fileNamed: objectCatalog.documents[i]) ? .red : .black)
+                            Button(action: {
+                                objectCatalog.deleteObject(fileNamed: objectCatalog.documents[i])
+                            }) {
+                                Image(systemName: "xmark.circle")
+                            }
+                            .foregroundColor(.red)
+                        }
+                        Image(uiImage: set.object.getPreview())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: itemWidth)
+                            .border(Color.black, width: 1)
+                            .overlay(
+                                Text(set.object.isCompleteFor(text: textToGenerate) ? "" : "Warning:\nCharset\nis incomplete\nfor text!")
+                                    .foregroundColor(.red)
+                                    .multilineTextAlignment(.center)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                                            .foregroundColor(.white)
+                                            .opacity(set.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                                    )
+                            )
+                    }
+                    .onTapGesture {
+                        objectCatalog.documentPath = objectCatalog.documents[i]
+                        showingSelector = false
                     }
                 }
                 VStack(spacing: 12.5) {
                     Text("Import")
                         .foregroundColor(.blue)
                     Button(action: {
-                        showingSelector = true
+                        showingImporter = true
                     }) {
                         Image(systemName: "plus")
                             .resizable()
                             .frame(width: 50, height: 50)
                     }
-                    .frame(minWidth: itemWidth, maxHeight: itemWidth)
-                    .border(Color.black, width: 1)
                     .alert(isPresented: $showingUniquenessAlert) {
                         Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .default(Text("OK")))
                     }
                 }
             }
         }
-        .frame(width: max(0, min(CGFloat(objectCatalog.documents.count + 1) * itemWidth + CGFloat(objectCatalog.documents.count) * 10, CGFloat(itemWidth * 2 + 10))), alignment: .center)
-        .fileImporter(isPresented: $showingSelector, allowedContentTypes: [DocType.fileType]) { url in
-            do {
-                let data = try FileManager.default.contents(atPath: url.get().path)
-                let document = DocType(from: data!)
-
-                var isUnique = true
-                for file in objectCatalog.documents {
-                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-                    let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
-                    if set.object == document.object {
-                        isUnique = false
+            .fileImporter(isPresented: $showingImporter, allowedContentTypes: [DocType.fileType]) { url in
+                do {
+                    let data = try FileManager.default.contents(atPath: url.get().path)
+                    let document = DocType(from: data!)
+                    
+                    var isUnique = true
+                    for file in objectCatalog.documents {
+                        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+                        let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
+                        if set.object == document.object {
+                            isUnique = false
+                        }
                     }
-                }
-
-                if isUnique {
-                    objectCatalog.documentPath = try url.get().lastPathComponent
-                    objectCatalog.documents.append(try url.get().lastPathComponent)
-                } else {
-                    showingUniquenessAlert = true
-                }
-
-            } catch {}
-        }
-        .onAppear() {
-            objectCatalog.trim()
-        }
+                    
+                    if isUnique {
+                        objectCatalog.documents.append(try url.get().lastPathComponent)
+                    } else {
+                        showingUniquenessAlert = true
+                    }
+                    
+                } catch {}
+            }
+            .onAppear() {
+                objectCatalog.trim()
+            }
     }
 }
-

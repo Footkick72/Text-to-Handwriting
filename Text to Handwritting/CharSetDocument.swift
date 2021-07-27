@@ -27,6 +27,7 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
     static var defaultSaveFile = "charsets.json"
     static var fileExtension = ".tthcharset"
     static var fileType = UTType.charSetDocument
+    static var defaults = Dictionary<String, HandwritingDocumentResource>()
     
     init(from: Data) {
         object = try! JSONDecoder().decode(CharSet.self, from: from)

@@ -28,6 +28,7 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     static var defaultSaveFile = "templates.json"
     static var fileExtension = ".tthtemplate"
     static var fileType = UTType.templateDocument
+    static var defaults: Dictionary<String, HandwritingDocumentResource> = ["Blank": Template(bg: UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30)]
     
     init(from: Data) {
         object = try! JSONDecoder().decode(Template.self, from: from)

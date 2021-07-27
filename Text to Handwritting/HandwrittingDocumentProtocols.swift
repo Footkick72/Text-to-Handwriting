@@ -13,6 +13,7 @@ protocol HandwritingDocument {
     static var defaultSaveFile: String { get }
     static var fileExtension: String { get }
     static var fileType: UTType { get }
+    static var defaults: Dictionary<String, HandwritingDocumentResource> { get }
     associatedtype ObjectType: Equatable, Codable, HandwritingDocumentResource
     var object: ObjectType { get set }
     static func createNew(path: URL)
