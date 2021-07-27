@@ -12,9 +12,7 @@ struct ContentView: View {
     @State private var showingGenerationOptions = false
     
     var body: some View {
-        VStack(alignment: .center) {
-            TextEditor(text: $document.text)
-        }
+        TextEditor(text: $document.text)
         .sheet(isPresented: $showingGenerationOptions) {
             OptionsView(document: $document, shown: $showingGenerationOptions)
         }
