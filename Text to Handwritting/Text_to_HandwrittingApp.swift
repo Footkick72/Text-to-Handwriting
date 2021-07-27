@@ -27,7 +27,7 @@ struct Text_to_HandwritingApp: App {
             ContentView(document: file.$document)
         }
         DocumentGroup(newDocument: CharSetDocument()) { file in
-            FontEditor(document: file.$document)
+            CharSetEditor(document: file.$document)
         }
         DocumentGroup(newDocument: TemplateDocument()) { file in
             TemplateEditor(document: file.$document)

@@ -26,7 +26,7 @@
 		1AA1E2CC269F2863007DAE76 /* NumberSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */; };
 		1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2CE269F2891007DAE76 /* ImageRectSelector.swift */; };
 		1AA1E2D3269F28E4007DAE76 /* TemplateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */; };
-		1AA1E2DF26A0B32C007DAE76 /* FontEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* FontEditor.swift */; };
+		1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */; };
 		1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */; };
 		1ACB329826AF3322000674BC /* DocumentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329726AF3322000674BC /* DocumentSelector.swift */; };
 		1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */; };
@@ -56,7 +56,7 @@
 		1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberSelector.swift; sourceTree = "<group>"; };
 		1AA1E2CE269F2891007DAE76 /* ImageRectSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRectSelector.swift; sourceTree = "<group>"; };
 		1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditor.swift; sourceTree = "<group>"; };
-		1AA1E2DE26A0B32C007DAE76 /* FontEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontEditor.swift; sourceTree = "<group>"; };
+		1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSetEditor.swift; sourceTree = "<group>"; };
 		1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
 		1ACB329726AF3322000674BC /* DocumentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSelector.swift; sourceTree = "<group>"; };
 		1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwrittingDocumentProtocols.swift; sourceTree = "<group>"; };
@@ -103,7 +103,7 @@
 				1A3F8D53268B701100710E99 /* CharSet.swift */,
 				1ACB329726AF3322000674BC /* DocumentSelector.swift */,
 				1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */,
-				1AA1E2DE26A0B32C007DAE76 /* FontEditor.swift */,
+				1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */,
 				1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */,
 				1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */,
 				1A948E7F26AB2F3C00BE942C /* TemplateDocument.swift */,
@@ -225,7 +225,7 @@
 				1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */,
 				1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */,
-				1AA1E2DF26A0B32C007DAE76 /* FontEditor.swift in Sources */,
+				1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */,
 				1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */,
 				1A53399C26A71B7E00CC037D /* CharSetDocument.swift in Sources */,
 				1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */,

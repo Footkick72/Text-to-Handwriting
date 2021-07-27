@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct FontEditor: View {
+struct CharSetEditor: View {
     @Binding var document: CharSetDocument
     @State var showingWritingView = false
     @State var currentLetter: String = ""
