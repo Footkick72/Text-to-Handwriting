@@ -66,7 +66,7 @@ struct ImageRectSelector: View {
                         case .none:
                             print("This should never happen. The selected corner is somehow null, despite having been just set.")
                         }
-                        document.object.margins = closest_valid_rect(oldRect: document.object.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.object.getBackground().size.width, height: document.object.getBackground().size.height), minSize: CGSize(width: 50, height: 50), isDrag: selectedCorner == .fullRect)
+                        document.object.margins = closest_valid_rect(oldRect: document.object.margins, newRect: rect2!, boundingRect: CGRect(x: 0, y: 0, width: document.object.getBackground().size.width, height: document.object.getBackground().size.height), minSize: CGSize(width: 50, height: 50), dragging: selectedCorner!)
                     }
                     .onEnded {_ in
                         selectedCorner = nil
@@ -106,37 +106,62 @@ struct ImageRectSelector: View {
     }
     
     
-    func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize, isDrag: Bool) -> CGRect{
+    func closest_valid_rect(oldRect: CGRect, newRect: CGRect, boundingRect: CGRect, minSize: CGSize, dragging: Corners) -> CGRect{
         //logic that deals with constraining the CGRect to a real rectangle with positive area. Could be condensed, but this is by far the clearest way to write it.
         var resultRect = newRect
-        if resultRect.minX < boundingRect.minX {
-            if isDrag {
-                resultRect.size.width = oldRect.width
-            } else {
-                resultRect.size.width = oldRect.width + (oldRect.minX - boundingRect.minX)
+        
+        //width check
+        if resultRect.size.width < minSize.width {
+            if dragging == .bottomLeft || dragging == .topLeft {
+                resultRect.origin.x = oldRect.maxX - minSize.width
             }
-            resultRect.origin.x = boundingRect.minX
-        }
-        if resultRect.minY < boundingRect.minY {
-            if isDrag {
-                resultRect.size.height = oldRect.height
-            } else {
-                resultRect.size.height = oldRect.height + (oldRect.minY - boundingRect.minY)
+            resultRect.size.width = minSize.width
+        } else {
+            // only execute side code if minimum width check is false to prevent inter-check fighting
+            if resultRect.minX < boundingRect.minX {
+                if dragging == .fullRect {
+                    resultRect.size.width = oldRect.width
+                } else {
+                    resultRect.size.width = oldRect.width + (oldRect.minX - boundingRect.minX)
+                }
+                resultRect.origin.x = boundingRect.minX
             }
-            resultRect.origin.y = boundingRect.minY
-        }
-        if resultRect.maxX > boundingRect.maxX {
-            if isDrag {
-                resultRect.origin.x = boundingRect.maxX - oldRect.width
+            if resultRect.maxX > boundingRect.maxX {
+                if dragging == .fullRect {
+                    resultRect.origin.x = boundingRect.maxX - oldRect.width
+                    resultRect.size.width = oldRect.width
+                } else {
+                    resultRect.size.width = boundingRect.maxX - oldRect.minX
+                }
             }
-            resultRect.size.width = oldRect.width
         }
-        if newRect.maxY > boundingRect.maxY {
-            if isDrag {
-                resultRect.origin.y = boundingRect.maxY - oldRect.height
+        
+        // height check
+        if resultRect.size.height < minSize.height {
+            if dragging == .topLeft || dragging == .topRight {
+                resultRect.origin.y = oldRect.maxY - minSize.height
             }
-            resultRect.size.height = oldRect.height
+            resultRect.size.height = minSize.height
+        } else {
+            // only execute side code if minimum height check is false to prevent inter-check fighting
+            if resultRect.minY < boundingRect.minY {
+                if dragging == .fullRect {
+                    resultRect.size.height = oldRect.height
+                } else {
+                    resultRect.size.height = oldRect.height + (oldRect.minY - boundingRect.minY)
+                }
+                resultRect.origin.y = boundingRect.minY
+            }
+            if newRect.maxY > boundingRect.maxY {
+                if dragging == .fullRect {
+                    resultRect.origin.y = boundingRect.maxY - oldRect.height
+                    resultRect.size.height = oldRect.height
+                } else {
+                    resultRect.size.height = boundingRect.maxY - oldRect.minY
+                }
+            }
         }
+        
         return resultRect
     }
 }
