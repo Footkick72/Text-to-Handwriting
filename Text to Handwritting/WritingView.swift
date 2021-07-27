@@ -129,7 +129,11 @@ struct WritingView: View {
             }
         }
         .onAppear() {
-            canvasScale = UserDefaults.standard.double(forKey: "writingViewCanvasScale")
+            if UserDefaults.standard.double(forKey: "writingViewCanvasScale") != 0.0 {
+                canvasScale = UserDefaults.standard.double(forKey: "writingViewCanvasScale")
+            } else {
+                UserDefaults.standard.setValue(1.0, forKey: "writingViewCanvasScale")
+            }
         }
     }
     
