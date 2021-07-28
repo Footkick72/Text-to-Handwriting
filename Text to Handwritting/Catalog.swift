@@ -81,6 +81,8 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         trim()
         if documents.count > 0 {
             documentPath = documents.first!
+        } else if DocType.defaults.count > 0 {
+            documentPath = DocType.defaults.keys.first!
         }
     }
 }
