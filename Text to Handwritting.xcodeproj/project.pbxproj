@@ -28,6 +28,7 @@
 		1AA1E2D3269F28E4007DAE76 /* TemplateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */; };
 		1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */; };
 		1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */; };
+		1AA4E6EF26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */; };
 		1ACB329826AF3322000674BC /* DocumentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329726AF3322000674BC /* DocumentSelector.swift */; };
 		1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,7 @@
 		1AA1E2D2269F28E4007DAE76 /* TemplateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditor.swift; sourceTree = "<group>"; };
 		1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSetEditor.swift; sourceTree = "<group>"; };
 		1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
+		1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDocumentCreator.swift; sourceTree = "<group>"; };
 		1ACB329726AF3322000674BC /* DocumentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSelector.swift; sourceTree = "<group>"; };
 		1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwrittingDocumentProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +104,7 @@
 				1A53399B26A71B7E00CC037D /* CharSetDocument.swift */,
 				1A3F8D53268B701100710E99 /* CharSet.swift */,
 				1ACB329726AF3322000674BC /* DocumentSelector.swift */,
+				1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */,
 				1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */,
 				1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */,
 				1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */,
@@ -217,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AA4E6EF26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift in Sources */,
 				1AA1E2BA269B8D9A007DAE76 /* FilesManager.swift in Sources */,
 				1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */,
 				1A3F8D42268B684200710E99 /* Text_to_HandwrittingApp.swift in Sources */,
