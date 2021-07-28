@@ -46,57 +46,8 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
             showingSelector = true
         }
         .popover(isPresented: $showingSelector) {
-            HStack {
-                UserFilesView<DocType>(showingSelector: $showingSelector, textToGenerate: textToGenerate, objectCatalog: objectCatalog)
-                Rectangle()
-                    .frame(width: 1)
-                    .padding()
-                    .foregroundColor(.black)
-                    .opacity(0.2)
-                DefaultsFilesView<DocType>(showingSelector: $showingSelector, textToGenerate: textToGenerate, objectCatalog: objectCatalog)
-            }
+            UserFilesView<DocType>(showingSelector: $showingSelector, textToGenerate: textToGenerate, objectCatalog: objectCatalog)
             .padding()
-        }
-    }
-}
-
-struct DefaultsFilesView<DocType: HandwritingDocument>: View {
-    @Binding var showingSelector: Bool
-    @State var textToGenerate: String
-    @ObservedObject var objectCatalog: Catalog<DocType>
-    
-    var itemWidth: CGFloat = 200
-    
-    var body: some View {
-        VStack(spacing: 50) {
-            Text("Defaults")
-            ForEach(Array(DocType.defaults.keys), id: \.self) { key in
-                let set = DocType.defaults[key]
-                VStack {
-                    Text(verbatim: key.lastPathComponent.removeExtension(DocType.fileExtension))
-                        .foregroundColor(objectCatalog.isSelectedDocument(set!) ? .red : .black)
-                        .font(.subheadline)
-                    Image(uiImage: set!.getPreview())
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: itemWidth * 0.7)
-                        .border(Color.black, width: 1)
-                        .overlay(
-                            Text(set!.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
-                                .foregroundColor(.red)
-                                .multilineTextAlignment(.center)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-                                        .foregroundColor(.white)
-                                        .opacity(set!.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
-                                )
-                        )
-                }
-                .onTapGesture() {
-                    objectCatalog.documentPath = key
-                    showingSelector = false
-                }
-            }
         }
     }
 }
@@ -112,15 +63,42 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
     
     var body: some View {
         ScrollView(showsIndicators: false) {
-            let columns = [ GridItem(.flexible(minimum: itemWidth * 0.7, maximum: 360), spacing: 10),
-                            GridItem(.flexible(minimum: itemWidth * 0.7, maximum: 360), spacing: 10),]
+            let columns = [ GridItem(.flexible(minimum: itemWidth, maximum: 360), spacing: 10),
+                            GridItem(.flexible(minimum: itemWidth, maximum: 360), spacing: 10),]
             LazyVGrid(columns: columns, alignment: .center, spacing: 10) {
+                ForEach(Array(DocType.defaults.keys), id: \.self) { key in
+                    let set = DocType.defaults[key]
+                    VStack {
+                        Text(verbatim: key.lastPathComponent.removeExtension(DocType.fileExtension))
+                            .font(.subheadline)
+                        Image(uiImage: set!.getPreview())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: itemWidth)
+                            .border(Color.black, width: 1)
+                            .overlay(
+                                Text(set!.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                                    .foregroundColor(.red)
+                                    .multilineTextAlignment(.center)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                                            .foregroundColor(.white)
+                                            .opacity(set!.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                                    )
+                            )
+                    }
+                    .padding()
+                    .border(Color.black, width: objectCatalog.isSelectedDocument(set!) ? 1 : 0)
+                    .onTapGesture() {
+                        objectCatalog.documentPath = key
+                        showingSelector = false
+                    }
+                }
                 ForEach(0..<objectCatalog.documents.count, id: \.self) { i in
                     let set = DocType(from: FileManager.default.contents(atPath: objectCatalog.documents[i].path)!)
                     VStack {
                         HStack {
                             Text(verbatim: objectCatalog.documents[i].lastPathComponent.removeExtension(DocType.fileExtension))
-                                .foregroundColor(objectCatalog.isSelectedDocument(at: i) ? .red : .black)
                                 .font(.subheadline)
                             Button(action: {
                                 objectCatalog.deleteObject(at: i)
@@ -145,6 +123,8 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                                     )
                             )
                     }
+                    .padding()
+                    .border(Color.black, width: objectCatalog.isSelectedDocument(at: i) ? 1 : 0)
                     .onTapGesture {
                         objectCatalog.documentPath = objectCatalog.documents[i]
                         showingSelector = false
