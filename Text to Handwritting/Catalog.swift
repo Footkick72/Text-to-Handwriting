@@ -39,11 +39,11 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
     func deleteObject(at: Int) {
         if documents[at] == documentPath {
             documentPath = nil
-            if documents.count >= 1 {
-                documentPath = documents.first!
-            }
         }
         documents.remove(at: at)
+        if documents.count > 0 && documentPath == nil {
+            documentPath = documents.first!
+        }
     }
     
     func isSelectedDocument(at: Int) -> Bool {
