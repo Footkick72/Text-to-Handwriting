@@ -60,6 +60,9 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
                 documents.remove(at: documents.firstIndex(of: file)!)
             }
         }
+        if documentPath != nil && !FileManager.default.fileExists(atPath: documentPath!.path) {
+            documentPath = nil
+        }
     }
     
     func save() {
@@ -69,6 +72,11 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
             try manager.delete(fileNamed: DocType.defaultSaveFile)
         } catch { print("error saving: \(error)") }
         do {
+            if documentPath != nil {
+                documents.append(documentPath!)
+            } else {
+                documents.append(URL(string: "randomnonscenceurl812748921)(*&@")!)
+            }
             try manager.save(fileNamed: DocType.defaultSaveFile, data: JSONEncoder().encode(documents))
         } catch { print("error saving: \(error)") }
     }
@@ -77,12 +85,15 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         let manager = FilesManager()
         do {
             self.documents = try JSONDecoder().decode(Array<URL>.self, from: try manager.read(fileNamed: DocType.defaultSaveFile))
+            self.documentPath = self.documents.popLast()
         } catch { print("error loading: \(error)") }
         trim()
-        if documents.count > 0 {
-            documentPath = documents.first!
-        } else if DocType.defaults.count > 0 {
-            documentPath = DocType.defaults.keys.first!
+        if documentPath == nil {
+            if documents.count > 0 {
+                documentPath = documents.first!
+            } else if DocType.defaults.count > 0 {
+                documentPath = DocType.defaults.keys.first!
+            }
         }
     }
 }
