@@ -45,8 +45,13 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         }
         documents.remove(at: at)
     }
+    
     func isSelectedDocument(at: Int) -> Bool {
         return documents[at] == documentPath
+    }
+    
+    func isSelectedDocument(_ d: DocType.ObjectType) -> Bool {
+        return document()?.object == d
     }
     
     func trim() {

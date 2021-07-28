@@ -53,7 +53,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                     .padding()
                     .foregroundColor(.black)
                     .opacity(0.2)
-                DefaultsFilesView<DocType>(textToGenerate: textToGenerate, objectCatalog: objectCatalog)
+                DefaultsFilesView<DocType>(showingSelector: $showingSelector, textToGenerate: textToGenerate, objectCatalog: objectCatalog)
             }
             .padding()
         }
@@ -61,6 +61,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
 }
 
 struct DefaultsFilesView<DocType: HandwritingDocument>: View {
+    @Binding var showingSelector: Bool
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
     
@@ -72,7 +73,9 @@ struct DefaultsFilesView<DocType: HandwritingDocument>: View {
             ForEach(Array(DocType.defaults.keys), id: \.self) { key in
                 let set = DocType.defaults[key]
                 VStack {
-                    Text(verbatim: key)
+                    Text(verbatim: key.lastPathComponent.removeExtension(DocType.fileExtension))
+                        .foregroundColor(objectCatalog.isSelectedDocument(set!) ? .red : .black)
+                        .font(.subheadline)
                     Image(uiImage: set!.getPreview())
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -88,6 +91,10 @@ struct DefaultsFilesView<DocType: HandwritingDocument>: View {
                                         .opacity(set!.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
                                 )
                         )
+                }
+                .onTapGesture() {
+                    objectCatalog.documentPath = key
+                    showingSelector = false
                 }
             }
         }
@@ -114,6 +121,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                         HStack {
                             Text(verbatim: objectCatalog.documents[i].lastPathComponent.removeExtension(DocType.fileExtension))
                                 .foregroundColor(objectCatalog.isSelectedDocument(at: i) ? .red : .black)
+                                .font(.subheadline)
                             Button(action: {
                                 objectCatalog.deleteObject(at: i)
                             }) {
