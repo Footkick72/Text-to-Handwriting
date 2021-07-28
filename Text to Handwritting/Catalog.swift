@@ -16,15 +16,14 @@ typealias TemplateCatalog = Catalog<TemplateDocument>
 typealias CharSetCatalog = Catalog<CharSetDocument>
 
 class Catalog<DocType: HandwritingDocument>: ObservableObject {
-    @Published var documentPath: String? = nil
-    @Published var documents: Array<String> = []
+    @Published var documentPath: URL? = nil
+    @Published var documents: Array<URL> = []
     
     func document() -> DocType? {
         trim()
         if let file = documentPath {
-            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-            if FileManager.default.fileExists(atPath: path.path) {
-                return DocType(from: FileManager.default.contents(atPath: path.path)!)
+            if FileManager.default.fileExists(atPath: file.path) {
+                return DocType(from: FileManager.default.contents(atPath: file.path)!)
             } else {
                 documentPath = nil
                 if documents.count > 0 {
@@ -37,25 +36,22 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         }
     }
     
-    func deleteObject(fileNamed: String) {
-        if fileNamed == documentPath {
+    func deleteObject(at: Int) {
+        if documents[at] == documentPath {
             documentPath = nil
             if documents.count >= 1 {
                 documentPath = documents.first!
             }
         }
-        documents.remove(at: documents.firstIndex(of: fileNamed)!)
+        documents.remove(at: at)
     }
-    func isSelectedDocument(fileNamed: String) -> Bool {
-        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(fileNamed)
-        let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
-        return set.object == document()?.object
+    func isSelectedDocument(at: Int) -> Bool {
+        return documents[at] == documentPath
     }
     
     func trim() {
         for file in documents {
-            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file).path
-            if !FileManager.default.fileExists(atPath: path) {
+            if !FileManager.default.fileExists(atPath: file.path) {
                 documents.remove(at: documents.firstIndex(of: file)!)
             }
         }
@@ -75,7 +71,7 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
     func load() {
         let manager = FilesManager()
         do {
-            self.documents = try JSONDecoder().decode(Array<String>.self, from: try manager.read(fileNamed: DocType.defaultSaveFile))
+            self.documents = try JSONDecoder().decode(Array<URL>.self, from: try manager.read(fileNamed: DocType.defaultSaveFile))
         } catch { print("error loading: \(error)") }
         trim()
         if documents.count > 0 {

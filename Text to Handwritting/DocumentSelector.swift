@@ -21,24 +21,26 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     var itemWidth: CGFloat = 200
     
     var body: some View {
-        title
         VStack {
-            Text(verbatim: objectCatalog.documentPath!.removeExtension(DocType.fileExtension))
-            Image(uiImage: objectCatalog.document()!.object.getPreview())
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: itemWidth)
-                .border(Color.black, width: 1)
-                .overlay(
-                    Text(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .background(
-                            RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-                                .foregroundColor(.white)
-                                .opacity(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
-                        )
-                )
+            title
+            if objectCatalog.documentPath != nil {
+                Text(verbatim: objectCatalog.documentPath!.lastPathComponent.removeExtension(DocType.fileExtension))
+                Image(uiImage: objectCatalog.document()!.object.getPreview())
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: itemWidth)
+                    .border(Color.black, width: 1)
+                    .overlay(
+                        Text(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .background(
+                                RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                                    .foregroundColor(.white)
+                                    .opacity(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                            )
+                    )
+            }
         }
         .onTapGesture {
             showingSelector = true
@@ -107,14 +109,13 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                             GridItem(.flexible(minimum: itemWidth * 0.7, maximum: 360), spacing: 10),]
             LazyVGrid(columns: columns, alignment: .center, spacing: 10) {
                 ForEach(0..<objectCatalog.documents.count, id: \.self) { i in
-                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(objectCatalog.documents[i])
-                    let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
+                    let set = DocType(from: FileManager.default.contents(atPath: objectCatalog.documents[i].path)!)
                     VStack {
                         HStack {
-                            Text(verbatim: objectCatalog.documents[i].removeExtension(DocType.fileExtension))
-                                .foregroundColor(objectCatalog.isSelectedDocument(fileNamed: objectCatalog.documents[i]) ? .red : .black)
+                            Text(verbatim: objectCatalog.documents[i].lastPathComponent.removeExtension(DocType.fileExtension))
+                                .foregroundColor(objectCatalog.isSelectedDocument(at: i) ? .red : .black)
                             Button(action: {
-                                objectCatalog.deleteObject(fileNamed: objectCatalog.documents[i])
+                                objectCatalog.deleteObject(at: i)
                             }) {
                                 Image(systemName: "xmark.circle")
                             }
@@ -164,15 +165,14 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                     
                     var isUnique = true
                     for file in objectCatalog.documents {
-                        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
-                        let set = DocType(from: FileManager.default.contents(atPath: path.path)!)
+                        let set = DocType(from: FileManager.default.contents(atPath: file.path)!)
                         if set.object == document.object {
                             isUnique = false
                         }
                     }
                     
                     if isUnique {
-                        objectCatalog.documents.append(try url.get().lastPathComponent)
+                        objectCatalog.documents.append(try url.get())
                     } else {
                         showingUniquenessAlert = true
                     }
