@@ -27,7 +27,9 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
     static var defaultSaveFile = "charsets.json"
     static var fileExtension = ".tthcharset"
     static var fileType = UTType.charSetDocument
-    static var defaults = Dictionary<URL, CharSet>()
+    static var defaults: Dictionary<URL, CharSet> = [
+        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("default.tthcharset"):
+            try! JSONDecoder().decode(CharSet.self, from: FileManager.default.contents(atPath: Bundle.main.resourceURL!.appendingPathComponent("DefaultCharset.tthcharset").path)!)]
     
     init(from: Data) {
         object = try! JSONDecoder().decode(CharSet.self, from: from)

@@ -29,6 +29,7 @@
 		1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */; };
 		1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */; };
 		1AA4E6EF26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */; };
+		1AA4E6F126B3023900EDBCD9 /* DefaultCharset.tthcharset in Resources */ = {isa = PBXBuildFile; fileRef = 1AA4E6F026B3023900EDBCD9 /* DefaultCharset.tthcharset */; };
 		1ACB329826AF3322000674BC /* DocumentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329726AF3322000674BC /* DocumentSelector.swift */; };
 		1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */; };
 /* End PBXBuildFile section */
@@ -60,6 +61,7 @@
 		1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSetEditor.swift; sourceTree = "<group>"; };
 		1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
 		1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDocumentCreator.swift; sourceTree = "<group>"; };
+		1AA4E6F026B3023900EDBCD9 /* DefaultCharset.tthcharset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DefaultCharset.tthcharset; sourceTree = "<group>"; };
 		1ACB329726AF3322000674BC /* DocumentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSelector.swift; sourceTree = "<group>"; };
 		1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwrittingDocumentProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				1A3F8D3F268B684200710E99 /* Products */,
-				1A3F92C8268BD0BA00710E99 /* Backgrounds */,
+				1A3F92C8268BD0BA00710E99 /* Defaults */,
 				1A3F8D40268B684200710E99 /* Text to Handwritting */,
 				1A3F984D268E3DC300710E99 /* Frameworks */,
 			);
@@ -132,13 +134,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		1A3F92C8268BD0BA00710E99 /* Backgrounds */ = {
+		1A3F92C8268BD0BA00710E99 /* Defaults */ = {
 			isa = PBXGroup;
 			children = (
+				1AA4E6F026B3023900EDBCD9 /* DefaultCharset.tthcharset */,
 				1A59E4B52691F05E00F93D58 /* blankpaper.png */,
 				1A3F92C9268BD0E200710E99 /* linedpaper.png */,
 			);
-			path = Backgrounds;
+			path = Defaults;
 			sourceTree = "<group>";
 		};
 		1A3F984D268E3DC300710E99 /* Frameworks */ = {
@@ -207,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A59E4B62691F05E00F93D58 /* blankpaper.png in Resources */,
+				1AA4E6F126B3023900EDBCD9 /* DefaultCharset.tthcharset in Resources */,
 				1A3F8D4B268B684200710E99 /* Preview Assets.xcassets in Resources */,
 				1A3F8D48268B684200710E99 /* Assets.xcassets in Resources */,
 				1A3F92CA268BD0E200710E99 /* linedpaper.png in Resources */,
