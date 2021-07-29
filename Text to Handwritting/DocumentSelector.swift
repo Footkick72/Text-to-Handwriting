@@ -124,7 +124,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                             )
                     }
                     .padding()
-                    .border(Color.black, width: objectCatalog.isSelectedDocument(at: i) ? 1 : 0)
+                    .border(Color.black, width: objectCatalog.isSelectedDocument(path: objectCatalog.documents[i]) ? 1 : 0)
                     .onTapGesture {
                         objectCatalog.documentPath = objectCatalog.documents[i]
                         showingSelector = false
@@ -141,30 +141,18 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                             .frame(width: 50, height: 50)
                     }
                     .alert(isPresented: $showingUniquenessAlert) {
-                        Alert(title: Text("Cannot load charset"), message: Text("You have already loaded an identical charset"), dismissButton: .default(Text("OK")))
+                        Alert(title: Text("Cannot load character set"), message: Text("You have already loaded this character set"), dismissButton: .default(Text("OK")))
                     }
                 }
             }
         }
             .fileImporter(isPresented: $showingImporter, allowedContentTypes: [DocType.fileType]) { url in
                 do {
-                    let data = try FileManager.default.contents(atPath: url.get().path)
-                    let document = DocType(from: data!)
-                    
-                    var isUnique = true
-                    for file in objectCatalog.documents {
-                        let set = DocType(from: FileManager.default.contents(atPath: file.path)!)
-                        if set.object == document.object {
-                            isUnique = false
-                        }
-                    }
-                    
-                    if isUnique {
+                    if objectCatalog.documents.firstIndex(of: try url.get()) == nil {
                         objectCatalog.documents.append(try url.get())
                     } else {
                         showingUniquenessAlert = true
                     }
-                    
                 } catch {}
             }
             .onAppear() {

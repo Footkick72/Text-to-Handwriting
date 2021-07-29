@@ -54,10 +54,6 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         findNewTemplate()
     }
     
-    func isSelectedDocument(at: Int) -> Bool {
-        return documents[at] == documentPath
-    }
-    
     func isSelectedDocument(path: URL) -> Bool {
         return documentPath == path
     }
