@@ -36,22 +36,30 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         }
     }
     
+    func findNewTemplate() {
+        if documentPath == nil {
+            if documents.count > 0 {
+                documentPath = documents.first!
+            } else if DocType.defaults.count > 0 {
+                documentPath = DocType.defaults.keys.first!
+            }
+        }
+    }
+    
     func deleteObject(at: Int) {
         if documents[at] == documentPath {
             documentPath = nil
         }
         documents.remove(at: at)
-        if documents.count > 0 && documentPath == nil {
-            documentPath = documents.first!
-        }
+        findNewTemplate()
     }
     
     func isSelectedDocument(at: Int) -> Bool {
         return documents[at] == documentPath
     }
     
-    func isSelectedDocument(_ d: DocType.ObjectType) -> Bool {
-        return document()?.object == d
+    func isSelectedDocument(path: URL) -> Bool {
+        return documentPath == path
     }
     
     func trim() {
@@ -88,12 +96,6 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
             self.documentPath = self.documents.popLast()
         } catch { print("error loading: \(error)") }
         trim()
-        if documentPath == nil {
-            if documents.count > 0 {
-                documentPath = documents.first!
-            } else if DocType.defaults.count > 0 {
-                documentPath = DocType.defaults.keys.first!
-            }
-        }
+        findNewTemplate()
     }
 }

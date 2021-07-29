@@ -88,7 +88,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                             )
                     }
                     .padding()
-                    .border(Color.black, width: objectCatalog.isSelectedDocument(set!) ? 1 : 0)
+                    .border(Color.black, width: objectCatalog.isSelectedDocument(path: key) ? 1 : 0)
                     .onTapGesture() {
                         objectCatalog.documentPath = key
                         showingSelector = false
