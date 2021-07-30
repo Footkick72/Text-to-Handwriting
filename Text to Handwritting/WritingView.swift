@@ -15,6 +15,7 @@ struct WritingView: View {
     @State var selection: String
     @State var canvas = PKCanvasView()
     @State var canvasScale: Double = 1.0
+    @State var previousScale: Double = 1.0
     
     var body: some View {
         VStack(alignment: .center, spacing: 25) {
@@ -88,7 +89,6 @@ struct WritingView: View {
                 }
                 .foregroundColor(.red)
             }
-            .font(.title)
             Canvas(canvasView: $canvas)
                 .background(
                     Image("writingbackground")
@@ -103,6 +103,11 @@ struct WritingView: View {
                     UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
                 }, label: {})
                     .padding(.horizontal, 50)
+                .onChange(of: canvasScale) { _ in
+                    let percentChange = canvasScale/previousScale
+                    canvas.drawing.transform(using: CGAffineTransform(scaleX: CGFloat(percentChange), y: CGFloat(percentChange)))
+                    previousScale = canvasScale
+                }
                 Text("Writing Canvas Scale")
             }
         }
