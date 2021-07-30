@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import PencilKit
 
 extension UTType {
   static let charSetDocument = UTType(exportedAs: "org.davidlong.tthcharset")
@@ -27,15 +28,16 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
     static var defaultSaveFile = "charsets.json"
     static var fileExtension = ".tthcharset"
     static var fileType = UTType.charSetDocument
-    static var defaults: Dictionary<URL, CharSet> = [
-        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("default.tthcharset"):
-            try! JSONDecoder().decode(CharSet.self, from: FileManager.default.contents(atPath: Bundle.main.resourceURL!.appendingPathComponent("DefaultCharset.tthcharset").path)!)]
+    static var defaults: Dictionary<URL, CharSet> = [:]
+//        [
+//        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("default.tthcharset"):
+//            try! JSONDecoder().decode(CharSet.self, from: FileManager.default.contents(atPath: Bundle.main.resourceURL!.appendingPathComponent("DefaultCharset.tthcharset").path)!)]
     
     init(from: Data) {
         object = try! JSONDecoder().decode(CharSet.self, from: from)
     }
 
-    init(characters: Dictionary<String,Array<Data>> = [:], charlens: Dictionary<String,Float> = [:]) {
+    init(characters: Dictionary<String,Array<PKDrawing>> = [:], charlens: Dictionary<String,Float> = [:]) {
         object = CharSet(characters: characters, charlens: charlens)
     }
 

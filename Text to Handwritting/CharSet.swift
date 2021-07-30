@@ -6,14 +6,15 @@
 //
 
 import Foundation
-import UIKit
+import SwiftUI
+import PencilKit
 
 struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     var availiable_chars: String
-    var characters: Dictionary<String,Array<Data>>
+    var characters: Dictionary<String,Array<PKDrawing>>
     var charlens: Dictionary<String,Float> = [:]
     
-    init(characters: Dictionary<String,Array<Data>>, charlens: Dictionary<String,Float>? = nil) {
+    init(characters: Dictionary<String,Array<PKDrawing>>, charlens: Dictionary<String,Float>? = nil) {
         self.characters = characters
         self.availiable_chars = ""
         for char in characters.keys {
@@ -30,7 +31,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         return self.getImages(char: char).count
     }
     
-    func getImage(char: String) -> UIImage? {
+    func getImage(char: String) -> PKDrawing? {
         let images = getImages(char: char)
         if images.count > 0 {
             return images.randomElement()!
@@ -39,25 +40,21 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         }
     }
     
-    func getSameImage(char: String) -> UIImage {
+    func getSameImage(char: String) -> PKDrawing {
         // returns the same image always for UI display purposes
         let images = getImages(char: char)
         if images.count > 0 {
             return images.first!
         } else {
-            return UIImage(named: "space")!
+            return PKDrawing()
         }
     }
     
-    func getImages(char: String) -> Array<UIImage> {
+    func getImages(char: String) -> Array<PKDrawing> {
         guard let data = self.characters[char] else {
-            return Array<UIImage>()
+            return Array<PKDrawing>()
         }
-        var images: Array<UIImage> = []
-        for datum in data {
-            images.append(UIImage(data: datum)!)
-        }
-        return images
+        return data
     }
     
     func get_charlens() -> Dictionary<String,Float>? {
@@ -73,9 +70,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         var charlen: Float = 0
         let images = getImages(char: String(char))
         for file in images {
-            let box = file.cropAlpha(cropVertical: true, cropHorizontal: true).size
-            let scaler: Float = 1.0/Float(file.size.width)
-            charlen += Float(box.width) * scaler
+            charlen += Float(file.bounds.width)
         }
         return charlen/Float(images.count)
     }
@@ -84,25 +79,20 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         if availiable_chars.count == 0 {
             return UIImage(cgImage: UIImage(named: "space")!.cgImage!, scale: 4.0, orientation: .up)
         }
-        UIGraphicsBeginImageContext(CGSize(width: 256*3, height: 256*3))
+        var image = PKDrawing()
         var i = 0
         for y in 0..<3 {
             for x in 0..<3 {
                 var char = getSameImage(char: String(availiable_chars[i]))
-                char = UIImage(cgImage: char.cgImage!, scale: 1.0, orientation: char.imageOrientation)
-                let rect = CGRect(x: x*256, y: y*256, width: 256, height: 256)
-                char.draw(in: rect, blendMode: .normal, alpha: 1.0)
+                char.transform(using: CGAffineTransform(translationX: CGFloat(x*256), y: CGFloat(y*256)))
+                image.append(char)
                 i += 1
                 if i >= availiable_chars.count {
-                    let image = UIGraphicsGetImageFromCurrentImageContext()!
-                    UIGraphicsEndImageContext()
-                    return image
+                    return image.image(from: CGRect(x: 0, y: 0, width: 256*3, height: 256*3), scale: 5.0)
                 }
             }
         }
-        let image = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return image
+        return image.image(from: CGRect(x: 0, y: 0, width: 256*3, height: 256*3), scale: 5.0)
     }
     
     func isCompleteFor(text: String) -> Bool {

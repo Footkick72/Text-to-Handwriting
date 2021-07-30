@@ -8,6 +8,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import Photos
+import PencilKit
 
 extension UTType {
     static var exampleText: UTType {
@@ -92,13 +93,8 @@ struct Text_to_HandwritingDocument: FileDocument {
         let space_length = Int(Double(font_size) * 0.5)
         let line_end_buffer = Int(font_size)
         
-        var image = template.getBackground()
-        let size = [Int(image.size.width), Int(image.size.height)]
-        
-        let s = CGSize(width: size[0], height: size[1])
-        UIGraphicsBeginImageContext(s)
-        let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-        image.draw(in: areaSize)
+        var image = PKDrawing()
+        let size = [Int(template.getBackground().size.width), Int(template.getBackground().size.height)]
         
         var x_pos = left_margin
         var y_pos = top_margin
@@ -111,7 +107,7 @@ struct Text_to_HandwritingDocument: FileDocument {
 
         var charlens: Dictionary<String,Float> = charset.charlens
         for k in charlens.keys {
-            charlens[k] = charlens[k]! * Float(font_size)
+            charlens[k] = charlens[k]! * Float(font_size) / 256
             charlens[k] = charlens[k]! +  Float(letter_spacing) * Float(font_size) / 256.0
         }
         
@@ -128,16 +124,14 @@ struct Text_to_HandwritingDocument: FileDocument {
                     if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                         y_pos = top_margin
                         if checkPhotoSavePermission() {
-                            image = UIGraphicsGetImageFromCurrentImageContext()!
-                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                            UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
+                            template.getBackground().draw(at: CGPoint(x: 0, y: 0))
+                            image.image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+                            let result = UIGraphicsGetImageFromCurrentImageContext()!
+                            UIGraphicsEndImageContext()
+                            UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
                         }
-                        UIGraphicsEndImageContext()
-                        image = template.getBackground()
-                        let s = CGSize(width: size[0], height: size[1])
-                        UIGraphicsBeginImageContext(s)
-                        let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-                        image.draw(in: areaSize)
-                        
+                        image = PKDrawing()
                         page_i += 1
                     }
                 }
@@ -151,30 +145,27 @@ struct Text_to_HandwritingDocument: FileDocument {
                 if y_pos >= size[1] - line_spacing - bottom_margin {
                     y_pos = top_margin
                     if checkPhotoSavePermission() {
-                        image = UIGraphicsGetImageFromCurrentImageContext()!
-                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                        UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
+                        template.getBackground().draw(at: CGPoint(x: 0, y: 0))
+                        image.image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+                        let result = UIGraphicsGetImageFromCurrentImageContext()!
+                        UIGraphicsEndImageContext()
+                        UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
                     }
-                    UIGraphicsEndImageContext()
-                    image = template.getBackground()
-                    let s = CGSize(width: size[0], height: size[1])
-                    UIGraphicsBeginImageContext(s)
-                    let areaSize = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-                    image.draw(in: areaSize)
-                    
+                    image = PKDrawing()
                     page_i += 1
                 }
             }
             
             for char in word {
                 if var letter = charset.getImage(char: String(char)) {
-                    letter = letter.cropAlpha(cropVertical: false, cropHorizontal: true)
-                    let scaler = Float(letter.size.height)/Float(font_size)
-                    letter = UIImage(cgImage: letter.cgImage!, scale: CGFloat(scaler), orientation: letter.imageOrientation)
-                    var letterlength = Float(letter.size.width)
-                    let letterRect = CGRect(x: CGFloat(Int(x_pos)), y: CGFloat(y_pos + Int(line_offset)), width: letter.size.width, height: letter.size.height)
-                    letter.draw(in: letterRect, blendMode: .normal, alpha: CGFloat(pencil_hardness))
-                    letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
+                    letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
+                    letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
+                    letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
+                    image.append(letter)
                     
+                    var letterlength = Float(letter.bounds.width)
+                    letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
                     x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
                     pencil_hardness += (Float.random(in: 0..<1) - 0.5) * 0.2
                     pencil_hardness = max(min(pencil_hardness, max_hardness), min_hardness)
@@ -190,9 +181,12 @@ struct Text_to_HandwritingDocument: FileDocument {
             updateProgress(Double(word_i)/Double(words.count), true, false)
         }
         if checkPhotoSavePermission() {
-            image = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
+            template.getBackground().draw(at: CGPoint(x: 0, y: 0))
+            image.image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+            let result = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
         }
         updateProgress(0.0, false, true)
         return

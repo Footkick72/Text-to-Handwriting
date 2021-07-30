@@ -24,7 +24,8 @@ struct WritingView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 25) {
                     ForEach(0..<document.object.getImages(char: selection).count, id: \.self) { i in
-                        Image(uiImage: document.object.getImages(char: selection)[i])
+                        let image = document.object.getImages(char: selection)[i]
+                        Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
@@ -45,24 +46,16 @@ struct WritingView: View {
             .frame(width: CGFloat(scrollWidth), height: 70)
             HStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    let drawing = canvas.drawing
-                    if drawing.strokes.count != 0 {
-                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
-                        let scaler = canvas.bounds.width / 256.0
-                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
-                        canvas.drawing = PKDrawing()
-                        self.saveImage(image: scaled)
+                    if canvas.drawing.strokes.count != 0 {
+                        self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
                     }
+                    canvas.drawing = PKDrawing()
                 }) {
                     Image(systemName: "checkmark.circle")
                 }
                 Button(action: {
-                    let drawing = canvas.drawing
-                    if drawing.strokes.count != 0 {
-                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
-                        let scaler = canvas.bounds.width / 256.0
-                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
-                        self.saveImage(image: scaled)
+                    if canvas.drawing.strokes.count != 0 {
+                        self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
                     }
                     canvas.drawing = PKDrawing()
                     let index = chars.firstIndex(of: Character(selection))!
@@ -75,12 +68,8 @@ struct WritingView: View {
                     Image(systemName: "backward")
                 }
                 Button(action: {
-                    let drawing = canvas.drawing
-                    if drawing.strokes.count != 0 {
-                        let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
-                        let scaler = canvas.bounds.width / 256.0
-                        let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
-                        self.saveImage(image: scaled)
+                    if canvas.drawing.strokes.count != 0 {
+                        self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
                     }
                     canvas.drawing = PKDrawing()
                     let index = chars.firstIndex(of: Character(selection))!
@@ -119,13 +108,9 @@ struct WritingView: View {
         }
         .padding(25)
         .onDisappear() {
-            let drawing = canvas.drawing
-            if drawing.strokes.count != 0 {
-                let drawn_area = drawing.image(from: canvas.bounds, scale: 1.0)
-                let scaler = canvas.bounds.width / 256.0
-                let scaled = UIImage(cgImage: drawn_area.cgImage!, scale: CGFloat(scaler), orientation: drawn_area.imageOrientation)
+            if canvas.drawing.strokes.count != 0 {
+                self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
                 canvas.drawing = PKDrawing()
-                self.saveImage(image: scaled)
             }
         }
         .onAppear() {
@@ -137,27 +122,23 @@ struct WritingView: View {
         }
     }
     
-    func saveImage(image: UIImage) {
+    func saveImage(image: PKDrawing) {
         if document.object.availiable_chars.firstIndex(of: Character(selection)) == nil {
             document.object.availiable_chars += selection
         }
         
         if document.object.characters.keys.firstIndex(of: selection) != nil {
-            document.object.characters[selection]!.append(image.pngData()!)
+            document.object.characters[selection]!.append(image)
         } else {
-            document.object.characters[selection] = [image.pngData()!]
+            document.object.characters[selection] = [image]
         }
         
         if document.object.charlens.keys.firstIndex(of: selection) != nil {
             var sum = document.object.charlens[selection]! * Float(document.object.characters[selection]!.count - 1)
-            let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
-            let scaler = 1.0 / Float(image.size.width)
-            sum += Float(box.width) * scaler
+            sum += Float(image.bounds.width)
             document.object.charlens[selection]! = sum / Float(document.object.characters[selection]!.count)
         } else {
-            let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
-            let scaler = 1.0 / Float(image.size.width)
-            document.object.charlens[selection] = Float(box.width) * scaler
+            document.object.charlens[selection] = Float(image.bounds.width)
         }
     }
     
@@ -170,10 +151,8 @@ struct WritingView: View {
         }
         
         var sum = document.object.charlens[selection]! * Float(document.object.characters[selection]!.count)
-        let image = UIImage(data: document.object.characters[selection]![imageIndex])!
-        let box = image.cropAlpha(cropVertical: true, cropHorizontal: true).size
-        let scaler = 1.0 / Float(image.size.width)
-        sum -= Float(box.width) * scaler
+        let image = document.object.characters[selection]![imageIndex]
+        sum -= Float(image.bounds.width)
         
         document.object.characters[selection]!.remove(at: imageIndex)
         document.object.charlens[selection]! = sum / Float(document.object.characters[selection]!.count)
