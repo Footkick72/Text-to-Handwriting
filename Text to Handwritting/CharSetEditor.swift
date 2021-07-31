@@ -17,6 +17,8 @@ struct CharSetEditor: View {
     @State var scale: CGFloat = 1.0
     @State var letterSpacing: Double = 4.0
     
+    @Environment(\.colorScheme) var colorScheme
+    
     let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
     
     var body: some View {
@@ -54,10 +56,9 @@ struct CharSetEditor: View {
                         .aspectRatio(1.0, contentMode: .fit)
                         .border(Color.black, width: 2)
                         .font(UIDevice.current.userInterfaceIdiom == .pad ? .title : .title2)
-                        .overlay(
+                        .background(
                             Rectangle()
-                                .foregroundColor(set.numberOfCharacters(char: char) == 0 ? .red : set.numberOfCharacters(char: char) < 5 ? .yellow : .green)
-                                .opacity(0.2)
+                                .foregroundColor(getBackgroundColor(char: char))
                         )
                         .scaleEffect(scale)
                         .gesture(TapGesture()
@@ -90,6 +91,27 @@ struct CharSetEditor: View {
                                               secondaryButton: .cancel())
                                     }
             )
+        }
+    }
+    
+    func getBackgroundColor(char: String) -> Color {
+        if colorScheme == .light {
+            if document.object.numberOfCharacters(char: char) == 0 {
+                return Color(red: 1.0, green: 0.768, blue: 0.794, opacity: 1.0)
+            } else if document.object.numberOfCharacters(char: char) < 5 {
+                return Color(red: 1.0, green: 0.941, blue: 0.761, opacity: 1.0)
+            } else {
+                return Color(red: 0.761, green: 0.929, blue: 0.804, opacity: 1.0)
+            }
+        }
+        else {
+            if document.object.numberOfCharacters(char: char) == 0 {
+                return Color(red: 0.803, green: 0.4, blue: 0.4, opacity: 1.0)
+            } else if document.object.numberOfCharacters(char: char) < 5 {
+                return Color(red: 0.803, green: 0.803, blue: 0.215, opacity: 1.0)
+            } else {
+                return Color(red: 0.372, green: 0.647, blue: 0.352, opacity: 1.0)
+            }
         }
     }
 }
