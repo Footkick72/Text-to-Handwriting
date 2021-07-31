@@ -207,7 +207,9 @@ struct Text_to_HandwritingDocument: FileDocument {
                 newStroke.transform = stroke.transform
                 newDrawingStrokes.append(newStroke)
             }
-            PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+            UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
+                PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+            }
             let result = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
