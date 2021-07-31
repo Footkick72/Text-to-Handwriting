@@ -10,12 +10,6 @@ import UniformTypeIdentifiers
 import Photos
 import PencilKit
 
-extension UTType {
-    static var exampleText: UTType {
-        UTType(importedAs: "org.davidlong.plain-text")
-    }
-}
-
 struct Text_to_HandwritingDocument: FileDocument {
     var text: String
 
@@ -23,7 +17,7 @@ struct Text_to_HandwritingDocument: FileDocument {
         self.text = text
     }
 
-    static var readableContentTypes: [UTType] { [.exampleText] }
+    static var readableContentTypes: [UTType] { [.plainText] }
 
     init(configuration: ReadConfiguration) throws {
         guard let data = configuration.file.regularFileContents,
