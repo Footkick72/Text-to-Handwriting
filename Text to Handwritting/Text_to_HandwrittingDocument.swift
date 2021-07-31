@@ -89,7 +89,7 @@ struct Text_to_HandwritingDocument: FileDocument {
         let bottom_margin = template.getMargins()[3]
         
         let line_spacing = Int(font_size + 4)
-        let letter_spacing: Int = Int(Double(font_size) * 0.2)
+        let letter_spacing: Int = charset.letterSpacing
         let space_length = Int(Double(font_size) * 0.5)
         let line_end_buffer = Int(font_size)
         

@@ -13,10 +13,12 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     var availiable_chars: String
     var characters: Dictionary<String,Array<PKDrawing>>
     var charlens: Dictionary<String,Float> = [:]
+    var letterSpacing: Int
     
-    init(characters: Dictionary<String,Array<PKDrawing>>, charlens: Dictionary<String,Float>? = nil) {
+    init(characters: Dictionary<String,Array<PKDrawing>>, charlens: Dictionary<String,Float>? = nil, letterSpacing: Int = 4) {
         self.characters = characters
         self.availiable_chars = ""
+        self.letterSpacing = letterSpacing
         for char in characters.keys {
             availiable_chars += char
         }

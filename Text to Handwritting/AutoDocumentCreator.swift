@@ -15,7 +15,7 @@ let DocumentCreator = AutoDocumentCreator()
 
 class AutoDocumentCreator {
     
-    let files: Dictionary<String, Data> = ["EmptyCharacterSet.tthcharset": try! JSONEncoder().encode(CharSet(characters: Dictionary<String, Array<PKDrawing>>(), charlens: Dictionary<String, Float>())),
+    let files: Dictionary<String, Data> = ["EmptyCharacterSet.tthcharset": try! JSONEncoder().encode(CharSet(characters: Dictionary<String, Array<PKDrawing>>(), charlens: Dictionary<String, Float>(), letterSpacing: 4)),
                                            "EmptyTemplate.tthtemplate": try! JSONEncoder().encode(Template(bg: UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")),
                                            "Instructions.txt": try! JSONEncoder().encode("This is a sample instructions document which I will write late")]
     
