@@ -23,7 +23,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
             availiable_chars += char
         }
         if charlens == nil {
-            self.charlens = self.get_charlens()!
+            self.charlens = self.getCharlens()!
         } else {
             self.charlens = charlens!
         }
@@ -59,16 +59,16 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         return data
     }
     
-    func get_charlens() -> Dictionary<String,Float>? {
+    func getCharlens() -> Dictionary<String,Float>? {
         //multiply by Float(font_size), add letter_spacing * Float(font_size) / 256 to convert to accurate sizes upon generation
         var lengths: Dictionary<String,Float> = [:]
         for char in availiable_chars {
-            lengths[String(char)] = self.get_charlen(char: char)
+            lengths[String(char)] = self.getCharlen(char: char)
         }
         return lengths
     }
     
-    func get_charlen(char: Character) -> Float {
+    func getCharlen(char: Character) -> Float {
         var charlen: Float = 0
         let images = getImages(char: String(char))
         for file in images {
