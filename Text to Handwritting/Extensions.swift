@@ -69,7 +69,11 @@ extension UIImage {
 
 extension StringProtocol {
     subscript(offset: Int) -> Character {
-        self[index(startIndex, offsetBy: offset)]
+        if offset >= 0 {
+            return self[index(startIndex, offsetBy: offset)]
+        } else {
+            return self[index(startIndex, offsetBy: self.count + offset)]
+        }
     }
     
     func removeExtension(_ ext:String) -> String {
