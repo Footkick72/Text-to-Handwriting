@@ -24,9 +24,12 @@ struct CharSetEditor: View {
             VStack {
                 Slider(value: $letterSpacing, in: 2.0...20.0, step: 0.1, onEditingChanged: { _ in }, label: {})
                     .padding(.horizontal, 50)
-                .onChange(of: letterSpacing) { _ in
-                    document.object.letterSpacing = Int(letterSpacing)
-                }
+                    .onChange(of: letterSpacing) { _ in
+                        document.object.letterSpacing = Int(letterSpacing)
+                    }
+                    .onAppear() {
+                        letterSpacing = Double(document.object.letterSpacing)
+                    }
                 Text("Character spacing")
             }
             let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
