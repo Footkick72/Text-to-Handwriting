@@ -69,13 +69,6 @@ struct Text_to_HandwritingDocument: FileDocument {
     }
     
     func createImage(charset: CharSet, template: Template, updateProgress: (Double, Bool, Bool) -> Void) -> Void {
-        var words = self.text.components(separatedBy: CharacterSet(charactersIn: " \n"))
-        for word in words {
-            if word == "" || word == "\n" {
-                words.remove(at: words.firstIndex(of: word)!)
-            }
-        }
-        
         let font_size = template.fontSize
         let left_margin = template.getMargins()[0]
         let right_margin = template.getMargins()[1]
@@ -93,10 +86,6 @@ struct Text_to_HandwritingDocument: FileDocument {
         var x_pos = left_margin
         var y_pos = top_margin
         var page_i:Int = 1
-        var char_i:Int = 0
-        var pencil_hardness:Float = 0.8
-        let max_hardness:Float = 0.9
-        let min_hardness:Float = 0.7
         var line_offset:Float = 0
 
         var charlens: Dictionary<String,Float> = charset.charlens
@@ -107,75 +96,78 @@ struct Text_to_HandwritingDocument: FileDocument {
         
         updateProgress(0.0, true, false)
         
-        var word_i = 0
-        for word in words {
-            while self.text[char_i] == " " || self.text[char_i] == "\n" {
-                if self.text[char_i] == " " {
-                    x_pos += space_length
-                } else {
+        var generated = 0
+        var char_i = self.text.startIndex
+        while char_i != self.text.endIndex {
+            if self.text[char_i] == " " {
+                x_pos += space_length
+                
+                generated += 1
+                char_i = self.text.index(after: char_i)
+                updateProgress(Double(generated)/Double(self.text.count), true, false)
+            } else if self.text[char_i] == "\n" {
+                x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
+                y_pos += line_spacing
+                if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
+                    y_pos = top_margin
+                    self.savePage(template: template, image: image)
+                    image = PKDrawing()
+                    page_i += 1
+                }
+                
+                generated += 1
+                char_i = self.text.index(after: char_i)
+                updateProgress(Double(generated)/Double(self.text.count), true, false)
+            } else {
+                var end_i = char_i
+                while end_i != self.text.endIndex && !self.text[end_i].isWhitespace {
+                    end_i = self.text.index(after: end_i)
+                }
+                let word = String(self.text[char_i..<end_i])
+                //word markdown stuff
+                
+                let expected_length = get_expected_length(word: String(word), charlens: charlens, space_length: Float(space_length)) + space_length + line_end_buffer
+                if x_pos + expected_length >= size[0] - right_margin {
                     x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
                     y_pos += line_spacing
                     if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                         y_pos = top_margin
-                        if checkPhotoSavePermission() {
-                            UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
-                            template.getBackground().draw(at: CGPoint(x: 0, y: 0))
-                            image.image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
-                            let result = UIGraphicsGetImageFromCurrentImageContext()!
-                            UIGraphicsEndImageContext()
-                            UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
-                        }
+                        self.savePage(template: template, image: image)
                         image = PKDrawing()
                         page_i += 1
                     }
                 }
-                char_i += 1
-            }
-            
-            let expected_length = get_expected_length(word: String(word), charlens: charlens, space_length: Float(space_length)) + space_length + line_end_buffer
-            if x_pos + expected_length >= size[0] - right_margin {
-                x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
-                y_pos += line_spacing
-                if y_pos >= size[1] - line_spacing - bottom_margin {
-                    y_pos = top_margin
-                    if checkPhotoSavePermission() {
-                        UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
-                        template.getBackground().draw(at: CGPoint(x: 0, y: 0))
-                        image.image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
-                        let result = UIGraphicsGetImageFromCurrentImageContext()!
-                        UIGraphicsEndImageContext()
-                        UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
+                
+                for char in word {
+                    if var letter = charset.getImage(char: String(char)) {
+                        print(letter)
+                        letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
+                        letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
+                        letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
+                        image.append(letter)
+                        
+                        var letterlength = Float(letter.bounds.width)
+                        letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
+                        x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
+                        line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
+                        line_offset = max(min(line_offset, 4), -4)
+                    } else {
+                        x_pos += space_length
                     }
-                    image = PKDrawing()
-                    page_i += 1
-                }
-            }
-            
-            for char in word {
-                if var letter = charset.getImage(char: String(char)) {
-                    letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
-                    letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
-                    letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
-                    image.append(letter)
                     
-                    var letterlength = Float(letter.bounds.width)
-                    letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
-                    x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
-                    pencil_hardness += (Float.random(in: 0..<1) - 0.5) * 0.2
-                    pencil_hardness = max(min(pencil_hardness, max_hardness), min_hardness)
-                    line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
-                    line_offset = max(min(line_offset, 4), -4)
-                } else {
-                    x_pos += space_length
+                    generated += 1
+                    char_i = self.text.index(after: char_i)
+                    updateProgress(Double(generated)/Double(self.text.count), true, false)
                 }
             }
-            
-            char_i += word.count
-            word_i += 1
-            updateProgress(Double(word_i)/Double(words.count), true, false)
         }
+        self.savePage(template: template, image: image)
+        updateProgress(0.0, false, true)
+    }
+    
+    func savePage(template: Template, image: PKDrawing) {
         if checkPhotoSavePermission() {
-            UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
+            UIGraphicsBeginImageContext(template.getBackground().size)
             template.getBackground().draw(at: CGPoint(x: 0, y: 0))
             let color = UIColor(red: CGFloat(template.textColor[0]), green: CGFloat(template.textColor[1]), blue: CGFloat(template.textColor[2]), alpha: CGFloat(template.textColor[3]))
             var newDrawingStrokes = [PKStroke]()
@@ -202,13 +194,11 @@ struct Text_to_HandwritingDocument: FileDocument {
                 newDrawingStrokes.append(newStroke)
             }
             UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
-                PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+                PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0, y: 0, width: template.getBackground().size.width, height: template.getBackground().size.height), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
             }
             let result = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
         }
-        updateProgress(0.0, false, true)
-        return
     }
 }
