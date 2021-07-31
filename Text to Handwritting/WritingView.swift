@@ -101,11 +101,10 @@ struct WritingView: View {
                 .border(Color.black, width: 2)
                 .frame(maxWidth: 500 * CGFloat(canvasScale), maxHeight: 500 * CGFloat(canvasScale))
             VStack {
-                Slider(value: $canvasScale, in: 0.2...1, step: 0.01, onEditingChanged: {_ in
-                    UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
-                }, label: {})
+                Slider(value: $canvasScale, in: 0.2...1, step: 0.01, onEditingChanged: { _ in }, label: {})
                     .padding(.horizontal, 50)
                 .onChange(of: canvasScale) { _ in
+                    UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
                     let percentChange = canvasScale/previousScale
                     canvas.drawing.transform(using: CGAffineTransform(scaleX: CGFloat(percentChange), y: CGFloat(percentChange)))
                     previousScale = canvasScale
@@ -113,12 +112,11 @@ struct WritingView: View {
                 Text("Writing Canvas Scale")
             }
             VStack {
-                Slider(value: $toolWidth, in: 5.0...50.0, step: 0.1, onEditingChanged: {_ in
-                    UserDefaults.standard.setValue(toolWidth, forKey: "writingViewToolWidth")
-                }, label: {})
+                Slider(value: $toolWidth, in: 5.0...50.0, step: 0.1, onEditingChanged: { _ in }, label: {})
                     .padding(.horizontal, 50)
                 .onChange(of: toolWidth) { _ in
                     canvas.tool = PKInkingTool(.pen, color: .black, width: CGFloat(toolWidth))
+                    UserDefaults.standard.setValue(toolWidth, forKey: "writingViewToolWidth")
                 }
                 Text("Pen width")
             }
@@ -138,7 +136,7 @@ struct WritingView: View {
             }
             
             if UserDefaults.standard.double(forKey: "writingViewToolWidth") != 0.0 {
-                canvasScale = UserDefaults.standard.double(forKey: "writingViewToolWidth")
+                toolWidth = UserDefaults.standard.double(forKey: "writingViewToolWidth")
             } else {
                 UserDefaults.standard.setValue(20.0, forKey: "writingViewToolWidth")
             }
