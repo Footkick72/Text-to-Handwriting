@@ -11,12 +11,16 @@ import SwiftUI
 struct Template: Equatable, Codable, HandwritingDocumentResource {
     var background: Data
     var margins: CGRect
-    var font_size: Float
+    var fontSize: Float
+    var textColor: Array<Float>
+    var writingStyle: String
     
-    init(bg: UIImage, margins: CGRect, size: Float) {
+    init(bg: UIImage, margins: CGRect, size: Float, textColor: Array<Float>, writingStyle: String) {
         self.background = bg.pngData()!
         self.margins = margins
-        self.font_size = size
+        self.fontSize = size
+        self.textColor = textColor
+        self.writingStyle = writingStyle
     }
     
     func getBackground() -> UIImage {

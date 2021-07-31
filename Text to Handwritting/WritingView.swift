@@ -16,6 +16,7 @@ struct WritingView: View {
     @State var canvas = PKCanvasView()
     @State var canvasScale: Double = 1.0
     @State var previousScale: Double = 1.0
+    @State var toolWidth: Double = 20.0
     
     var body: some View {
         VStack(alignment: .center, spacing: 25) {
@@ -89,6 +90,7 @@ struct WritingView: View {
                 }
                 .foregroundColor(.red)
             }
+            .font(.largeTitle)
             Canvas(canvasView: $canvas)
                 .background(
                     Image("writingbackground")
@@ -110,6 +112,16 @@ struct WritingView: View {
                 }
                 Text("Writing Canvas Scale")
             }
+            VStack {
+                Slider(value: $toolWidth, in: 5.0...50.0, step: 0.1, onEditingChanged: {_ in
+                    UserDefaults.standard.setValue(toolWidth, forKey: "writingViewToolWidth")
+                }, label: {})
+                    .padding(.horizontal, 50)
+                .onChange(of: toolWidth) { _ in
+                    canvas.tool = PKInkingTool(.pen, color: .black, width: CGFloat(toolWidth))
+                }
+                Text("Pen width")
+            }
         }
         .padding(25)
         .onDisappear() {
@@ -123,6 +135,12 @@ struct WritingView: View {
                 canvasScale = UserDefaults.standard.double(forKey: "writingViewCanvasScale")
             } else {
                 UserDefaults.standard.setValue(1.0, forKey: "writingViewCanvasScale")
+            }
+            
+            if UserDefaults.standard.double(forKey: "writingViewToolWidth") != 0.0 {
+                canvasScale = UserDefaults.standard.double(forKey: "writingViewToolWidth")
+            } else {
+                UserDefaults.standard.setValue(20.0, forKey: "writingViewToolWidth")
             }
         }
     }

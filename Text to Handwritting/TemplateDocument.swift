@@ -30,16 +30,16 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     static var fileType = UTType.templateDocument
     static var defaults: Dictionary<URL, Template> = [
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("blank.tthtemplate"):
-            Template(bg: UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30),
+            Template(bg: UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("lined.tthtemplate"):
-            Template(bg: UIImage(imageLiteralResourceName: "linedpaper.png"), margins: CGRect(x: 50, y: 50, width: 780, height: 1020), size: 26)]
+            Template(bg: UIImage(imageLiteralResourceName: "linedpaper.png"), margins: CGRect(x: 50, y: 50, width: 780, height: 1020), size: 26, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
     
     init(from: Data) {
         object = try! JSONDecoder().decode(Template.self, from: from)
     }
 
-    init(bg: UIImage = UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect = CGRect(x: 50, y: 50, width: 750, height: 1000), size: Float = 30) {
-        object = Template(bg: bg, margins: margins, size: size)
+    init(bg: UIImage = UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect = CGRect(x: 50, y: 50, width: 750, height: 1000), size: Float = 30, textColor: Array<Float> = [0.0, 0.0, 0.0, 1.0], writingStyle: String =  "Pen") {
+        object = Template(bg: bg, margins: margins, size: size, textColor: textColor, writingStyle: writingStyle)
     }
 
     static var readableContentTypes: [UTType] { [.templateDocument] }

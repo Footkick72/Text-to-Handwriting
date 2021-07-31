@@ -82,7 +82,7 @@ struct Text_to_HandwritingDocument: FileDocument {
             }
         }
         
-        let font_size = template.font_size
+        let font_size = template.fontSize
         let left_margin = template.getMargins()[0]
         let right_margin = template.getMargins()[1]
         let top_margin = template.getMargins()[2]
@@ -183,7 +183,31 @@ struct Text_to_HandwritingDocument: FileDocument {
         if checkPhotoSavePermission() {
             UIGraphicsBeginImageContext(CGSize(width: size[0], height: size[1]))
             template.getBackground().draw(at: CGPoint(x: 0, y: 0))
-            image.image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+            let color = UIColor(red: CGFloat(template.textColor[0]), green: CGFloat(template.textColor[1]), blue: CGFloat(template.textColor[2]), alpha: CGFloat(template.textColor[3]))
+            var newDrawingStrokes = [PKStroke]()
+            for stroke in image.strokes {
+                //yes, I am aware this code appears to make an exact copy of stroke with a different ink. Why does it produce different behavior that doing just that? I don't know. PKDrawing is weird.
+                var newPoints = [PKStrokePoint]()
+                stroke.path.forEach { (point) in
+                    newPoints.append(point)
+                }
+                let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+                var ink: PKInk
+                switch template.writingStyle {
+                case "Pen":
+                    ink = PKInk(.pen, color: color)
+                case "Pencil":
+                    ink = PKInk(.pencil, color: color)
+                case "Marker":
+                    ink = PKInk(.marker, color: color)
+                default:
+                    fatalError("selected template's writingStyle is \(template.writingStyle), invalid!")
+                }
+                var newStroke = PKStroke(ink: ink, path: newPath)
+                newStroke.transform = stroke.transform
+                newDrawingStrokes.append(newStroke)
+            }
+            PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0, y: 0, width: size[0], height: size[1]), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
             let result = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)

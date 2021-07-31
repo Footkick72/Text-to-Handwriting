@@ -77,8 +77,8 @@ struct ImageRectSelector: View {
                     .stroke(Color.red, lineWidth: 5)
                     .frame(width: document.object.margins.width, height: document.object.margins.height)
                     .overlay(
-                        VStack(alignment: .center, spacing: CGFloat(document.object.font_size)) {
-                            ForEach(0..<max(1,Int(document.object.margins.height/(CGFloat(document.object.font_size)))) + 1, id: \.self) {i in
+                        VStack(alignment: .center, spacing: CGFloat(document.object.fontSize)) {
+                            ForEach(0..<max(1,Int(document.object.margins.height/(CGFloat(document.object.fontSize)))) + 1, id: \.self) {i in
                                 Rectangle()
                                     .stroke(Color.red, lineWidth: 1)
                                     .frame(width: document.object.margins.width, height: 1)
@@ -94,13 +94,13 @@ struct ImageRectSelector: View {
                 displayScale = Double(min(
                     UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
                     UIScreen.main.bounds.size.height/document.object.getBackground().size.height
-                )) * 0.7
+                )) * 0.5
             })
             .onChange(of: document.object.background) { _ in
                 displayScale = Double(min(
                     UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
                     UIScreen.main.bounds.size.height/document.object.getBackground().size.height
-                )) * 0.7
+                )) * 0.5
                 document.object.margins = CGRect(origin: CGPoint(x: 0, y: 0), size: document.object.getBackground().size)
             }
     }
