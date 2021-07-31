@@ -80,6 +80,7 @@
 		1A3F8D35268B684200710E99 = {
 			isa = PBXGroup;
 			children = (
+				1A3F9853268E77CF00710E99 /* .gitignore */,
 				1A3F8D3F268B684200710E99 /* Products */,
 				1A3F92C8268BD0BA00710E99 /* Defaults */,
 				1A3F8D40268B684200710E99 /* Text to Handwritting */,
@@ -118,7 +119,6 @@
 				1AA1E2CE269F2891007DAE76 /* ImageRectSelector.swift */,
 				1A3F92D0268CB75800710E99 /* Extensions.swift */,
 				1AA1E2B9269B8D9A007DAE76 /* FilesManager.swift */,
-				1A3F9853268E77CF00710E99 /* .gitignore */,
 				1A3F8D47268B684200710E99 /* Assets.xcassets */,
 				1A3F8D4C268B684200710E99 /* Info.plist */,
 				1A3F8D49268B684200710E99 /* Preview Content */,
