@@ -124,9 +124,18 @@ struct Text_to_HandwritingDocument: FileDocument {
                     end_i = self.text.index(after: end_i)
                 }
                 var word = String(self.text[char_i..<end_i])
+                
+                var isUnderline = false
+                var isStrikethrough = false
                 var isBold = false
-                if word.first == "*" && word.last == "*" {
-                    isBold = true
+                if (word.first == "*" && word.last == "*") || (word.first == "~" && word.last == "~") || (word.first == "_" && word.last == "_") {
+                    if word.first == "*" && word.last == "*" {
+                        isBold = true
+                    } else if word.first == "~" && word.last == "~" {
+                        isStrikethrough = true
+                    } else if word.first == "_" && word.last == "_" {
+                        isUnderline = true
+                    }
                     word.remove(at: word.startIndex)
                     word.remove(at: word.index(before: word.endIndex))
                     char_i = self.text.index(char_i, offsetBy: 2)
@@ -143,6 +152,8 @@ struct Text_to_HandwritingDocument: FileDocument {
                         page_i += 1
                     }
                 }
+                
+                var wordPath = Array<PKStrokePoint>()
                 
                 for char in word {
                     if var letter = charset.getImage(char: String(char)) {
@@ -172,6 +183,14 @@ struct Text_to_HandwritingDocument: FileDocument {
                         letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
                         image.append(letter)
                         
+                        let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
+                                                                    y: isStrikethrough ? letter.bounds.midY : letter.bounds.maxY + 4),
+                                                  timeOffset: TimeInterval(),
+                                                  size: CGSize(width: 5, height: 5),
+                                                  opacity: 1.0, force: 1.0,
+                                                  azimuth: 0.0, altitude: 0.0)
+                        wordPath.append(point)
+                        
                         var letterlength = Float(letter.bounds.width)
                         letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
                         x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
@@ -184,6 +203,13 @@ struct Text_to_HandwritingDocument: FileDocument {
                     generated += 1
                     char_i = self.text.index(after: char_i)
                     updateProgress(Double(generated)/Double(self.text.count), true, false)
+                }
+                
+                let path = PKStrokePath(controlPoints: wordPath, creationDate: Date())
+                if isUnderline || isStrikethrough {
+                    let stroke = PKStroke(ink: PKInk(.pen, color: .black), path: path)
+                    let drawing = PKDrawing(strokes: [stroke])
+                    image.append(drawing)
                 }
             }
         }
