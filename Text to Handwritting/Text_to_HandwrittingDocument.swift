@@ -154,6 +154,7 @@ struct Text_to_HandwritingDocument: FileDocument {
                 }
                 
                 var wordPath = Array<PKStrokePoint>()
+                var pathY: CGFloat = 0
                 
                 for char in word {
                     if var letter = charset.getImage(char: String(char)) {
@@ -183,10 +184,19 @@ struct Text_to_HandwritingDocument: FileDocument {
                         letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
                         image.append(letter)
                         
+                        let idealY = isStrikethrough ? letter.bounds.midY : letter.bounds.maxY + 4
+                        if pathY == 0 {
+                            pathY = idealY
+                        } else {
+                            pathY += CGFloat.random(in: -2...2)
+                            let t: CGFloat = 0.1
+                            pathY = pathY * (1.0 - t) + idealY * t
+                        }
+                        
                         let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
-                                                                    y: isStrikethrough ? letter.bounds.midY : letter.bounds.maxY + 4),
+                                                                    y: pathY),
                                                   timeOffset: TimeInterval(),
-                                                  size: CGSize(width: 5, height: 5),
+                                                  size: CGSize(width: 3, height: 3),
                                                   opacity: 1.0, force: 1.0,
                                                   azimuth: 0.0, altitude: 0.0)
                         wordPath.append(point)
