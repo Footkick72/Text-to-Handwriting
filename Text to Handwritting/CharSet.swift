@@ -99,7 +99,8 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     
     func isCompleteFor(text: String) -> Bool {
         for char in text {
-            if numberOfCharacters(char: String(char)) == 0 && char != " " && char != "\n"{
+            // do we have it? is it a whitespace or a markdown character? No to both = return false
+            if numberOfCharacters(char: String(char)) == 0 && char != " " && char != "\n" && char != "*" && char != "_" && char != "~" {
                 return false
             }
         }
