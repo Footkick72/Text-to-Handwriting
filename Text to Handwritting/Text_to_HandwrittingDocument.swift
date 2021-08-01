@@ -123,8 +123,14 @@ struct Text_to_HandwritingDocument: FileDocument {
                 while end_i != self.text.endIndex && !self.text[end_i].isWhitespace {
                     end_i = self.text.index(after: end_i)
                 }
-                let word = String(self.text[char_i..<end_i])
-                //word markdown stuff
+                var word = String(self.text[char_i..<end_i])
+                var isBold = false
+                if word.first == "*" && word.last == "*" {
+                    isBold = true
+                    word.remove(at: word.startIndex)
+                    word.remove(at: word.index(before: word.endIndex))
+                    char_i = self.text.index(char_i, offsetBy: 2)
+                }
                 
                 let expected_length = get_expected_length(word: String(word), charlens: charlens, space_length: Float(space_length)) + space_length + line_end_buffer
                 if x_pos + expected_length >= size[0] - right_margin {
@@ -140,7 +146,27 @@ struct Text_to_HandwritingDocument: FileDocument {
                 
                 for char in word {
                     if var letter = charset.getImage(char: String(char)) {
-                        print(letter)
+                        
+                        if isBold {
+                            var boldStrokes = [PKStroke]()
+                            for stroke in letter.strokes {
+                                var newPoints = [PKStrokePoint]()
+                                stroke.path.forEach { (point) in
+                                    let newPoint = PKStrokePoint(location: point.location,
+                                                                 timeOffset: point.timeOffset,
+                                                                 size: point.size.applying(CGAffineTransform(scaleX: 2, y: 2)),
+                                                                 opacity: point.opacity, force: point.force,
+                                                                 azimuth: point.azimuth, altitude: point.altitude)
+                                    newPoints.append(newPoint)
+                                }
+                                let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+                                var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
+                                newStroke.transform = stroke.transform
+                                boldStrokes.append(newStroke)
+                            }
+                            letter = PKDrawing(strokes: boldStrokes)
+                        }
+                        
                         letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
                         letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
                         letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
