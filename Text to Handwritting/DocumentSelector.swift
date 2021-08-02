@@ -66,7 +66,9 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
             let columns = [ GridItem(.flexible(minimum: itemWidth, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: itemWidth, maximum: 360), spacing: 10),]
             LazyVGrid(columns: columns, alignment: .center, spacing: 10) {
-                ForEach(Array(DocType.defaults.keys), id: \.self) { key in
+                ForEach(Array(DocType.defaults.keys).sorted(by: {a, b in
+                    return a.lastPathComponent < b.lastPathComponent
+                }), id: \.self) { key in
                     let set = DocType.defaults[key]
                     VStack {
                         Text(verbatim: key.lastPathComponent.removeExtension(DocType.fileExtension))

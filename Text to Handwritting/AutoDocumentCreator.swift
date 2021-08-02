@@ -45,13 +45,17 @@ class AutoDocumentCreator {
         }
         
         for url in CharSetDocument.defaults.keys {
-            let data = try! JSONEncoder().encode(CharSetDocument.defaults[url])
-            try! data.write(to: url)
+            if !FileManager.default.fileExists(atPath: url.path) {
+                let data = try! JSONEncoder().encode(CharSetDocument.defaults[url])
+                try! data.write(to: url)
+            }
         }
         
         for url in TemplateDocument.defaults.keys {
-            let data = try! JSONEncoder().encode(TemplateDocument.defaults[url])
-            try! data.write(to: url)
+            if !FileManager.default.fileExists(atPath: url.path) {
+                let data = try! JSONEncoder().encode(TemplateDocument.defaults[url])
+                try! data.write(to: url)
+            }
         }
     }
 }
