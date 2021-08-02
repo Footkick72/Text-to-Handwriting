@@ -22,10 +22,10 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         for char in characters.keys {
             availiable_chars += char
         }
-        if charlens == nil {
-            self.charlens = self.getCharlens()!
+        if let charlens = charlens {
+            self.charlens = charlens
         } else {
-            self.charlens = charlens!
+            self.charlens = self.getCharlens()
         }
     }
     
@@ -35,11 +35,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     
     func getImage(char: String) -> PKDrawing? {
         let images = getImages(char: char)
-        if images.count > 0 {
-            return images.randomElement()!
-        } else {
-            return nil
-        }
+        return images.randomElement()
     }
     
     func getSameImage(char: String) -> PKDrawing {
@@ -59,7 +55,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         return data
     }
     
-    func getCharlens() -> Dictionary<String,Float>? {
+    func getCharlens() -> Dictionary<String,Float> {
         //multiply by Float(font_size), add letter_spacing * Float(font_size) / 256 to convert to accurate sizes upon generation
         var lengths: Dictionary<String,Float> = [:]
         for char in availiable_chars {
@@ -100,7 +96,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     func isCompleteFor(text: String) -> Bool {
         for char in text {
             // do we have it? is it a whitespace or a markdown character? No to both = return false
-            if numberOfCharacters(char: String(char)) == 0 && char != " " && char != "\n" && char != "*" && char != "_" && char != "~" {
+            if numberOfCharacters(char: String(char)) == 0 && " \n*_~".firstIndex(of: char) == nil {
                 return false
             }
         }

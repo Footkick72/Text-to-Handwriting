@@ -23,21 +23,21 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     var body: some View {
         VStack {
             title
-            if objectCatalog.documentPath != nil {
-                Text(verbatim: objectCatalog.documentPath!.lastPathComponent.removeExtension(DocType.fileExtension))
-                Image(uiImage: objectCatalog.document()!.object.getPreview())
+            if let path = objectCatalog.documentPath, let object = objectCatalog.document()?.object {
+                Text(verbatim: path.lastPathComponent.removeExtension(DocType.fileExtension))
+                Image(uiImage: object.getPreview())
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(maxWidth: itemWidth)
                     .border(Color.black, width: 1)
                     .overlay(
-                        Text(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                        Text(object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
                             .foregroundColor(.red)
                             .multilineTextAlignment(.center)
                             .background(
                                 RoundedRectangle(cornerRadius: 25.0, style: .continuous)
                                     .foregroundColor(.white)
-                                    .opacity(objectCatalog.document()!.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                                    .opacity(object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
                             )
                     )
             }
@@ -69,32 +69,33 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                 ForEach(Array(DocType.defaults.keys).sorted(by: {a, b in
                     return a.lastPathComponent < b.lastPathComponent
                 }), id: \.self) { key in
-                    let set = DocType.defaults[key]
-                    VStack {
-                        Text(verbatim: key.lastPathComponent.removeExtension(DocType.fileExtension))
-                            .font(.subheadline)
-                        Image(uiImage: set!.getPreview())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: itemWidth)
-                            .border(Color.black, width: 1)
-                            .overlay(
-                                Text(set!.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
-                                    .foregroundColor(.red)
-                                    .multilineTextAlignment(.center)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-                                            .foregroundColor(.white)
-                                            .opacity(set!.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
-                                    )
-                            )
-                    }
-                    .padding()
-                    .border(Color.black, width: objectCatalog.isSelectedDocument(path: key) ? 1 : 0)
-                    .onTapGesture() {
-                        objectCatalog.documentPath = key
-                        objectCatalog.save()
-                        showingSelector = false
+                    if let set = DocType.defaults[key] {
+                        VStack {
+                            Text(verbatim: key.lastPathComponent.removeExtension(DocType.fileExtension))
+                                .font(.subheadline)
+                            Image(uiImage: set.getPreview())
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: itemWidth)
+                                .border(Color.black, width: 1)
+                                .overlay(
+                                    Text(set.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                                        .foregroundColor(.red)
+                                        .multilineTextAlignment(.center)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                                                .foregroundColor(.white)
+                                                .opacity(set.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
+                                        )
+                                )
+                        }
+                        .padding()
+                        .border(Color.black, width: objectCatalog.isSelectedDocument(path: key) ? 1 : 0)
+                        .onTapGesture() {
+                            objectCatalog.documentPath = key
+                            objectCatalog.save()
+                            showingSelector = false
+                        }
                     }
                 }
                 ForEach(0..<objectCatalog.documents.count, id: \.self) { i in

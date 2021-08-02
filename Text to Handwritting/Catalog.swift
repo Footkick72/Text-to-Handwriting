@@ -67,8 +67,8 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
                 documents.remove(at: documents.firstIndex(of: file)!)
             }
         }
-        if documentPath != nil && !FileManager.default.fileExists(atPath: documentPath!.path) {
-            documentPath = nil
+        if let documentPath = documentPath, !FileManager.default.fileExists(atPath: documentPath.path) {
+            self.documentPath = nil
         }
     }
     

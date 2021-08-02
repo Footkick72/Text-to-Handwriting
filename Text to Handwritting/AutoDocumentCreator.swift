@@ -36,24 +36,23 @@ class AutoDocumentCreator {
                                             """.data(using: .utf8)!]
     
     func createDocuments() {
-        for file in files.keys {
-            let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(file)
+        for (path, file) in files {
+            let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(path)
             if !FileManager.default.fileExists(atPath: url.path) {
-                let data = files[file]!
+                try! file.write(to: url)
+            }
+        }
+        
+        for (url, file) in CharSetDocument.defaults {
+            if !FileManager.default.fileExists(atPath: url.path) {
+                let data = try! JSONEncoder().encode(file)
                 try! data.write(to: url)
             }
         }
         
-        for url in CharSetDocument.defaults.keys {
+        for (url, file) in TemplateDocument.defaults {
             if !FileManager.default.fileExists(atPath: url.path) {
-                let data = try! JSONEncoder().encode(CharSetDocument.defaults[url])
-                try! data.write(to: url)
-            }
-        }
-        
-        for url in TemplateDocument.defaults.keys {
-            if !FileManager.default.fileExists(atPath: url.path) {
-                let data = try! JSONEncoder().encode(TemplateDocument.defaults[url])
+                let data = try! JSONEncoder().encode(file)
                 try! data.write(to: url)
             }
         }

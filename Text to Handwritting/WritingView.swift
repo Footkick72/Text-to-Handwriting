@@ -154,16 +154,13 @@ struct WritingView: View {
             document.object.availiable_chars += selection
         }
         
-        if document.object.characters.keys.firstIndex(of: selection) != nil {
-            document.object.characters[selection]!.append(image)
-        } else {
-            document.object.characters[selection] = [image]
-        }
+        let s = document.object.characters[selection] ?? []
+        document.object.characters[selection] = s + [image]
         
-        if document.object.charlens.keys.firstIndex(of: selection) != nil {
-            var sum = document.object.charlens[selection]! * Float(document.object.characters[selection]!.count - 1)
+        if var lengths = document.object.charlens[selection], let drawings = document.object.characters[selection] {
+            var sum = lengths * Float(drawings.count - 1)
             sum += Float(image.bounds.width)
-            document.object.charlens[selection]! = sum / Float(document.object.characters[selection]!.count)
+            lengths = sum / Float(drawings.count)
         } else {
             document.object.charlens[selection] = Float(image.bounds.width)
         }

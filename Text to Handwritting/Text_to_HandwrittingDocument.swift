@@ -36,8 +36,8 @@ struct Text_to_HandwritingDocument: FileDocument {
     func get_expected_length(word: String, charlens: Dictionary<String,Float>, space_length: Float) -> Int{
         var length: Float = 0.0
         for char in word {
-            if charlens.keys.firstIndex(of: String(char)) != nil {
-                length += charlens[String(char)]!
+            if let len = charlens[String(char)] {
+                length += len
             } else {
                 length += space_length
             }
@@ -89,9 +89,9 @@ struct Text_to_HandwritingDocument: FileDocument {
         var line_offset:Float = 0
 
         var charlens: Dictionary<String,Float> = charset.charlens
-        for k in charlens.keys {
-            charlens[k] = charlens[k]! * Float(font_size) / 256
-            charlens[k] = charlens[k]! +  Float(letter_spacing) * Float(font_size) / 256.0
+        for (k, v) in charlens {
+            charlens[k] = v * Float(font_size) / 256
+            charlens[k] = v +  Float(letter_spacing) * Float(font_size) / 256.0
         }
         
         updateProgress(0.0, true, false)
@@ -256,9 +256,13 @@ struct Text_to_HandwritingDocument: FileDocument {
                 newDrawingStrokes.append(newStroke)
             }
             UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
-                PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0, y: 0, width: template.getBackground().size.width, height: template.getBackground().size.height), scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+                PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0,
+                                                                         y: 0,
+                                                                         width: template.getBackground().size.width,
+                                                                         height: template.getBackground().size.height),
+                                                            scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
             }
-            let result = UIGraphicsGetImageFromCurrentImageContext()!
+            guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
         }
