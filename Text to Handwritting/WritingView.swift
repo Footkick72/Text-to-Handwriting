@@ -38,6 +38,11 @@ struct WritingView: View {
                                 }) {
                                     Image(systemName: "xmark.circle")
                                         .foregroundColor(.red)
+                                        .padding(4)
+                                        .background(
+                                            Circle()
+                                                .foregroundColor(.white)
+                                        )
                                 }
                                 .offset(x: 25, y: -25)
                             )
