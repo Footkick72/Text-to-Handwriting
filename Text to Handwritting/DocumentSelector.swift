@@ -93,6 +93,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                     .border(Color.black, width: objectCatalog.isSelectedDocument(path: key) ? 1 : 0)
                     .onTapGesture() {
                         objectCatalog.documentPath = key
+                        objectCatalog.save()
                         showingSelector = false
                     }
                 }
@@ -129,6 +130,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                     .border(Color.black, width: objectCatalog.isSelectedDocument(path: objectCatalog.documents[i]) ? 1 : 0)
                     .onTapGesture {
                         objectCatalog.documentPath = objectCatalog.documents[i]
+                        objectCatalog.save()
                         showingSelector = false
                     }
                 }
@@ -152,6 +154,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                 do {
                     if objectCatalog.documents.firstIndex(of: try url.get()) == nil {
                         objectCatalog.documents.append(try url.get())
+                        objectCatalog.save()
                     } else {
                         showingUniquenessAlert = true
                     }

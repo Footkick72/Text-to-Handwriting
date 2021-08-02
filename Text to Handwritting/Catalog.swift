@@ -54,6 +54,7 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         }
         documents.remove(at: at)
         findNewTemplate()
+        save()
     }
     
     func isSelectedDocument(path: URL) -> Bool {
