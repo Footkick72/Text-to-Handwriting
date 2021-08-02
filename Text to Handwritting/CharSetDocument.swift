@@ -25,7 +25,7 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
     
     typealias ObjectType = CharSet
     
-    static var defaultSaveFile = "charsets.json"
+    static var defaultSaveFile = "charsets"
     static var fileExtension = ".tthcharset"
     static var fileType = UTType.charSetDocument
     static var defaults: Dictionary<URL, CharSet> = [:]

@@ -74,27 +74,40 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
     
     func save() {
         trim()
-        let manager = FilesManager()
-        do {
-            try manager.delete(fileNamed: DocType.defaultSaveFile)
-        } catch { print("error saving: \(error)") }
-        do {
-            if documentPath != nil {
-                documents.append(documentPath!)
-            } else {
-                documents.append(URL(string: "randomnonscenceurl812748921)(*&@")!)
-            }
-            try manager.save(fileNamed: DocType.defaultSaveFile, data: JSONEncoder().encode(documents))
-        } catch { print("error saving: \(error)") }
+        if documents.count != 0 {
+            let bookmarks = documents.map() { try! $0.bookmarkData() }
+            UserDefaults.standard.setValue(bookmarks, forKey: DocType.defaultSaveFile + "DocumentList")
+        } else {
+            UserDefaults.standard.setValue(nil, forKey: DocType.defaultSaveFile + "DocumentList")
+        }
+        
+        if let documentPath = documentPath  {
+            let selectedBookmark = try! documentPath.bookmarkData()
+            UserDefaults.standard.setValue(selectedBookmark, forKey: DocType.defaultSaveFile + "SelectedDocument")
+        } else {
+            UserDefaults.standard.setValue(nil, forKey: DocType.defaultSaveFile + "SelectedDocument")
+        }
     }
 
     func load() {
-        let manager = FilesManager()
-        do {
-            self.documents = try JSONDecoder().decode(Array<URL>.self, from: try manager.read(fileNamed: DocType.defaultSaveFile))
-            self.documentPath = self.documents.popLast()
-        } catch { print("error loading: \(error)") }
+        var toResave = false
+        if let docs = UserDefaults.standard.array(forKey: DocType.defaultSaveFile + "DocumentList") {
+            self.documents = []
+            for d in docs {
+                do {
+                    self.documents.append(try URL(resolvingBookmarkData: d as! Data, bookmarkDataIsStale: &toResave))
+                    print("loaded documents")
+                } catch { }
+            }
+        }
+        
+        if let selected = UserDefaults.standard.data(forKey: DocType.defaultSaveFile + "SelectedDocument") {
+            do {
+                self.documentPath = try URL(resolvingBookmarkData: selected, bookmarkDataIsStale: &toResave)
+            } catch { self.documentPath = nil }
+        }
         trim()
         findNewTemplate()
+        save()
     }
 }

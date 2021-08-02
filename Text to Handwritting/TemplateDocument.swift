@@ -25,7 +25,7 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     
     typealias ObjectType = Template
     
-    static var defaultSaveFile = "templates.json"
+    static var defaultSaveFile = "templates"
     static var fileExtension = ".tthtemplate"
     static var fileType = UTType.templateDocument
     static var defaults: Dictionary<URL, Template> = [
