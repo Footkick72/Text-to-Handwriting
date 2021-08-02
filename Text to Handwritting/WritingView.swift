@@ -26,29 +26,30 @@ struct WritingView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 25) {
                     ForEach(0..<document.object.getImages(char: selection).count, id: \.self) { i in
-                        let image = document.object.getImages(char: selection)[i]
-                        Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 50, height: 50)
-                            .border(Color.black, width: 2)
-                            .overlay(
-                                Button(action: {
-                                    self.deleteImage(imageIndex: i)
-                                }) {
-                                    Image(systemName: "xmark.circle")
-                                        .foregroundColor(.red)
-                                        .padding(4)
-                                        .background(
-                                            Circle()
-                                                .foregroundColor(.white)
-                                        )
-                                }
-                                .offset(x: 25, y: -25)
-                            )
+                        ZStack {
+                            let image = document.object.getImages(char: selection)[i]
+                            Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 50, height: 50)
+                                .border(Color.black, width: 2)
+                            Button(action: {
+                                self.deleteImage(imageIndex: i)
+                            }) {
+                                Image(systemName: "xmark.circle")
+                                    .foregroundColor(.red)
+                                    .padding(4)
+                                    .background(
+                                        Circle()
+                                            .foregroundColor(.white)
+                                    )
+                            }
+                            .offset(x: 25, y: -25)
+                        }
                     }
                 }
-                .frame(width: CGFloat(scrollWidth), height: 70)
+                .padding()
+                .frame(height: 70)
             }
             .frame(width: CGFloat(scrollWidth), height: 70)
             HStack(alignment: .center, spacing: 10) {
