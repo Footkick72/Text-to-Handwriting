@@ -18,6 +18,7 @@
 		1A53399C26A71B7E00CC037D /* CharSetDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A53399B26A71B7E00CC037D /* CharSetDocument.swift */; };
 		1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A59E4AE2690FAC500F93D58 /* Template.swift */; };
 		1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A59E4B82694D35000F93D58 /* ImagePicker.swift */; };
+		1A80242C26B993490099110C /* DefaultCharset.tthcharset in Resources */ = {isa = PBXBuildFile; fileRef = 1A80242B26B993490099110C /* DefaultCharset.tthcharset */; };
 		1A86D08426B5AC54007A236A /* blankpaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D08326B5AC53007A236A /* blankpaper.png */; };
 		1A86D0A526B5DECC007A236A /* textformat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D0A426B5DECC007A236A /* textformat@2x.png */; };
 		1A86D0A826B5E089007A236A /* doc.richtext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D0A726B5E089007A236A /* doc.richtext@2x.png */; };
@@ -31,7 +32,6 @@
 		1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */; };
 		1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */; };
 		1AA4E6EF26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */; };
-		1AA4E6F126B3023900EDBCD9 /* DefaultCharset.tthcharset in Resources */ = {isa = PBXBuildFile; fileRef = 1AA4E6F026B3023900EDBCD9 /* DefaultCharset.tthcharset */; };
 		1ACB329826AF3322000674BC /* DocumentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329726AF3322000674BC /* DocumentSelector.swift */; };
 		1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +52,7 @@
 		1A53399B26A71B7E00CC037D /* CharSetDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSetDocument.swift; sourceTree = "<group>"; };
 		1A59E4AE2690FAC500F93D58 /* Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Template.swift; sourceTree = "<group>"; };
 		1A59E4B82694D35000F93D58 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		1A80242B26B993490099110C /* DefaultCharset.tthcharset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DefaultCharset.tthcharset; sourceTree = "<group>"; };
 		1A86D08326B5AC53007A236A /* blankpaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankpaper.png; sourceTree = "<group>"; };
 		1A86D0A426B5DECC007A236A /* textformat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textformat@2x.png"; sourceTree = "<group>"; };
 		1A86D0A726B5E089007A236A /* doc.richtext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "doc.richtext@2x.png"; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 		1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharSetEditor.swift; sourceTree = "<group>"; };
 		1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
 		1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDocumentCreator.swift; sourceTree = "<group>"; };
-		1AA4E6F026B3023900EDBCD9 /* DefaultCharset.tthcharset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DefaultCharset.tthcharset; sourceTree = "<group>"; };
 		1ACB329726AF3322000674BC /* DocumentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSelector.swift; sourceTree = "<group>"; };
 		1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwrittingDocumentProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,7 +141,7 @@
 		1A3F92C8268BD0BA00710E99 /* Defaults */ = {
 			isa = PBXGroup;
 			children = (
-				1AA4E6F026B3023900EDBCD9 /* DefaultCharset.tthcharset */,
+				1A80242B26B993490099110C /* DefaultCharset.tthcharset */,
 				1A86D08326B5AC53007A236A /* blankpaper.png */,
 				1A3F92C9268BD0E200710E99 /* linedpaper.png */,
 			);
@@ -224,9 +224,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A86D08426B5AC54007A236A /* blankpaper.png in Resources */,
-				1AA4E6F126B3023900EDBCD9 /* DefaultCharset.tthcharset in Resources */,
 				1A86D0A826B5E089007A236A /* doc.richtext@2x.png in Resources */,
 				1A86D0A526B5DECC007A236A /* textformat@2x.png in Resources */,
+				1A80242C26B993490099110C /* DefaultCharset.tthcharset in Resources */,
 				1A3F8D4B268B684200710E99 /* Preview Assets.xcassets in Resources */,
 				1A3F8D48268B684200710E99 /* Assets.xcassets in Resources */,
 				1A3F92CA268BD0E200710E99 /* linedpaper.png in Resources */,
