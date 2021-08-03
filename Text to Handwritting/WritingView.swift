@@ -18,6 +18,8 @@ struct WritingView: View {
     @State var previousScale: Double = 1.0
     @State var toolWidth: Double = 20.0
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         VStack(alignment: .center, spacing: 25) {
             Text("Write " + selection)
@@ -41,7 +43,7 @@ struct WritingView: View {
                                     .padding(4)
                                     .background(
                                         Circle()
-                                            .foregroundColor(.white)
+                                            .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
                                     )
                             }
                             .offset(x: 25, y: -25)
