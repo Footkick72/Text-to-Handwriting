@@ -21,7 +21,10 @@ struct TemplateEditor: View {
                 showingImagePicker = true
             }) {
                 Image(systemName: "photo.on.rectangle.angled")
-            }.frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.9, alignment: .top)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 40)
+            }.frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.8, alignment: .top)
             VStack {
                 NumberSelector(value: $document.object.fontSize, minValue: 5, maxValue: 200, label: "Font size")
                     .frame(width: 300)
