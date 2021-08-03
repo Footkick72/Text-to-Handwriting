@@ -24,7 +24,7 @@ struct CharSetEditor: View {
     var body: some View {
         VStack {
             VStack {
-                Slider(value: $letterSpacing, in: 2.0...20.0, step: 0.1, onEditingChanged: { _ in }, label: {})
+                Slider(value: $letterSpacing, in: 0.0...20.0, step: 0.1, onEditingChanged: { _ in }, label: {})
                     .padding(.horizontal, 50)
                     .onChange(of: letterSpacing) { _ in
                         document.object.letterSpacing = Int(letterSpacing)
