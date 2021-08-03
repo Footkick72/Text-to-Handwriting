@@ -150,7 +150,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                             .frame(width: 50, height: 50)
                     }
                     .alert(isPresented: $showingUniquenessAlert) {
-                        Alert(title: Text("Cannot load character set"), message: Text("You have already loaded this character set"), dismissButton: .default(Text("OK")))
+                        Alert(title: Text("Cannot load file"), message: Text("You have already loaded this file"), dismissButton: .default(Text("OK")))
                     }
                 }
             }
