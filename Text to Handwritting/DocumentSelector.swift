@@ -36,6 +36,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                         Text(object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
                             .foregroundColor(.red)
                             .multilineTextAlignment(.center)
+                            .padding(5)
                             .background(
                                 RoundedRectangle(cornerRadius: 25.0, style: .continuous)
                                     .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
@@ -86,6 +87,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                                     Text(set.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
                                         .foregroundColor(.red)
                                         .multilineTextAlignment(.center)
+                                        .padding(5)
                                         .background(
                                             RoundedRectangle(cornerRadius: 25.0, style: .continuous)
                                                 .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
@@ -124,6 +126,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                                 Text(set.object.isCompleteFor(text: textToGenerate) ? "" : "Warning:\nCharset\nis incomplete\nfor text!")
                                     .foregroundColor(.red)
                                     .multilineTextAlignment(.center)
+                                    .padding(5)
                                     .background(
                                         RoundedRectangle(cornerRadius: 25.0, style: .continuous)
                                             .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
