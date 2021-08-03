@@ -125,6 +125,12 @@ struct Text_to_HandwritingDocument: FileDocument {
                 generated += 1
                 char_i = self.text.index(after: char_i)
                 updateProgress(Double(generated)/Double(self.text.count), true, false)
+            } else if self.text[char_i] == "\t" {
+                x_pos += space_length * 4
+                
+                generated += 1
+                char_i = self.text.index(after: char_i)
+                updateProgress(Double(generated)/Double(self.text.count), true, false)
             } else if self.text[char_i] == "\n" {
                 x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
                 y_pos += line_spacing
