@@ -90,8 +90,7 @@ struct Text_to_HandwritingDocument: FileDocument {
 
         var charlens: Dictionary<String,Float> = charset.charlens
         for (k, v) in charlens {
-            charlens[k] = v * Float(font_size) / 256
-            charlens[k] = v +  Float(letter_spacing) * Float(font_size) / 256.0
+            charlens[k] = (v  + Float(letter_spacing)) * Float(font_size) / 256
         }
         
         updateProgress(0.0, true, false)
