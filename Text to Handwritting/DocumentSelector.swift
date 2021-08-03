@@ -20,6 +20,8 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     
     var itemWidth: CGFloat = 200
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         VStack {
             title
@@ -36,7 +38,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                             .multilineTextAlignment(.center)
                             .background(
                                 RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
                                     .opacity(object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
                             )
                     )
@@ -61,6 +63,8 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
     
     var itemWidth: CGFloat = 200
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             let columns = [ GridItem(.flexible(minimum: itemWidth, maximum: 360), spacing: 10),
@@ -84,7 +88,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                                         .multilineTextAlignment(.center)
                                         .background(
                                             RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-                                                .foregroundColor(.white)
+                                                .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
                                                 .opacity(set.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
                                         )
                                 )
@@ -122,7 +126,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                                     .multilineTextAlignment(.center)
                                     .background(
                                         RoundedRectangle(cornerRadius: 25.0, style: .continuous)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
                                             .opacity(set.object.isCompleteFor(text: textToGenerate) ? 0.0 : 1.0)
                                     )
                             )
