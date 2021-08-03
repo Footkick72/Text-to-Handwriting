@@ -22,7 +22,7 @@ class AutoDocumentCreator {
 
                                             This application converts typed text into images of handwritten text. To see it in action, tap the "Convert to Handwritting" button at the top right of this document, and then tap "Save to Photos". A handwritten version of this file will be added to your photos.
 
-                                            The generator supports simple markup. To make a word appear *bold*, place a "*" on either end of it. You can also _underline_ or use ~strikethrough~.
+                                            The generator supports simple markup. To make a word appear *bold*, place a "*" on either end of it. You can also _underline_ with two "_"s or use two "~"s for ~strikethrough~.
 
                                             The generation can be customized using the menu that appears after tapping "Convert to Handwritting". There is a character set that gives the handwriting style, and a template that gives the paper style. Tap on them to select a different character set or template. There are two default templates, for lined and unlined paper, and one default character set. The import button is used to select a new character set or template file from your filesystem.
 
