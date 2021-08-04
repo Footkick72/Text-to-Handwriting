@@ -18,7 +18,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
     
-    var itemWidth: CGFloat = 200
+    var itemWidth: CGFloat = 150
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -63,7 +63,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
     
-    var itemWidth: CGFloat = 200
+    var itemWidth: CGFloat = 150
     
     @Environment(\.colorScheme) var colorScheme
     
