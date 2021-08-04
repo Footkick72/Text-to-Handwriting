@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ImageRectSelector: View {
     @Binding var document: TemplateDocument
+    @State var scale: Double
     
     @State var selectedCorner: Corners?
     enum Corners: Identifiable {
@@ -19,7 +20,6 @@ struct ImageRectSelector: View {
         }
     }
     
-    @State var displayScale = 0.5
     @State var initial_rel_dist: CGPoint?
     
     var body: some View {
@@ -34,7 +34,7 @@ struct ImageRectSelector: View {
                             let toBottomLeft = sqrt(pow(pos.location.x - document.object.margins.minX,2) + pow(pos.location.y - document.object.margins.maxY,2))
                             let toBottomRight = sqrt(pow(pos.location.x - document.object.margins.maxX,2) + pow(pos.location.y - document.object.margins.maxY,2))
                             let closest = min(toTopLeft, min(toTopRight, min(toBottomLeft, toBottomRight)))
-                            if closest > CGFloat(25) / CGFloat(displayScale) {
+                            if closest > CGFloat(25) / CGFloat(scale) {
                                 selectedCorner = .fullRect
                             }
                             else if closest == toTopLeft {
@@ -74,13 +74,13 @@ struct ImageRectSelector: View {
             )
             .overlay(
                 Rectangle()
-                    .stroke(Color.red, lineWidth: 5)
+                    .stroke(Color.red, lineWidth: CGFloat(5)/CGFloat(scale))
                     .frame(width: document.object.margins.width, height: document.object.margins.height)
                     .overlay(
                         VStack(alignment: .center, spacing: CGFloat(document.object.fontSize)) {
                             ForEach(0..<max(1,Int(document.object.margins.height/(CGFloat(document.object.fontSize)))) + 1, id: \.self) {i in
                                 Rectangle()
-                                    .stroke(Color.red, lineWidth: 1)
+                                    .stroke(Color.red, lineWidth: CGFloat(1)/CGFloat(scale))
                                     .frame(width: document.object.margins.width, height: 1)
                             }
                         }
@@ -89,18 +89,7 @@ struct ImageRectSelector: View {
                     )
                     .position(x: document.object.margins.midX, y: document.object.margins.midY)
             )
-            .scaleEffect(CGFloat(displayScale))
-            .onAppear(perform: {
-                displayScale = Double(min(
-                    UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
-                    UIScreen.main.bounds.size.height/document.object.getBackground().size.height
-                )) * 0.5
-            })
             .onChange(of: document.object.background) { _ in
-                displayScale = Double(min(
-                    UIScreen.main.bounds.size.width/document.object.getBackground().size.width,
-                    UIScreen.main.bounds.size.height/document.object.getBackground().size.height
-                )) * 0.5
                 document.object.margins = CGRect(origin: CGPoint(x: 0, y: 0), size: document.object.getBackground().size)
             }
     }
