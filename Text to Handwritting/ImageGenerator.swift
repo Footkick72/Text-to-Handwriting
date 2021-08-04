@@ -9,7 +9,7 @@ import Foundation
 import Photos
 import PencilKit
 
-class ImageGenerator {
+class ImageGenerator: NSObject {
     var text: String
     var charset: CharSet
     var template: Template
@@ -35,6 +35,8 @@ class ImageGenerator {
     var line_offset:Float = 0
 
     var charlens: Dictionary<String,Float>
+    
+    var semaphore = DispatchSemaphore(value: 0)
     
     init(text: String, charset: CharSet, template: Template, updateProgress: @escaping (Double, Bool, Bool) -> Void) {
         self.text = text
@@ -147,6 +149,7 @@ class ImageGenerator {
                     self.savePage(template: template, image: image)
                     image = PKDrawing()
                     page_i += 1
+                    semaphore.wait()
                 }
                 
                 generated += 1
@@ -169,6 +172,7 @@ class ImageGenerator {
                         self.savePage(template: template, image: image)
                         image = PKDrawing()
                         page_i += 1
+                        semaphore.wait()
                     }
                 }
                 
@@ -211,6 +215,7 @@ class ImageGenerator {
                         self.savePage(template: template, image: image)
                         image = PKDrawing()
                         page_i += 1
+                        semaphore.wait()
                     }
                 }
                 
@@ -336,7 +341,11 @@ class ImageGenerator {
             }
             guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
             UIGraphicsEndImageContext()
-            UIImageWriteToSavedPhotosAlbum(result, nil, nil, nil)
+            UIImageWriteToSavedPhotosAlbum(result, self, #selector(nextPage(_:didFinishSavingWithError:contextInfo:)), nil)
         }
+    }
+    
+    @objc func nextPage(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        semaphore.signal()
     }
 }
