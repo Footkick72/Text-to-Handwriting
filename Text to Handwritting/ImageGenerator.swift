@@ -297,7 +297,7 @@ class ImageGenerator: NSObject {
     func savePage(template: Template, image: inout PKDrawing) {
         if checkPhotoSavePermission() {
             UIGraphicsBeginImageContext(template.getBackground().size)
-            template.getBackground().draw(at: CGPoint(x: 0, y: 0))
+            template.getBackground().draw(at: CGPoint.zero)
             let color = UIColor(red: CGFloat(template.textColor[0]), green: CGFloat(template.textColor[1]), blue: CGFloat(template.textColor[2]), alpha: CGFloat(template.textColor[3]))
             var newDrawingStrokes = [PKStroke]()
             for stroke in image.strokes {
@@ -323,12 +323,14 @@ class ImageGenerator: NSObject {
                 newDrawingStrokes.append(newStroke)
             }
             UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
-                let drawing = PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0,
-                                                                         y: 0,
-                                                                         width: template.getBackground().size.width,
-                                                                         height: template.getBackground().size.height),
-                                                            scale: 3.0)
-                drawing.draw(at: CGPoint(x: 0, y: 0))
+                let drawing = PKDrawing(strokes: newDrawingStrokes)
+                let img = drawing.image(from: CGRect(x: 0,
+                                                     y: 0,
+                                                     width: template.getBackground().size.width,
+                                                     height: template.getBackground().size.height),
+                                        scale: 3.0)
+                img.draw(at: CGPoint.zero)
+                
             }
             guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
             UIGraphicsEndImageContext()
