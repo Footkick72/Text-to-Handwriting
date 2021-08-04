@@ -87,7 +87,7 @@ struct Text_to_HandwritingDocument: FileDocument {
     
     func getMarkdownWord(_ char_i: String.Index) -> String {
         var end_i = self.text.index(after: char_i)
-        while end_i != self.text.endIndex && self.text[end_i] != self.text[char_i] && !self.text[end_i].isWhitespace {
+        while end_i != self.text.index(before: self.text.endIndex) && self.text[end_i] != self.text[char_i] && !self.text[end_i].isWhitespace {
             end_i = self.text.index(after: end_i)
         }
         return String(self.text[char_i...end_i])
