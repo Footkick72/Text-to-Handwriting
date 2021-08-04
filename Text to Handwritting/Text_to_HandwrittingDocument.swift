@@ -324,7 +324,7 @@ struct Text_to_HandwritingDocument: FileDocument {
                                                                          y: 0,
                                                                          width: template.getBackground().size.width,
                                                                          height: template.getBackground().size.height),
-                                                            scale: 5.0).draw(at: CGPoint(x: 0, y: 0))
+                                                            scale: 3.0).draw(at: CGPoint(x: 0, y: 0))
             }
             guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
             UIGraphicsEndImageContext()

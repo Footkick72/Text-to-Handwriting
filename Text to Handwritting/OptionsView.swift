@@ -28,11 +28,13 @@ struct OptionsView: View {
                 }
                 HStack(alignment: .center, spacing: 50) {
                     Button("Save to Photos") {
-                        document.createImage(charset: charsets.document()!.object, template: templates.document()!.object, updateProgress: { value, going, done in
-                            generationProgress = value
-                            generating = going
-                            finished = done
-                        })
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            document.createImage(charset: charsets.document()!.object, template: templates.document()!.object, updateProgress: { value, going, done in
+                                generationProgress = value
+                                generating = going
+                                finished = done
+                            })
+                        }
                     }
                     .disabled((charsets.document() == nil || templates.document() == nil) ? true : false)
                     .alert(isPresented: $finished) {
