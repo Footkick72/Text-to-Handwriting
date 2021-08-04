@@ -31,6 +31,8 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     static var defaults: Dictionary<URL, Template> = [
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("blank.tthtemplate"):
             Template(bg: UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
+        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("transparent.tthtemplate"):
+            Template(bg: UIImage(imageLiteralResourceName: "transparentpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("lined.tthtemplate"):
             Template(bg: UIImage(imageLiteralResourceName: "linedpaper.png"), margins: CGRect(x: 50, y: 50, width: 780, height: 1020), size: 26, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
     

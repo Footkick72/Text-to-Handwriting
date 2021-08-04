@@ -332,7 +332,7 @@ class ImageGenerator: NSObject {
             }
             guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
             UIGraphicsEndImageContext()
-            UIImageWriteToSavedPhotosAlbum(result, self, #selector(nextPage(_:didFinishSavingWithError:contextInfo:)), nil)
+            UIImageWriteToSavedPhotosAlbum(UIImage(data: result.pngData()!)!, self, #selector(nextPage(_:didFinishSavingWithError:contextInfo:)), nil)
             
             image = PKDrawing()
             semaphore.wait()
