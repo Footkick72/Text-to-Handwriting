@@ -25,6 +25,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     var body: some View {
         VStack {
             title
+                .foregroundColor(.blue)
             if let path = objectCatalog.documentPath, let object = objectCatalog.document()?.object {
                 Text(verbatim: path.lastPathComponent.removeExtension(DocType.fileExtension))
                 Image(uiImage: object.getPreview())
