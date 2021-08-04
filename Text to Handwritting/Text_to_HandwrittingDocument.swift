@@ -12,6 +12,7 @@ import PencilKit
 
 struct Text_to_HandwritingDocument: FileDocument {
     var text: String
+    var corrupted: Bool = false
 
     init(text: String = "Hello, world!") {
         self.text = text
@@ -23,12 +24,15 @@ struct Text_to_HandwritingDocument: FileDocument {
         guard let data = configuration.file.regularFileContents,
               let string = String(data: data, encoding: .utf8)
         else {
-            throw CocoaError(.fileReadCorruptFile)
+            text = ""
+            corrupted = true
+            return
         }
         text = string
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        if corrupted { throw CocoaError(.fileWriteInapplicableStringEncoding)}
         let data = text.data(using: .utf8)!
         return .init(regularFileWithContents: data)
     }

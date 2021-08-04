@@ -12,14 +12,18 @@ struct ContentView: View {
     @State private var showingGenerationOptions = false
     
     var body: some View {
-        TextEditor(text: $document.text)
-        .sheet(isPresented: $showingGenerationOptions) {
-            OptionsView(document: $document, shown: $showingGenerationOptions)
+        if document.corrupted {
+            Text("File is corrupted, unable to read!")
+        } else {
+            TextEditor(text: $document.text)
+            .sheet(isPresented: $showingGenerationOptions) {
+                OptionsView(document: $document, shown: $showingGenerationOptions)
+            }
+            .navigationBarItems(trailing:
+                                    Button("Convert to handwriting") {
+                                        showingGenerationOptions.toggle()
+                                    }
+            )
         }
-        .navigationBarItems(trailing:
-                                Button("Convert to handwriting") {
-                                    showingGenerationOptions.toggle()
-                                }
-        )
     }
 }
