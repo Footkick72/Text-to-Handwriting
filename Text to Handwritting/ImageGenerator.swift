@@ -145,9 +145,7 @@ class ImageGenerator: NSObject {
                 y_pos += line_spacing
                 if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                     y_pos = top_margin
-                    self.savePage(template: template, image: image)
-                    image = PKDrawing()
-                    semaphore.wait()
+                    self.savePage(template: template, image: &image)
                 }
                 
                 generated += 1
@@ -167,9 +165,7 @@ class ImageGenerator: NSObject {
                     y_pos += line_spacing
                     if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                         y_pos = top_margin
-                        self.savePage(template: template, image: image)
-                        image = PKDrawing()
-                        semaphore.wait()
+                        self.savePage(template: template, image: &image)
                     }
                 }
                 
@@ -209,9 +205,7 @@ class ImageGenerator: NSObject {
                     y_pos += line_spacing
                     if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
                         y_pos = top_margin
-                        self.savePage(template: template, image: image)
-                        image = PKDrawing()
-                        semaphore.wait()
+                        self.savePage(template: template, image: &image)
                     }
                 }
                 
@@ -296,11 +290,11 @@ class ImageGenerator: NSObject {
                 updateProgress(Double(generated)/Double(self.text.count), true, false)
             }
         }
-        self.savePage(template: template, image: image)
+        self.savePage(template: template, image: &image)
         updateProgress(0.0, false, true)
     }
     
-    func savePage(template: Template, image: PKDrawing) {
+    func savePage(template: Template, image: inout PKDrawing) {
         if checkPhotoSavePermission() {
             UIGraphicsBeginImageContext(template.getBackground().size)
             template.getBackground().draw(at: CGPoint(x: 0, y: 0))
@@ -329,15 +323,19 @@ class ImageGenerator: NSObject {
                 newDrawingStrokes.append(newStroke)
             }
             UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
-                PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0,
+                let drawing = PKDrawing(strokes: newDrawingStrokes).image(from: CGRect(x: 0,
                                                                          y: 0,
                                                                          width: template.getBackground().size.width,
                                                                          height: template.getBackground().size.height),
-                                                            scale: 3.0).draw(at: CGPoint(x: 0, y: 0))
+                                                            scale: 3.0)
+                drawing.draw(at: CGPoint(x: 0, y: 0))
             }
             guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
             UIGraphicsEndImageContext()
             UIImageWriteToSavedPhotosAlbum(result, self, #selector(nextPage(_:didFinishSavingWithError:contextInfo:)), nil)
+            
+            image = PKDrawing()
+            semaphore.wait()
         }
     }
     
