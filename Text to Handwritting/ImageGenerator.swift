@@ -79,29 +79,6 @@ class ImageGenerator: NSObject {
         return Int(length)
     }
     
-    func checkPhotoSavePermission() -> Bool {
-        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
-        switch status {
-            case .notDetermined:
-                // The user hasn't determined this app's access.
-                return false
-            case .restricted:
-                // The system restricted this app's access.
-                return false
-            case .denied:
-                // The user explicitly denied this app's access.
-                return false
-            case .authorized:
-                // The user authorized this app to access Photos data.
-                return true
-            case .limited:
-                // The user authorized this app for limited Photos access.
-                return false
-            @unknown default:
-                fatalError()
-        }
-    }
-    
     func generateWord(_ letter: inout PKDrawing) {
         letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
         letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
@@ -295,50 +272,48 @@ class ImageGenerator: NSObject {
     }
     
     func savePage(template: Template, image: inout PKDrawing) {
-        if checkPhotoSavePermission() {
-            UIGraphicsBeginImageContext(template.getBackground().size)
-            template.getBackground().draw(at: CGPoint.zero)
-            let color = UIColor(red: CGFloat(template.textColor[0]), green: CGFloat(template.textColor[1]), blue: CGFloat(template.textColor[2]), alpha: CGFloat(template.textColor[3]))
-            var newDrawingStrokes = [PKStroke]()
-            for stroke in image.strokes {
-                //yes, I am aware this code appears to make an exact copy of stroke with a different ink. Why does it produce different behavior that doing just that? I don't know. PKDrawing is weird.
-                var newPoints = [PKStrokePoint]()
-                stroke.path.forEach { (point) in
-                    newPoints.append(point)
-                }
-                let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
-                var ink: PKInk
-                switch template.writingStyle {
-                case "Pen":
-                    ink = PKInk(.pen, color: color)
-                case "Pencil":
-                    ink = PKInk(.pencil, color: color)
-                case "Marker":
-                    ink = PKInk(.marker, color: color)
-                default:
-                    fatalError("selected template's writingStyle is \(template.writingStyle), invalid!")
-                }
-                var newStroke = PKStroke(ink: ink, path: newPath)
-                newStroke.transform = stroke.transform
-                newDrawingStrokes.append(newStroke)
+        UIGraphicsBeginImageContext(template.getBackground().size)
+        template.getBackground().draw(at: CGPoint.zero)
+        let color = UIColor(red: CGFloat(template.textColor[0]), green: CGFloat(template.textColor[1]), blue: CGFloat(template.textColor[2]), alpha: CGFloat(template.textColor[3]))
+        var newDrawingStrokes = [PKStroke]()
+        for stroke in image.strokes {
+            //yes, I am aware this code appears to make an exact copy of stroke with a different ink. Why does it produce different behavior that doing just that? I don't know. PKDrawing is weird.
+            var newPoints = [PKStrokePoint]()
+            stroke.path.forEach { (point) in
+                newPoints.append(point)
             }
-            UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
-                let drawing = PKDrawing(strokes: newDrawingStrokes)
-                let img = drawing.image(from: CGRect(x: 0,
-                                                     y: 0,
-                                                     width: template.getBackground().size.width,
-                                                     height: template.getBackground().size.height),
-                                        scale: 3.0)
-                img.draw(at: CGPoint.zero)
-                
+            let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+            var ink: PKInk
+            switch template.writingStyle {
+            case "Pen":
+                ink = PKInk(.pen, color: color)
+            case "Pencil":
+                ink = PKInk(.pencil, color: color)
+            case "Marker":
+                ink = PKInk(.marker, color: color)
+            default:
+                fatalError("selected template's writingStyle is \(template.writingStyle), invalid!")
             }
-            guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
-            UIGraphicsEndImageContext()
-            UIImageWriteToSavedPhotosAlbum(UIImage(data: result.pngData()!)!, self, #selector(nextPage(_:didFinishSavingWithError:contextInfo:)), nil)
-            
-            image = PKDrawing()
-            semaphore.wait()
+            var newStroke = PKStroke(ink: ink, path: newPath)
+            newStroke.transform = stroke.transform
+            newDrawingStrokes.append(newStroke)
         }
+        UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
+            let drawing = PKDrawing(strokes: newDrawingStrokes)
+            let img = drawing.image(from: CGRect(x: 0,
+                                                 y: 0,
+                                                 width: template.getBackground().size.width,
+                                                 height: template.getBackground().size.height),
+                                    scale: 3.0)
+            img.draw(at: CGPoint.zero)
+            
+        }
+        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("UIGraphicsImageContent is not initialized") }
+        UIGraphicsEndImageContext()
+        UIImageWriteToSavedPhotosAlbum(UIImage(data: result.pngData()!)!, self, #selector(nextPage(_:didFinishSavingWithError:contextInfo:)), nil)
+        
+        image = PKDrawing()
+        semaphore.wait()
     }
     
     @objc func nextPage(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {

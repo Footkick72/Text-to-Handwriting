@@ -7,10 +7,12 @@
 
 import Foundation
 import SwiftUI
+import Photos
 
 struct TemplateEditor: View {
     @Binding var document: TemplateDocument
     @State var showingImagePicker = false
+    @State var showingNoPermissionAlert = false
     @State var realTextColor: Color = Color(white: 1.0)
     
     var body: some View {
@@ -18,7 +20,11 @@ struct TemplateEditor: View {
             ImageRectSelector(document: $document)
                 .offset(y: -100)
             Button(action: {
-                showingImagePicker = true
+                if PHPhotoLibrary.checkPhotoSavePermission() {
+                    showingImagePicker = true
+                } else {
+                    showingNoPermissionAlert = true
+                }
             }) {
                 Image(systemName: "photo.on.rectangle.angled")
                     .resizable()
@@ -47,6 +53,9 @@ struct TemplateEditor: View {
                 document.object.background = image.pngData()!
                 showingImagePicker = false
             }
+        }
+        .alert(isPresented: $showingNoPermissionAlert) {
+            Alert(title: Text("Cannot open photos"), message: Text("Text to Handwritting does not have permission to acess your photo library"), dismissButton: .default(Text("Ok")))
         }
         .onAppear() {
             realTextColor = Color(.sRGB, red: Double(document.object.textColor[0]), green: Double(document.object.textColor[1]), blue: Double(document.object.textColor[2]), opacity: Double(document.object.textColor[3]))
