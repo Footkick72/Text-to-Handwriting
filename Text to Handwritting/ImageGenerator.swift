@@ -31,7 +31,6 @@ class ImageGenerator: NSObject {
     
     var x_pos: Int
     var y_pos: Int
-    var page_i: Int = 1
     var line_offset:Float = 0
 
     var charlens: Dictionary<String,Float>
@@ -148,7 +147,6 @@ class ImageGenerator: NSObject {
                     y_pos = top_margin
                     self.savePage(template: template, image: image)
                     image = PKDrawing()
-                    page_i += 1
                     semaphore.wait()
                 }
                 
@@ -171,7 +169,6 @@ class ImageGenerator: NSObject {
                         y_pos = top_margin
                         self.savePage(template: template, image: image)
                         image = PKDrawing()
-                        page_i += 1
                         semaphore.wait()
                     }
                 }
@@ -214,7 +211,6 @@ class ImageGenerator: NSObject {
                         y_pos = top_margin
                         self.savePage(template: template, image: image)
                         image = PKDrawing()
-                        page_i += 1
                         semaphore.wait()
                     }
                 }
