@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A3CA90726BABD9800762413 /* ImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3CA90626BABD9800762413 /* ImageGenerator.swift */; };
 		1A3F8D42268B684200710E99 /* Text_to_HandwrittingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D41268B684200710E99 /* Text_to_HandwrittingApp.swift */; };
 		1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D43268B684200710E99 /* Text_to_HandwrittingDocument.swift */; };
 		1A3F8D46268B684200710E99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D45268B684200710E99 /* ContentView.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A3CA90626BABD9800762413 /* ImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGenerator.swift; sourceTree = "<group>"; };
 		1A3F8D3E268B684200710E99 /* Text to Handwritting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Text to Handwritting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A3F8D41268B684200710E99 /* Text_to_HandwrittingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwrittingApp.swift; sourceTree = "<group>"; };
 		1A3F8D43268B684200710E99 /* Text_to_HandwrittingDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwrittingDocument.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			children = (
 				1A3F8D41268B684200710E99 /* Text_to_HandwrittingApp.swift */,
 				1A3F8D43268B684200710E99 /* Text_to_HandwrittingDocument.swift */,
+				1A3CA90626BABD9800762413 /* ImageGenerator.swift */,
 				1A3F8D45268B684200710E99 /* ContentView.swift */,
 				1AA1E2BF269F2766007DAE76 /* OptionsView.swift */,
 				1A948E9026ADF70900BE942C /* Catalog.swift */,
@@ -250,6 +253,7 @@
 				1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */,
 				1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */,
+				1A3CA90726BABD9800762413 /* ImageGenerator.swift in Sources */,
 				1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */,
 				1A53399C26A71B7E00CC037D /* CharSetDocument.swift in Sources */,
 				1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */,
