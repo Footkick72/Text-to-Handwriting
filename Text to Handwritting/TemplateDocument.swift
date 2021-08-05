@@ -34,7 +34,7 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("transparent.tthtemplate"):
             Template(bg: UIImage(imageLiteralResourceName: "transparentpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("lined.tthtemplate"):
-            Template(bg: UIImage(imageLiteralResourceName: "linedpaper.png"), margins: CGRect(x: 50, y: 50, width: 780, height: 1020), size: 26, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
+            Template(bg: UIImage(imageLiteralResourceName: "linedpaper.png"), margins: CGRect(x: 120, y: 110, width: 730, height: 1050), size: 23.8, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
     
     init(from: Data) {
         object = try! JSONDecoder().decode(Template.self, from: from)

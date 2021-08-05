@@ -93,6 +93,9 @@ class ImageGenerator: NSObject {
     }
     
     func getMarkdownWord(_ char_i: String.Index) -> String {
+        if char_i == self.text.index(before: self.text.endIndex) {
+            return ""
+        }
         var end_i = self.text.index(after: char_i)
         while end_i != self.text.index(before: self.text.endIndex) && self.text[end_i] != self.text[char_i] && !self.text[end_i].isWhitespace {
             end_i = self.text.index(after: end_i)
@@ -158,7 +161,7 @@ class ImageGenerator: NSObject {
                     updateProgress(Double(generated)/Double(self.text.count), true, false)
                 }
                 
-            } else if "*_~".contains(self.text[char_i]) && getMarkdownWord(char_i).last! == self.text[char_i] {
+            } else if "*_~".contains(self.text[char_i]) && getMarkdownWord(char_i).last == self.text[char_i] {
                 
                 var word = getMarkdownWord(char_i)
                 
@@ -265,6 +268,14 @@ class ImageGenerator: NSObject {
                 generated += 1
                 char_i = self.text.index(after: char_i)
                 updateProgress(Double(generated)/Double(self.text.count), true, false)
+            }
+            if x_pos + 10 >= size[0] - right_margin {
+                x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
+                y_pos += line_spacing
+                if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
+                    y_pos = top_margin
+                    self.savePage(template: template, image: &image)
+                }
             }
         }
         self.savePage(template: template, image: &image)
