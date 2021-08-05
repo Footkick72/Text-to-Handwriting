@@ -21,7 +21,7 @@ struct WritingView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        VStack(alignment: .center, spacing: 25) {
+        VStack(alignment: .center, spacing: 15) {
             Text("Write " + selection)
                 .font(.title)
             let scrollWidth = max(min(67 * document.object.getImages(char: selection).count + 25 * (document.object.getImages(char: selection).count - 1), 370), 0)
@@ -51,9 +51,9 @@ struct WritingView: View {
                     }
                 }
                 .padding()
-                .frame(height: 70)
+                .frame(height: 110)
             }
-            .frame(width: CGFloat(scrollWidth), height: 70)
+            .frame(width: CGFloat(scrollWidth), height: 110)
             HStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     if canvas.drawing.strokes.count != 0 {
