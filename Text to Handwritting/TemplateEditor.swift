@@ -48,11 +48,13 @@ struct TemplateEditor: View {
                 .frame(width: 300)
             Picker("Font style", selection: $document.object.writingStyle) {
                 Text("Pen").tag("Pen")
+                    .font(.body)
                 Text("Pencil").tag("Pencil")
+                    .font(.body)
                 Text("Marker").tag("Marker")
+                    .font(.body)
             }
-            .frame(width: 300, height: 100)
-            .clipped()
+            .frame(width: 300, height: 150)
         }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary) { image in

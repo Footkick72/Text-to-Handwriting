@@ -24,7 +24,7 @@ struct ContentView: View {
             .navigationBarItems(trailing:
                                     Button("Convert to handwriting") {
                                         if PHPhotoLibrary.checkPhotoSavePermission() {
-                                                showingGenerationOptions.toggle()
+                                                showingGenerationOptions = true
                                         } else {
                                             showingNoPermissionAlert = true
                                         }
