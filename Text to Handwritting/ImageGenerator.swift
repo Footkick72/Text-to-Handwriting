@@ -80,6 +80,26 @@ class ImageGenerator: NSObject {
     }
     
     func generateWord(_ letter: inout PKDrawing) {
+        
+        var newStrokes = [PKStroke]()
+        for stroke in letter.strokes {
+            var newPoints = [PKStrokePoint]()
+            stroke.path.forEach { (point) in
+                let newPoint = PKStrokePoint(location: point.location,
+                                             timeOffset: point.timeOffset,
+                                             size: point.size.applying(CGAffineTransform(scaleX: CGFloat(charset.forceMultiplier), y: CGFloat(charset.forceMultiplier))),
+                                             opacity: point.opacity, force: point.force,
+                                             azimuth: point.azimuth, altitude: point.altitude)
+                newPoints.append(newPoint)
+            }
+            let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+            var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
+            newStroke.transform = stroke.transform
+            newStrokes.append(newStroke)
+        }
+        
+        letter = PKDrawing(strokes: newStrokes)
+        
         letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
         letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
         letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))

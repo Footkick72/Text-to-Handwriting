@@ -17,11 +17,13 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     var characters: Dictionary<String,Array<PKDrawing>>
     var charlens: Dictionary<String,Float> = [:]
     var letterSpacing: Int
+    var forceMultiplier: Float
     
-    init(characters: Dictionary<String,Array<PKDrawing>>, charlens: Dictionary<String,Float>? = nil, letterSpacing: Int = 4) {
+    init(characters: Dictionary<String,Array<PKDrawing>>, charlens: Dictionary<String,Float>? = nil, letterSpacing: Int = 4, forceMultiplier: Float = 1) {
         self.characters = characters
         self.availiable_chars = ""
         self.letterSpacing = letterSpacing
+        self.forceMultiplier = forceMultiplier
         for char in characters.keys {
             availiable_chars += char
         }

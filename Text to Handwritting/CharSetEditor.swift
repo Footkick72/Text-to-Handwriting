@@ -33,6 +33,9 @@ struct CharSetEditor: View {
                         letterSpacing = Double(document.object.letterSpacing)
                     }
                 Text("Character spacing")
+                Slider(value: $document.object.forceMultiplier, in: 0.5...5.0, step: 0.1, onEditingChanged: { _ in }, label: {})
+                    .padding(.horizontal, 50)
+                Text("Character thickness")
             }
             let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
