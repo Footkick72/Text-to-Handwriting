@@ -17,6 +17,7 @@ struct WritingView: View {
     @State var canvasScale: Double = 1.0
     @State var previousScale: Double = 1.0
     @State var toolWidth: Double = 20.0
+    @ScaledMetric var imageSize: CGFloat = 50
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -24,7 +25,6 @@ struct WritingView: View {
         VStack(alignment: .center, spacing: 15) {
             Text("Write " + selection)
                 .font(.title)
-            let scrollWidth = max(min(67 * document.object.getImages(char: selection).count + 25 * (document.object.getImages(char: selection).count - 1), 370), 0)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 25) {
                     ForEach(0..<document.object.getImages(char: selection).count, id: \.self) { i in
@@ -33,27 +33,28 @@ struct WritingView: View {
                             Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: 50, height: 50)
                                 .border(Color.black, width: 2)
                             Button(action: {
                                 self.deleteImage(imageIndex: i)
                             }) {
                                 Image(systemName: "xmark.circle")
+                                    .font(.footnote)
                                     .foregroundColor(.red)
-                                    .padding(4)
                                     .background(
                                         Circle()
                                             .foregroundColor(colorScheme == .light ? .white : Color(.sRGB, red: 27.0/255.0, green: 27.0/255.0, blue: 28.0/255.0, opacity: 1.0))
                                     )
                             }
-                            .offset(x: 25, y: -25)
+                            .frame(width: imageSize, height: imageSize, alignment: .topTrailing)
+                            .offset(x: -2, y: 2)
                         }
-                    }
+                    }.frame(width: imageSize, height: imageSize)
                 }
                 .padding()
-                .frame(height: 110)
+                .frame(height: imageSize)
             }
-            .frame(width: CGFloat(scrollWidth), height: 110)
+            .frame(height: imageSize)
+            .padding(.horizontal)
             HStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     if canvas.drawing.strokes.count != 0 {
