@@ -19,7 +19,7 @@ struct NumberSelector: View {
             Text(label)
             Slider(value: $value,
                    in: minValue...maxValue,
-                   step: 1.0,
+                   step: 0.01,
                    onEditingChanged: {_ in },
                    minimumValueLabel: Text(String(Int(minValue))),
                    maximumValueLabel: Text(String(Int(maxValue))),
