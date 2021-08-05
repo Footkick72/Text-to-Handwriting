@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ImageRectSelector: View {
     @Binding var document: TemplateDocument
-    @State var scale: Double
+    let scale: Double
     
     @State var selectedCorner: Corners?
     enum Corners: Identifiable {
