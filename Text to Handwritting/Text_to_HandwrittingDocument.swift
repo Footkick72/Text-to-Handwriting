@@ -14,7 +14,7 @@ struct Text_to_HandwritingDocument: FileDocument {
     var text: String
     var corrupted: Bool = false
 
-    init(text: String = "Hello, world!") {
+    init(text: String = "Your text here.") {
         self.text = text
     }
 
