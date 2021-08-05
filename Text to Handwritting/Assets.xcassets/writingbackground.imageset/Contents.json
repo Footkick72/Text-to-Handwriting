@@ -35,7 +35,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "writingbackground.png",
+      "filename" : "newWritingBackgroundWhite.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -46,7 +46,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "writingbackgrounddark.png",
+      "filename" : "newWritingBackgroundBlack.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
