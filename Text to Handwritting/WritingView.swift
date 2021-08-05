@@ -18,6 +18,7 @@ struct WritingView: View {
     @State var previousScale: Double = 1.0
     @State var toolWidth: Double = 20.0
     @ScaledMetric var imageSize: CGFloat = 50
+    @ScaledMetric(relativeTo: .largeTitle) var canvasButtonsSize: CGFloat = 50
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -55,62 +56,63 @@ struct WritingView: View {
             }
             .frame(height: imageSize)
             .padding(.horizontal)
-            HStack(alignment: .center, spacing: 10) {
-                Button(action: {
-                    if canvas.drawing.strokes.count != 0 {
-                        self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
-                    }
-                    canvas.drawing = PKDrawing()
-                }) {
-                    Image(systemName: "checkmark.circle")
-                }
-                Button(action: {
-                    if canvas.drawing.strokes.count != 0 {
-                        self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
-                    }
-                    canvas.drawing = PKDrawing()
-                    let index = chars.firstIndex(of: Character(selection))!
-                    if String(chars.first!) != selection {
-                        selection = String(chars[chars.index(before: index)])
-                    } else {
-                        selection = String(chars.last!)
-                    }
-                }) {
-                    Image(systemName: "backward")
-                }
-                Button(action: {
-                    if canvas.drawing.strokes.count != 0 {
-                        self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
-                    }
-                    canvas.drawing = PKDrawing()
-                    let index = chars.firstIndex(of: Character(selection))!
-                    if String(chars.last!) != selection {
-                        selection = String(chars[chars.index(after: index)])
-                    } else {
-                        selection = String(chars.first!)
-                    }
-                }) {
-                    Image(systemName: "forward")
-                }
-                Button(action: {
-                    canvas.drawing = PKDrawing()
-                }) {
-                    Image(systemName: "trash")
-                }
-                .foregroundColor(.red)
-            }
-            .font(.largeTitle)
             GeometryReader { geometry in
                 VStack { // workaround - geometry reader does not center children; add VStack set to geometry size to fix.
-                    Canvas(canvasView: $canvas)
-                        .background(
-                            Image("writingbackground")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        )
-                        .aspectRatio(CGFloat(1.0), contentMode: .fit)
-                        .border(Color.black, width: 2)
-                        .frame(width: max(50, 50 * CGFloat(1.0 - canvasScale) + geometry.size.width * CGFloat(canvasScale)), height: max(50, 50 * CGFloat(1.0 - canvasScale) + geometry.size.height * CGFloat(canvasScale)))
+                    VStack {
+                        HStack(alignment: .center, spacing: 10) {
+                            Button(action: {
+                                if canvas.drawing.strokes.count != 0 {
+                                    self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
+                                }
+                                canvas.drawing = PKDrawing()
+                            }) {
+                                Image(systemName: "checkmark.circle")
+                            }
+                            Button(action: {
+                                if canvas.drawing.strokes.count != 0 {
+                                    self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
+                                }
+                                canvas.drawing = PKDrawing()
+                                let index = chars.firstIndex(of: Character(selection))!
+                                if String(chars.first!) != selection {
+                                    selection = String(chars[chars.index(before: index)])
+                                } else {
+                                    selection = String(chars.last!)
+                                }
+                            }) {
+                                Image(systemName: "backward")
+                            }
+                            Button(action: {
+                                if canvas.drawing.strokes.count != 0 {
+                                    self.saveImage(image: canvas.drawing.transformed(using: CGAffineTransform(scaleX: 256.0/canvas.bounds.width, y: 256.0/canvas.bounds.height)))
+                                }
+                                canvas.drawing = PKDrawing()
+                                let index = chars.firstIndex(of: Character(selection))!
+                                if String(chars.last!) != selection {
+                                    selection = String(chars[chars.index(after: index)])
+                                } else {
+                                    selection = String(chars.first!)
+                                }
+                            }) {
+                                Image(systemName: "forward")
+                            }
+                            Button(action: {
+                                canvas.drawing = PKDrawing()
+                            }) {
+                                Image(systemName: "trash")
+                            }
+                            .foregroundColor(.red)
+                        }
+                        .font(.largeTitle)
+                        Canvas(canvasView: $canvas)
+                            .background(
+                                Image("writingbackground")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            )
+                            .aspectRatio(CGFloat(1.0), contentMode: .fit)
+                            .border(Color.black, width: 2)
+                    }.frame(width: max(50 + canvasButtonsSize, (50 + canvasButtonsSize) * CGFloat(1.0 - canvasScale) + geometry.size.width * CGFloat(canvasScale)), height: max(50 + canvasButtonsSize, (50 + canvasButtonsSize) * CGFloat(1.0 - canvasScale) + geometry.size.height * CGFloat(canvasScale)))
                 }.frame(width: geometry.size.width, height: geometry.size.height)
             }
             VStack {
