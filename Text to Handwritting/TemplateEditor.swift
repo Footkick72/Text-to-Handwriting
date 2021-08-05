@@ -30,14 +30,14 @@ struct TemplateEditor: View {
                     .frame(height: 40)
             }
             GeometryReader { geometry in
-                let displayScale = Double(min(
-                    geometry.size.width/document.object.getBackground().size.width,
-                    geometry.size.height/document.object.getBackground().size.height
-                ))
-                ImageRectSelector(document: $document, scale: displayScale)
-                    .scaleEffect(CGFloat(displayScale))
-                    .offset(CGSize(width: -document.object.getBackground().size.width/2 + geometry.size.width/2,
-                                   height: -document.object.getBackground().size.height/2 + geometry.size.height/2))
+                VStack { // workaround - geometry reader does not center children; add VStack set to geometry size to fix.
+                    let displayScale = Double(min(
+                        geometry.size.width/document.object.getBackground().size.width,
+                        geometry.size.height/document.object.getBackground().size.height
+                    ))
+                    ImageRectSelector(document: $document, scale: displayScale)
+                        .scaleEffect(CGFloat(displayScale))
+                }.frame(width: geometry.size.width, height: geometry.size.height)
             }.padding()
             NumberSelector(value: $document.object.fontSize, minValue: 5, maxValue: 200, label: "Font size")
                 .frame(width: 300)
