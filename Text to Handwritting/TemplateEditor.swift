@@ -55,6 +55,7 @@ struct TemplateEditor: View {
                     .font(.body)
             }
             .frame(width: 300, height: 150)
+            .clipped()
         }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary) { image in
