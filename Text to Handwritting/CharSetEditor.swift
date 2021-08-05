@@ -44,12 +44,13 @@ struct CharSetEditor: View {
                         let set: CharSet = document.object
                         let char: String = String(allchars[i])
                         VStack {
-                            Text(char)
                             if set.numberOfCharacters(char: char) != 0 {
                                 let image = set.getSameImage(char: char)
                                 Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
                                     .resizable()
                                     .scaledToFit()
+                            } else {
+                                Text(char)
                             }
                         }
                         .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
