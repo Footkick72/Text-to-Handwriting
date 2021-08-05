@@ -99,17 +99,21 @@ struct WritingView: View {
                 .foregroundColor(.red)
             }
             .font(.largeTitle)
-            Canvas(canvasView: $canvas)
-                .background(
-                    Image("writingbackground")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                )
-                .aspectRatio(CGFloat(1.0), contentMode: .fit)
-                .border(Color.black, width: 2)
-                .frame(maxWidth: 500 * CGFloat(canvasScale), maxHeight: 500 * CGFloat(canvasScale))
+            GeometryReader { geometry in
+                VStack { // workaround - geometry reader does not center children; add VStack set to geometry size to fix.
+                    Canvas(canvasView: $canvas)
+                        .background(
+                            Image("writingbackground")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        )
+                        .aspectRatio(CGFloat(1.0), contentMode: .fit)
+                        .border(Color.black, width: 2)
+                        .frame(width: max(50, 50 * CGFloat(1.0 - canvasScale) + geometry.size.width * CGFloat(canvasScale)), height: max(50, 50 * CGFloat(1.0 - canvasScale) + geometry.size.height * CGFloat(canvasScale)))
+                }.frame(width: geometry.size.width, height: geometry.size.height)
+            }
             VStack {
-                Slider(value: $canvasScale, in: 0.2...1, step: 0.01, onEditingChanged: { _ in }, label: {})
+                Slider(value: $canvasScale, in: 0.0...1, step: 0.01, onEditingChanged: { _ in }, label: {})
                     .padding(.horizontal, 50)
                 .onChange(of: canvasScale) { _ in
                     UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
