@@ -8,7 +8,7 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>charsetIcon.png</string>
+			<string>charsetIcon320.png</string>
 			<key>CFBundleTypeName</key>
 			<string>Character set</string>
 			<key>CFBundleTypeRole</key>
@@ -22,7 +22,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>templateIcon.png</string>
+			<string>templateIcon320.png</string>
 			<key>CFBundleTypeName</key>
 			<string>Template</string>
 			<key>CFBundleTypeRole</key>
@@ -90,7 +90,7 @@
 			<string>A Charset</string>
 			<key>UTTypeIconFiles</key>
 			<array>
-				<string>charsetIcon.png</string>
+				<string>charsetIcon320.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>org.davidlong.tthcharset</string>
@@ -115,7 +115,7 @@
 			<string>A Template</string>
 			<key>UTTypeIconFiles</key>
 			<array>
-				<string>templateIcon.png</string>
+				<string>templateIcon320.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>org.davidlong.tthtemplate</string>
