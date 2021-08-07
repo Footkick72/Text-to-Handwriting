@@ -107,6 +107,23 @@ class ImageGenerator: NSObject {
         }
     }
     
+    func pasteWord() {
+        if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
+            
+            // in case of newline, reposition word and increment x position
+            let oldX = x_pos
+            let oldY = y_pos
+            self.createNewLine()
+            
+            if !word.bounds.isEmpty {
+                word.transform(using: CGAffineTransform(translationX: CGFloat(x_pos - oldX) + word.bounds.width, y: CGFloat(y_pos - oldY)))
+            }
+            x_pos += Int(word.bounds.width)
+        }
+        image.append(word)
+        word = PKDrawing()
+    }
+    
     func createImage() {
         while char_i != self.text.endIndex {
             
@@ -118,21 +135,8 @@ class ImageGenerator: NSObject {
             
             
             // word insertion
-            if self.text[char_i].isWhitespace || char_i == self.text.index(before: self.text.endIndex) {
-                if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
-                    
-                    // in case of newline, reposition word and increment x position
-                    let oldX = x_pos
-                    let oldY = y_pos
-                    self.createNewLine()
-                    
-                    if !word.bounds.isEmpty {
-                        word.transform(using: CGAffineTransform(translationX: CGFloat(x_pos - oldX) + word.bounds.width, y: CGFloat(y_pos - oldY)))
-                    }
-                    x_pos += Int(word.bounds.width)
-                }
-                image.append(word)
-                word = PKDrawing()
+            if self.text[char_i].isWhitespace {
+                pasteWord()
             }
             
             
@@ -272,7 +276,9 @@ class ImageGenerator: NSObject {
             char_i = self.text.index(after: char_i)
             updateProgress(Double(generated)/Double(self.text.count), true, false)
             
-            
+            if char_i == self.text.endIndex {
+                pasteWord()
+            }
         }
         
         self.savePage(template: template, image: &image)
