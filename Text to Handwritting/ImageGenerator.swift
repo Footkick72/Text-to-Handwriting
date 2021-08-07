@@ -37,6 +37,21 @@ class ImageGenerator: NSObject {
     
     var semaphore = DispatchSemaphore(value: 0)
     
+    var generated = 0
+    var char_i: String.Index
+    
+    var word = PKDrawing()
+    
+    var underlinePath = Array<PKStrokePoint>()
+    var underlinePathY: CGFloat = 0
+    var strikethroughPath = Array<PKStrokePoint>()
+    var strikethroughPathY: CGFloat = 0
+    
+    var proceedingMarkdownCharCount = 0
+    var isBold = false
+    var isUnderline = false
+    var isStrikethrough = false
+    
     init(text: String, charset: CharSet, template: Template, updateProgress: @escaping (Double, Bool, Bool) -> Void) {
         self.text = text
         self.charset = charset
@@ -64,240 +79,204 @@ class ImageGenerator: NSObject {
             charlens[k] = (v  + Float(letter_spacing)) * Float(font_size) / 256
         }
         
+        self.char_i = self.text.startIndex
+        
         updateProgress(0.0, true, false)
     }
     
-    func get_expected_length(word: String) -> Int{
-        var length: Float = 0.0
-        for char in word {
-            if let len = charlens[String(char)] {
-                length += len
-            } else {
-                length += Float(space_length)
-            }
-        }
-        return Int(length)
-    }
-    
-    func generateWord(_ letter: inout PKDrawing) {
+    func createNewLine() {
         
-        var newStrokes = [PKStroke]()
-        for stroke in letter.strokes {
-            var newPoints = [PKStrokePoint]()
-            stroke.path.forEach { (point) in
-                let newPoint = PKStrokePoint(location: point.location,
-                                             timeOffset: point.timeOffset,
-                                             size: point.size.applying(CGAffineTransform(scaleX: CGFloat(charset.forceMultiplier), y: CGFloat(charset.forceMultiplier))),
-                                             opacity: point.opacity, force: point.force,
-                                             azimuth: point.azimuth, altitude: point.altitude)
-                newPoints.append(newPoint)
-            }
-            let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
-            var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
-            newStroke.transform = stroke.transform
-            newStrokes.append(newStroke)
+        // draw underlines and strikethroughs
+        if isUnderline {
+            let path = PKStrokePath(controlPoints: underlinePath, creationDate: Date())
+            let stroke = PKStroke(ink: PKInk(.pen, color: .black), path: path)
+            let drawing = PKDrawing(strokes: [stroke])
+            image.append(drawing)
+            underlinePath = Array<PKStrokePoint>()
+            underlinePathY = 0
         }
         
-        letter = PKDrawing(strokes: newStrokes)
-        
-        letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
-        letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
-        letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
-        image.append(letter)
-        
-        var letterlength = Float(letter.bounds.width)
-        letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
-        x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
-        line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
-        line_offset = max(min(line_offset, 4), -4)
-    }
-    
-    func getMarkdownWord(_ char_i: String.Index) -> String {
-        if char_i == self.text.index(before: self.text.endIndex) {
-            return ""
+        if isStrikethrough {
+            let path = PKStrokePath(controlPoints: strikethroughPath, creationDate: Date())
+            let stroke = PKStroke(ink: PKInk(.pen, color: .black), path: path)
+            let drawing = PKDrawing(strokes: [stroke])
+            image.append(drawing)
+            strikethroughPath = Array<PKStrokePoint>()
+            strikethroughPathY = 0
         }
-        var end_i = self.text.index(after: char_i)
-        while end_i != self.text.index(before: self.text.endIndex) && self.text[end_i] != self.text[char_i] && !self.text[end_i].isWhitespace {
-            end_i = self.text.index(after: end_i)
+        
+        // increment positions
+        x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
+        y_pos += line_spacing
+        if y_pos >= size[1] - line_spacing - bottom_margin {
+            y_pos = top_margin
+            self.savePage(template: template, image: &image)
         }
-        return String(self.text[char_i...end_i])
     }
     
     func createImage() {
-        
-        var generated = 0
-        var char_i = self.text.startIndex
         while char_i != self.text.endIndex {
+            
+            
+            // decrememnt markdown counter
+            if proceedingMarkdownCharCount != 0 {
+                proceedingMarkdownCharCount -= 1
+            }
+            
+            
+            // word insertion
+            if self.text[char_i].isWhitespace || char_i == self.text.index(before: self.text.endIndex) {
+                if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
+                    self.createNewLine()
+                    
+                    // in case of newline, reposition word and increment x position
+                    if !word.bounds.isEmpty {
+                        word.transform(using: CGAffineTransform(translationX: -word.bounds.origin.x + CGFloat(x_pos), y: -word.bounds.origin.y + CGFloat(y_pos)))
+                    }
+                    x_pos += Int(word.bounds.width)
+                }
+                image.append(word)
+                word = PKDrawing()
+            }
+            
+            
+            // whitespace handling
             if self.text[char_i] == " " {
                 x_pos += space_length
                 
-                generated += 1
-                char_i = self.text.index(after: char_i)
-                updateProgress(Double(generated)/Double(self.text.count), true, false)
             } else if self.text[char_i] == "\t" {
                 x_pos += space_length * 4
                 
-                generated += 1
-                char_i = self.text.index(after: char_i)
-                updateProgress(Double(generated)/Double(self.text.count), true, false)
             } else if self.text[char_i] == "\n" {
-                x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
-                y_pos += line_spacing
-                if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
-                    y_pos = top_margin
-                    self.savePage(template: template, image: &image)
-                }
+                createNewLine()
+            }
+            
+            
+            // markdown handling
+            else if self.text.index(after: char_i) != self.text.endIndex && self.text[char_i] == "*" && self.text[self.text.index(after: char_i)] == "*" {
+                isBold.toggle()
+                proceedingMarkdownCharCount = 2
+            }
+            else if self.text.index(after: char_i) != self.text.endIndex && self.text[char_i] == "_" && self.text[self.text.index(after: char_i)] == "_" {
+                isUnderline.toggle()
+                proceedingMarkdownCharCount = 2
                 
-                generated += 1
-                char_i = self.text.index(after: char_i)
-                updateProgress(Double(generated)/Double(self.text.count), true, false)
-            } else if self.text[char_i].isLetter {
-                
-                var end_i = self.text.index(after: char_i)
-                while end_i != self.text.endIndex && self.text[end_i].isLetter {
-                    end_i = self.text.index(after: end_i)
-                }
-                let word = String(self.text[char_i..<end_i])
-                
-                let expected_length = get_expected_length(word: String(word)) + space_length + line_end_buffer
-                if x_pos + expected_length >= size[0] - right_margin {
-                    x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
-                    y_pos += line_spacing
-                    if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
-                        y_pos = top_margin
-                        self.savePage(template: template, image: &image)
-                    }
-                }
-                
-                for char in word {
-                    if var letter = charset.getImage(char: String(char)) {
-                        generateWord(&letter)
-                    } else {
-                        x_pos += space_length
-                    }
-                    
-                    generated += 1
-                    char_i = self.text.index(after: char_i)
-                    updateProgress(Double(generated)/Double(self.text.count), true, false)
-                }
-                
-            } else if "*_~".contains(self.text[char_i]) && getMarkdownWord(char_i).last == self.text[char_i] {
-                
-                var word = getMarkdownWord(char_i)
-                
-                var isUnderline = false
-                var isStrikethrough = false
-                var isBold = false
-                if word.first == "*" && word.last == "*" {
-                    isBold = true
-                } else if word.first == "~" && word.last == "~" {
-                    isStrikethrough = true
-                } else if word.first == "_" && word.last == "_" {
-                    isUnderline = true
-                }
-                word.remove(at: word.startIndex)
-                word.remove(at: word.index(before: word.endIndex))
-                char_i = self.text.index(char_i, offsetBy: 2)
-                
-                let expected_length = get_expected_length(word: String(word)) + space_length + line_end_buffer
-                if x_pos + expected_length >= size[0] - right_margin {
-                    x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
-                    y_pos += line_spacing
-                    if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
-                        y_pos = top_margin
-                        self.savePage(template: template, image: &image)
-                    }
-                }
-                
-                var wordPath = Array<PKStrokePoint>()
-                var pathY: CGFloat = 0
-                
-                for char in word {
-                    if var letter = charset.getImage(char: String(char)) {
-                        
-                        if isBold {
-                            var boldStrokes = [PKStroke]()
-                            for stroke in letter.strokes {
-                                var newPoints = [PKStrokePoint]()
-                                stroke.path.forEach { (point) in
-                                    let newPoint = PKStrokePoint(location: point.location,
-                                                                 timeOffset: point.timeOffset,
-                                                                 size: point.size.applying(CGAffineTransform(scaleX: 2, y: 2)),
-                                                                 opacity: point.opacity, force: point.force,
-                                                                 azimuth: point.azimuth, altitude: point.altitude)
-                                    newPoints.append(newPoint)
-                                }
-                                let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
-                                var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
-                                newStroke.transform = stroke.transform
-                                boldStrokes.append(newStroke)
-                            }
-                            letter = PKDrawing(strokes: boldStrokes)
-                        }
-                        
-                        generateWord(&letter)
-                        
-                        let idealY = isStrikethrough ? letter.bounds.midY : letter.bounds.maxY + 4
-                        if pathY == 0 {
-                            pathY = idealY
-                        } else {
-                            pathY += CGFloat.random(in: -2...2)
-                            let t: CGFloat = 0.1
-                            pathY = pathY * (1.0 - t) + idealY * t
-                        }
-                        
-                        let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
-                                                                    y: pathY),
-                                                  timeOffset: TimeInterval(),
-                                                  size: CGSize(width: 3, height: 3),
-                                                  opacity: 1.0, force: 1.0,
-                                                  azimuth: 0.0, altitude: 0.0)
-                        wordPath.append(point)
-                    } else {
-                        x_pos += space_length
-                    }
-                    
-                    generated += 1
-                    char_i = self.text.index(after: char_i)
-                    updateProgress(Double(generated)/Double(self.text.count), true, false)
-                }
-                
-                let path = PKStrokePath(controlPoints: wordPath, creationDate: Date())
-                if isUnderline || isStrikethrough {
+                if !isUnderline {
+                    let path = PKStrokePath(controlPoints: underlinePath, creationDate: Date())
                     let stroke = PKStroke(ink: PKInk(.pen, color: .black), path: path)
                     let drawing = PKDrawing(strokes: [stroke])
                     image.append(drawing)
+                    underlinePath = Array<PKStrokePoint>()
+                    underlinePathY = 0
                 }
-            } else {
+            }
+            else if self.text.index(after: char_i) != self.text.endIndex && self.text[char_i] == "~" && self.text[self.text.index(after: char_i)] == "~" {
+                isStrikethrough.toggle()
+                proceedingMarkdownCharCount = 2
+                
+                if !isStrikethrough {
+                    let path = PKStrokePath(controlPoints: strikethroughPath, creationDate: Date())
+                    let stroke = PKStroke(ink: PKInk(.pen, color: .black), path: path)
+                    let drawing = PKDrawing(strokes: [stroke])
+                    image.append(drawing)
+                    strikethroughPath = Array<PKStrokePoint>()
+                    strikethroughPathY = 0
+                }
+            }
+            
+            
+            // word generation
+            else if proceedingMarkdownCharCount == 0 {
                 if var letter = charset.getImage(char: String(self.text[char_i])) {
+                    
+                    // regenerate the strokes with added weight
+                    var newStrokes = [PKStroke]()
+                    for stroke in letter.strokes {
+                        var newPoints = [PKStrokePoint]()
+                        stroke.path.forEach { (point) in
+                            var newSize = point.size.applying(CGAffineTransform(scaleX: CGFloat(charset.forceMultiplier), y: CGFloat(charset.forceMultiplier)))
+                            if isBold {
+                                newSize = point.size.applying(CGAffineTransform(scaleX: 1.5, y: 1.5))
+                            }
+                            let newPoint = PKStrokePoint(location: point.location,
+                                                         timeOffset: point.timeOffset,
+                                                         size: newSize,
+                                                         opacity: point.opacity, force: point.force,
+                                                         azimuth: point.azimuth, altitude: point.altitude)
+                            newPoints.append(newPoint)
+                        }
+                        let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+                        var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
+                        newStroke.transform = stroke.transform
+                        newStrokes.append(newStroke)
+                    }
+                    
+                    letter = PKDrawing(strokes: newStrokes)
                     
                     letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
                     letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
                     letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
-                    image.append(letter)
+                    word.append(letter)
                     
                     var letterlength = Float(letter.bounds.width)
-                    letterlength += (Float.random(in: 0..<1) - 0.5) * 2.0
-                    x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0..<1) * 0.2)
-                    line_offset += (Float.random(in: 0..<1) - 0.5) * 0.25
+                    letterlength += Float.random(in: -1 ..< 1)
+                    x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2))
+                    line_offset += Float.random(in: -0.125 ..< 0.125)
                     line_offset = max(min(line_offset, 4), -4)
-                } else {
-                    x_pos += space_length
+                    
+                    
+                    // underline path logging
+                    if isUnderline {
+                        let idealY = letter.bounds.maxY + 4
+                        if underlinePathY == 0 {
+                            underlinePathY = idealY
+                        } else {
+                            underlinePathY += CGFloat.random(in: -2...2)
+                            let t: CGFloat = 0.1
+                            underlinePathY = underlinePathY * (1.0 - t) + idealY * t
+                        }
+                        
+                        let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
+                                                                    y: underlinePathY),
+                                                  timeOffset: TimeInterval(),
+                                                  size: CGSize(width: 3, height: 3),
+                                                  opacity: 1.0, force: 1.0,
+                                                  azimuth: 0.0, altitude: 0.0)
+                        underlinePath.append(point)
+                    }
+                    
+                    // strikethrough path logging
+                    if isStrikethrough {
+                        let idealY = letter.bounds.midY
+                        if strikethroughPathY == 0 {
+                            strikethroughPathY = idealY
+                        } else {
+                            strikethroughPathY += CGFloat.random(in: -2...2)
+                            let t: CGFloat = 0.1
+                            strikethroughPathY = strikethroughPathY * (1.0 - t) + idealY * t
+                        }
+                        
+                        let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
+                                                                    y: strikethroughPathY),
+                                                  timeOffset: TimeInterval(),
+                                                  size: CGSize(width: 3, height: 3),
+                                                  opacity: 1.0, force: 1.0,
+                                                  azimuth: 0.0, altitude: 0.0)
+                        strikethroughPath.append(point)
+                    }
+                    
                 }
-                
-                generated += 1
-                char_i = self.text.index(after: char_i)
-                updateProgress(Double(generated)/Double(self.text.count), true, false)
             }
-            if x_pos + 10 >= size[0] - right_margin {
-                x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
-                y_pos += line_spacing
-                if y_pos >= size[1] - line_spacing - bottom_margin - top_margin {
-                    y_pos = top_margin
-                    self.savePage(template: template, image: &image)
-                }
-            }
+            
+            
+            //increment progress counter and char_i
+            generated += 1
+            char_i = self.text.index(after: char_i)
+            updateProgress(Double(generated)/Double(self.text.count), true, false)
+            
+            
         }
+        
         self.savePage(template: template, image: &image)
         updateProgress(0.0, false, true)
     }
