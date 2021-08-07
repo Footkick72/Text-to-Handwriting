@@ -51,6 +51,8 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         let data = try JSONEncoder().encode(object)
-        return .init(regularFileWithContents: data)
+        let wrapper = FileWrapper.init(regularFileWithContents: data)
+        wrapper.fileAttributes[FileAttributeKey.extensionHidden.rawValue] = NSNumber(booleanLiteral: true)
+        return wrapper
     }
 }
