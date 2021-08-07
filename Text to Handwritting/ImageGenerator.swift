@@ -99,7 +99,7 @@ class ImageGenerator: NSObject {
         }
         
         // increment positions
-        x_pos = Int(Float(left_margin) * (1.0 + (Float.random(in: 0..<1) - 0.5) * 0.2))
+        x_pos = Int(Float(left_margin) + Float.random(in: max(-font_size * 0.125, -20) ..< min(font_size * 0.125, 20)))
         y_pos += line_spacing
         if y_pos >= size[1] - line_spacing - bottom_margin {
             y_pos = top_margin
