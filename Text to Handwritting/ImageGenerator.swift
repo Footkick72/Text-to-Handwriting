@@ -120,11 +120,14 @@ class ImageGenerator: NSObject {
             // word insertion
             if self.text[char_i].isWhitespace || char_i == self.text.index(before: self.text.endIndex) {
                 if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
-                    self.createNewLine()
                     
                     // in case of newline, reposition word and increment x position
+                    let oldX = x_pos
+                    let oldY = y_pos
+                    self.createNewLine()
+                    
                     if !word.bounds.isEmpty {
-                        word.transform(using: CGAffineTransform(translationX: -word.bounds.origin.x + CGFloat(x_pos), y: -word.bounds.origin.y + CGFloat(y_pos)))
+                        word.transform(using: CGAffineTransform(translationX: CGFloat(x_pos - oldX) + word.bounds.width, y: CGFloat(y_pos - oldY)))
                     }
                     x_pos += Int(word.bounds.width)
                 }
