@@ -7,24 +7,28 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>charsetIcon.png</string>
 			<key>CFBundleTypeName</key>
 			<string>Character set</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
-			<string>None</string>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>org.davidlong.tthcharset</string>
 			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>templateIcon.png</string>
 			<key>CFBundleTypeName</key>
 			<string>Template</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
-			<string>None</string>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>org.davidlong.tthtemplate</string>
@@ -80,14 +84,13 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.data</string>
-				<string>public.content</string>
+				<string>public.json</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>A Charset</string>
 			<key>UTTypeIconFiles</key>
 			<array>
-				<string>textformat@2x.png</string>
+				<string>charsetIcon.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>org.davidlong.tthcharset</string>
@@ -97,19 +100,22 @@
 				<array>
 					<string>tthcharset</string>
 				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/org.davidlong.tthcharset</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.data</string>
-				<string>public.content</string>
+				<string>public.json</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>A Template</string>
 			<key>UTTypeIconFiles</key>
 			<array>
-				<string>doc.richtext@2x.png</string>
+				<string>templateIcon.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>org.davidlong.tthtemplate</string>
@@ -118,6 +124,10 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>tthtemplate</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/org.davidlong.tthtemplate</string>
 				</array>
 			</dict>
 		</dict>
