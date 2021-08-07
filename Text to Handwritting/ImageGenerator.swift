@@ -261,6 +261,8 @@ class ImageGenerator: NSObject {
                         strikethroughPath.append(point)
                     }
                     
+                } else {
+                    x_pos += space_length
                 }
             }
             
