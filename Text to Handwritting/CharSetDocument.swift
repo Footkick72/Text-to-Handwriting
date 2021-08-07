@@ -36,8 +36,8 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
         object = try! JSONDecoder().decode(CharSet.self, from: from)
     }
 
-    init(characters: Dictionary<String,Array<PKDrawing>> = [:], charlens: Dictionary<String,Float> = [:], letterSpacing: Int = 4) {
-        object = CharSet(characters: characters, charlens: charlens, letterSpacing: letterSpacing)
+    init(characters: Dictionary<String,Array<PKDrawing>> = [:], letterSpacing: Int = 4) {
+        object = CharSet(characters: characters, letterSpacing: letterSpacing)
     }
 
     static var readableContentTypes: [UTType] { [.charSetDocument] }

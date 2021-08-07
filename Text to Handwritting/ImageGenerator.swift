@@ -32,8 +32,6 @@ class ImageGenerator: NSObject {
     var x_pos: Int
     var y_pos: Int
     var line_offset:Float = 0
-
-    var charlens: Dictionary<String,Float>
     
     var semaphore = DispatchSemaphore(value: 0)
     
@@ -73,11 +71,6 @@ class ImageGenerator: NSObject {
         
         self.x_pos = left_margin
         self.y_pos = top_margin
-
-        self.charlens = charset.charlens
-        for (k, v) in charlens {
-            charlens[k] = (v  + Float(letter_spacing)) * Float(font_size) / 256
-        }
         
         self.char_i = self.text.startIndex
         

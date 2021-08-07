@@ -165,30 +165,14 @@ struct WritingView: View {
         
         let s = document.object.characters[selection] ?? []
         document.object.characters[selection] = s + [image]
-        
-        if var lengths = document.object.charlens[selection], let drawings = document.object.characters[selection] {
-            var sum = lengths * Float(drawings.count - 1)
-            sum += Float(image.bounds.width)
-            lengths = sum / Float(drawings.count)
-        } else {
-            document.object.charlens[selection] = Float(image.bounds.width)
-        }
     }
     
     func deleteImage(imageIndex: Int) {
         if document.object.characters[selection]!.count <= 1 {
             document.object.availiable_chars.remove(at: document.object.availiable_chars.firstIndex(of: Character(selection))!)
             document.object.characters.removeValue(forKey: selection)
-            document.object.charlens.removeValue(forKey: selection)
             return
         }
-        
-        var sum = document.object.charlens[selection]! * Float(document.object.characters[selection]!.count)
-        let image = document.object.characters[selection]![imageIndex]
-        sum -= Float(image.bounds.width)
-        
-        document.object.characters[selection]!.remove(at: imageIndex)
-        document.object.charlens[selection]! = sum / Float(document.object.characters[selection]!.count)
     }
 }
 

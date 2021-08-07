@@ -15,22 +15,16 @@ fileprivate let substitutions: Dictionary<String, Array<String>> = ["\"": ["”"
 struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     var availiable_chars: String
     var characters: Dictionary<String,Array<PKDrawing>>
-    var charlens: Dictionary<String,Float> = [:]
     var letterSpacing: Int
     var forceMultiplier: Float
     
-    init(characters: Dictionary<String,Array<PKDrawing>>, charlens: Dictionary<String,Float>? = nil, letterSpacing: Int = 4, forceMultiplier: Float = 1) {
+    init(characters: Dictionary<String,Array<PKDrawing>>, letterSpacing: Int = 4, forceMultiplier: Float = 1) {
         self.characters = characters
         self.availiable_chars = ""
         self.letterSpacing = letterSpacing
         self.forceMultiplier = forceMultiplier
         for char in characters.keys {
             availiable_chars += char
-        }
-        if let charlens = charlens {
-            self.charlens = charlens
-        } else {
-            self.charlens = self.getCharlens()
         }
     }
     
@@ -65,24 +59,6 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
             return Array<PKDrawing>()
         }
         return data
-    }
-    
-    func getCharlens() -> Dictionary<String,Float> {
-        //multiply by Float(font_size), add letter_spacing * Float(font_size) / 256 to convert to accurate sizes upon generation
-        var lengths: Dictionary<String,Float> = [:]
-        for char in availiable_chars {
-            lengths[String(char)] = self.getCharlen(char: char)
-        }
-        return lengths
-    }
-    
-    func getCharlen(char: Character) -> Float {
-        var charlen: Float = 0
-        let images = getImages(char: String(char))
-        for file in images {
-            charlen += Float(file.bounds.width)
-        }
-        return charlen/Float(images.count)
     }
     
     func getPreview() -> UIImage {
