@@ -21,7 +21,7 @@ class ImageGenerator: NSObject {
     var top_margin: Int
     var bottom_margin: Int
     
-    var line_spacing: Int
+    var line_spacing: Float
     var letter_spacing: Int
     var space_length: Int
     var line_end_buffer: Int
@@ -29,8 +29,8 @@ class ImageGenerator: NSObject {
     var image = PKDrawing()
     var size: Array<Int>
     
-    var x_pos: Int
-    var y_pos: Int
+    var x_pos: Float
+    var y_pos: Float
     var line_offset:Float = 0
     
     var semaphore = DispatchSemaphore(value: 0)
@@ -61,16 +61,16 @@ class ImageGenerator: NSObject {
         self.top_margin = template.getMargins()[2]
         self.bottom_margin = template.getMargins()[3]
         
-        self.line_spacing = Int(font_size + 4)
+        self.line_spacing = template.lineSpacing
         self.letter_spacing = charset.letterSpacing
-        self.space_length = Int(Double(font_size) * 0.5)
-        self.line_end_buffer = Int(font_size)
+        self.space_length = Int(Double(line_spacing) * 0.5)
+        self.line_end_buffer = Int(line_spacing)
         
         self.image = PKDrawing()
         self.size = [Int(template.getBackground().size.width), Int(template.getBackground().size.height)]
         
-        self.x_pos = left_margin
-        self.y_pos = top_margin
+        self.x_pos = Float(left_margin)
+        self.y_pos = Float(top_margin)
         
         self.char_i = self.text.startIndex
         
@@ -99,10 +99,10 @@ class ImageGenerator: NSObject {
         }
         
         // increment positions
-        x_pos = Int(Float(left_margin) + Float.random(in: max(-font_size * 0.125, -20) ..< min(font_size * 0.125, 20)))
+        x_pos = Float(left_margin) + Float.random(in: max(-line_spacing * 0.125, -20) ..< min(line_spacing * 0.125, 20))
         y_pos += line_spacing
-        if y_pos >= size[1] - line_spacing - bottom_margin {
-            y_pos = top_margin
+        if y_pos >= Float(size[1]) - line_spacing - Float(bottom_margin) {
+            y_pos = Float(top_margin)
             self.savePage(template: template, image: &image)
         }
     }
@@ -130,10 +130,10 @@ class ImageGenerator: NSObject {
             
             // whitespace handling
             if self.text[char_i] == " " {
-                x_pos += space_length
+                x_pos += Float(space_length)
                 
             } else if self.text[char_i] == "\t" {
-                x_pos += space_length * 4
+                x_pos += Float(space_length * 4)
                 
             } else if self.text[char_i] == "\n" {
                 createNewLine()
@@ -220,19 +220,19 @@ class ImageGenerator: NSObject {
                             letter = PKDrawing(strokes: newStrokes)
                             
                             // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
-                            let fillingScale = CGFloat(1.8)
+                            let fillingScale = CGFloat(1.8 * font_size)
                             letter.transform(using: CGAffineTransform(scaleX: fillingScale, y: fillingScale))
                             letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: -32 * fillingScale))
                             
-                            letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
-                            letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
+                            letter.transform(using: CGAffineTransform(scaleX: CGFloat(line_spacing/256.0), y: CGFloat(line_spacing/256)))
+                            letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + line_offset)))
                             word.append(letter)
                             
                             var letterlength = Float(letter.bounds.width)
                             letterlength += Float.random(in: -1 ..< 1)
-                            x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2))
+                            x_pos += letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2)
                         } else {
-                            x_pos += space_length
+                            x_pos += Float(space_length)
                         }
                     }
                     
@@ -273,19 +273,19 @@ class ImageGenerator: NSObject {
                     letter = PKDrawing(strokes: newStrokes)
                     
                     // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
-                    let fillingScale = CGFloat(1.8)
+                    let fillingScale = CGFloat(1.8 * font_size)
                     letter.transform(using: CGAffineTransform(scaleX: fillingScale, y: fillingScale))
                     letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: -32 * fillingScale))
                     
-                    letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
-                    letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
+                    letter.transform(using: CGAffineTransform(scaleX: CGFloat(line_spacing/256.0), y: CGFloat(line_spacing/256)))
+                    letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + line_offset)))
                     word.append(letter)
                     
                     var letterlength = Float(letter.bounds.width)
                     letterlength += Float.random(in: -1 ..< 1)
-                    x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2))
+                    x_pos += letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2)
                     line_offset += Float.random(in: -0.5 ..< 0.5)
-                    line_offset = max(min(line_offset, font_size * 0.15), -font_size * 0.15)
+                    line_offset = max(min(line_offset, line_spacing * 0.15), -line_spacing * 0.15)
                     
                     
                     // underline path logging
@@ -329,7 +329,7 @@ class ImageGenerator: NSObject {
                     }
                     
                 } else {
-                    x_pos += space_length
+                    x_pos += Float(space_length)
                 }
             }
             
