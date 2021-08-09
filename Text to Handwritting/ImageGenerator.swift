@@ -108,18 +108,6 @@ class ImageGenerator: NSObject {
     }
     
     func pasteWord() {
-        if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
-            
-            // in case of newline, reposition word and increment x position
-            let oldX = x_pos
-            let oldY = y_pos
-            self.createNewLine()
-            
-            if !word.bounds.isEmpty {
-                word.transform(using: CGAffineTransform(translationX: CGFloat(x_pos - oldX) + word.bounds.width, y: CGFloat(y_pos - oldY)))
-            }
-            x_pos += Int(word.bounds.width)
-        }
         image.append(word)
         word = PKDrawing()
     }
@@ -187,6 +175,75 @@ class ImageGenerator: NSObject {
             
             // word generation
             else if proceedingMarkdownCharCount == 0 {
+                if word.strokes.count == 0 { //we're at the start of the word
+                    let oldX = x_pos
+                    
+                    var end_i = char_i
+                    while end_i != self.text.index(before: self.text.endIndex) && !self.text[end_i].isWhitespace {
+                        end_i = self.text.index(after: end_i)
+                    }
+                    let chars = String(self.text[char_i...end_i])
+                    
+                    var markdown = Array<Int>()
+                    for i in 0 ..< chars.count - 1 {
+                        if "*_~".contains(chars[i]) && chars[i] == chars[i+1] {
+                            markdown.append(i)
+                            markdown.append(i+1)
+                        }
+                    }
+                    
+                    // approximate the length the word will be
+                    for i in 0 ..< chars.count {
+                        if var letter = charset.getImage(char: String(chars[i])), !markdown.contains(i) {
+                            
+                            // regenerate the strokes with added weight
+                            var newStrokes = [PKStroke]()
+                            for stroke in letter.strokes {
+                                var newPoints = [PKStrokePoint]()
+                                stroke.path.forEach { (point) in
+                                    let newSize = point.size.applying(CGAffineTransform(scaleX: CGFloat(charset.forceMultiplier), y: CGFloat(charset.forceMultiplier)))
+                                    let newPoint = PKStrokePoint(location: point.location,
+                                                                 timeOffset: point.timeOffset,
+                                                                 size: newSize,
+                                                                 opacity: point.opacity,
+                                                                 force: point.force,
+                                                                 azimuth: point.azimuth,
+                                                                 altitude: point.altitude)
+                                    newPoints.append(newPoint)
+                                }
+                                let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+                                var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
+                                newStroke.transform = stroke.transform
+                                newStrokes.append(newStroke)
+                            }
+                            
+                            letter = PKDrawing(strokes: newStrokes)
+                            
+                            // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
+                            let fillingScale = CGFloat(1.8)
+                            letter.transform(using: CGAffineTransform(scaleX: fillingScale, y: fillingScale))
+                            letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: -32 * fillingScale))
+                            
+                            letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
+                            letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
+                            word.append(letter)
+                            
+                            var letterlength = Float(letter.bounds.width)
+                            letterlength += Float.random(in: -1 ..< 1)
+                            x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2))
+                        } else {
+                            x_pos += space_length
+                        }
+                    }
+                    
+                    if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
+                        self.createNewLine()
+                    } else {
+                        x_pos = oldX
+                    }
+                    word = PKDrawing()
+                }
+                
                 if var letter = charset.getImage(char: String(self.text[char_i])) {
                     
                     // regenerate the strokes with added weight
@@ -201,8 +258,10 @@ class ImageGenerator: NSObject {
                             let newPoint = PKStrokePoint(location: point.location,
                                                          timeOffset: point.timeOffset,
                                                          size: newSize,
-                                                         opacity: point.opacity, force: point.force,
-                                                         azimuth: point.azimuth, altitude: point.altitude)
+                                                         opacity: point.opacity,
+                                                         force: point.force,
+                                                         azimuth: point.azimuth,
+                                                         altitude: point.altitude)
                             newPoints.append(newPoint)
                         }
                         let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
@@ -213,7 +272,11 @@ class ImageGenerator: NSObject {
                     
                     letter = PKDrawing(strokes: newStrokes)
                     
-                    letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: 0))
+                    // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
+                    let fillingScale = CGFloat(1.8)
+                    letter.transform(using: CGAffineTransform(scaleX: fillingScale, y: fillingScale))
+                    letter.transform(using: CGAffineTransform(translationX: -letter.bounds.minX, y: -32 * fillingScale))
+                    
                     letter.transform(using: CGAffineTransform(scaleX: CGFloat(font_size/256.0), y: CGFloat(font_size/256)))
                     letter.transform(using: CGAffineTransform(translationX: CGFloat(x_pos), y: CGFloat(y_pos + Int(line_offset))))
                     word.append(letter)
@@ -221,8 +284,8 @@ class ImageGenerator: NSObject {
                     var letterlength = Float(letter.bounds.width)
                     letterlength += Float.random(in: -1 ..< 1)
                     x_pos += Int(letterlength + Float(letter_spacing) + Float.random(in: 0 ..< 0.2))
-                    line_offset += Float.random(in: -0.125 ..< 0.125)
-                    line_offset = max(min(line_offset, 4), -4)
+                    line_offset += Float.random(in: -0.5 ..< 0.5)
+                    line_offset = max(min(line_offset, font_size * 0.15), -font_size * 0.15)
                     
                     
                     // underline path logging
