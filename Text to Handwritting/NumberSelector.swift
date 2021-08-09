@@ -23,10 +23,10 @@ struct NumberSelector: View {
                    in: minValue...maxValue,
                    step: 0.01,
                    onEditingChanged: {_ in },
-                   minimumValueLabel: Text(String(Int(minValue))),
-                   maximumValueLabel: Text(String(Int(maxValue))),
+                   minimumValueLabel: Text(String(rounded ? Float(Int(minValue)) : round(minValue * 100) / 100)),
+                   maximumValueLabel: Text(String(rounded ? Float(Int(maxValue)) : round(maxValue * 100) / 100)),
                    label: {})
-            Text(String(rounded ? Float(Int(value)) : value))
+            Text(String(rounded ? Float(Int(value)) : round(value * 100) / 100))
         }
     }
 }
