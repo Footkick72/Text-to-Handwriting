@@ -39,7 +39,9 @@ struct TemplateEditor: View {
                         .scaleEffect(CGFloat(displayScale))
                 }.frame(width: geometry.size.width, height: geometry.size.height)
             }.padding()
-            NumberSelector(value: $document.object.fontSize, minValue: 5, maxValue: 200, label: "Font size")
+            NumberSelector(value: $document.object.fontSize, minValue: 0.2, maxValue: 4, label: "Font size", rounded: false)
+                .frame(width: 300)
+            NumberSelector(value: $document.object.lineSpacing, minValue: 10, maxValue: 200, label: "Line Spacing", rounded: true)
                 .frame(width: 300)
             ColorPicker("Font color", selection: $realTextColor)
                 .onChange(of: realTextColor) { value in

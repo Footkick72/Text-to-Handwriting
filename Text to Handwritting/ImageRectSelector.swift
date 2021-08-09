@@ -74,14 +74,15 @@ struct ImageRectSelector: View {
             )
             .overlay(
                 Rectangle()
-                    .stroke(Color.red, lineWidth: CGFloat(5)/CGFloat(scale))
+                    .stroke(Color.red, lineWidth: CGFloat(5/scale))
                     .frame(width: document.object.margins.width, height: document.object.margins.height)
                     .overlay(
-                        VStack(alignment: .center, spacing: CGFloat(document.object.fontSize)) {
-                            ForEach(0..<max(1,Int(document.object.margins.height/(CGFloat(document.object.fontSize)))) + 1, id: \.self) {i in
+                        VStack(alignment: .center, spacing: CGFloat(document.object.lineSpacing * (1.0 - document.object.fontSize * 0.9))) {
+                            ForEach(0 ..< max(1,Int(document.object.margins.height/(CGFloat(document.object.lineSpacing)))) + 1, id: \.self) {i in
                                 Rectangle()
-                                    .stroke(Color.red, lineWidth: CGFloat(1)/CGFloat(scale))
-                                    .frame(width: document.object.margins.width, height: 1)
+                                    .fill(Color.red)
+                                    .opacity(0.2)
+                                    .frame(width: document.object.margins.width, height: CGFloat(document.object.lineSpacing * document.object.fontSize * 0.9))
                             }
                         }
                         .frame(width: document.object.margins.width, height: document.object.margins.height, alignment: .top)
