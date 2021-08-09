@@ -12,13 +12,15 @@ struct Template: Equatable, Codable, HandwritingDocumentResource {
     var background: Data
     var margins: CGRect
     var fontSize: Float
+    var lineSpacing: Float
     var textColor: Array<Float>
     var writingStyle: String
     
-    init(bg: UIImage, margins: CGRect, size: Float, textColor: Array<Float>, writingStyle: String) {
+    init(bg: UIImage, margins: CGRect, size: Float, spacing: Float, textColor: Array<Float>, writingStyle: String) {
         self.background = bg.pngData()!
         self.margins = margins
         self.fontSize = size
+        self.lineSpacing = spacing
         self.textColor = textColor
         self.writingStyle = writingStyle
     }
