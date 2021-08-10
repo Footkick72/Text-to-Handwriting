@@ -41,7 +41,7 @@ struct ContentView: View {
                                         }
                 )
                 .sheet(isPresented: $showingInfoScreen) {
-                    InfoView()
+                    InfoView(shown: $showingInfoScreen)
                 }
         }
     }
