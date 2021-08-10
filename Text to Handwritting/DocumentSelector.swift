@@ -106,7 +106,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                     }
                 }
                 ForEach(0..<objectCatalog.documents.count, id: \.self) { i in
-                    let set = DocType(from: FileManager.default.contents(atPath: objectCatalog.documents[i].path)!)
+                    let set = try! DocType(from: FileManager.default.contents(atPath: objectCatalog.documents[i].path)!)
                     VStack {
                         HStack {
                             Text(verbatim: objectCatalog.documents[i].lastPathComponent.removeExtension(DocType.fileExtension))

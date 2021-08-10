@@ -32,8 +32,8 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("default.tthcharset"):
             try! JSONDecoder().decode(CharSet.self, from: FileManager.default.contents(atPath: Bundle.main.resourceURL!.appendingPathComponent("DefaultCharset.tthcharset").path)!)]
     
-    init(from: Data) {
-        object = try! JSONDecoder().decode(CharSet.self, from: from)
+    init(from: Data) throws {
+        object = try JSONDecoder().decode(CharSet.self, from: from)
     }
 
     init(characters: Dictionary<String,Array<PKDrawing>> = [:], letterSpacing: Int = 4) {

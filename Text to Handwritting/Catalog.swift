@@ -23,7 +23,7 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         trim()
         if let file = documentPath {
             if FileManager.default.fileExists(atPath: file.path) {
-                return DocType(from: FileManager.default.contents(atPath: file.path)!)
+                return try! DocType(from: FileManager.default.contents(atPath: file.path)!)
             } else {
                 documentPath = nil
                 if documents.count > 0 {
@@ -65,10 +65,24 @@ class Catalog<DocType: HandwritingDocument>: ObservableObject {
         for file in documents {
             if !FileManager.default.fileExists(atPath: file.path) {
                 documents.remove(at: documents.firstIndex(of: file)!)
+            } else {
+                do {
+                    _ = try DocType(from: FileManager.default.contents(atPath: file.path)!)
+                } catch {
+                    documents.remove(at: documents.firstIndex(of: file)!)
+                }
             }
         }
-        if let documentPath = documentPath, !FileManager.default.fileExists(atPath: documentPath.path) {
-            self.documentPath = nil
+        if let documentPath = documentPath {
+            if !FileManager.default.fileExists(atPath: documentPath.path) {
+                self.documentPath = nil
+            } else {
+                do {
+                    _ = try DocType(from: FileManager.default.contents(atPath: documentPath.path)!)
+                } catch {
+                    self.documentPath = nil
+                }
+            }
         }
     }
     

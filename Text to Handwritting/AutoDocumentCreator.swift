@@ -37,9 +37,7 @@ class AutoDocumentCreator {
     func createDocuments() {
         for (path, file) in files {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(path)
-            if !FileManager.default.fileExists(atPath: url.path) {
-                try! file.write(to: url)
-            }
+            try! file.write(to: url)
         }
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Instructions.txt")

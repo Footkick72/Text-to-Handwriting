@@ -17,7 +17,7 @@ protocol HandwritingDocument {
     static var defaults: Dictionary<URL, ObjectType> { get }
     var object: ObjectType { get set }
     static func createNew(path: URL)
-    init(from: Data)
+    init(from: Data) throws
 }
 
 protocol HandwritingDocumentResource {
