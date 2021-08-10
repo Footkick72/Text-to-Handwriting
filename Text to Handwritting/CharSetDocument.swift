@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import PencilKit
 
 extension UTType {
-  static let charSetDocument = UTType(exportedAs: "org.davidlong.tthcharset")
+  static let charSetDocument = UTType(exportedAs: "org.davidlong.t2hc")
 }
 
 struct CharSetDocument: FileDocument, HandwritingDocument {
@@ -26,11 +26,11 @@ struct CharSetDocument: FileDocument, HandwritingDocument {
     typealias ObjectType = CharSet
     
     static var defaultSaveFile = "charsets"
-    static var fileExtension = ".tthcharset"
+    static var fileExtension = ".t2hc"
     static var fileType = UTType.charSetDocument
     static var defaults: Dictionary<URL, CharSet> = [
-        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("default.tthcharset"):
-            try! JSONDecoder().decode(CharSet.self, from: FileManager.default.contents(atPath: Bundle.main.resourceURL!.appendingPathComponent("DefaultCharset.tthcharset").path)!)]
+        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("default.t2hc"):
+            try! JSONDecoder().decode(CharSet.self, from: FileManager.default.contents(atPath: Bundle.main.resourceURL!.appendingPathComponent("DefaultCharset.t2hc").path)!)]
     
     init(from: Data) throws {
         object = try JSONDecoder().decode(CharSet.self, from: from)

@@ -17,7 +17,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>org.davidlong.tthcharset</string>
+				<string>org.davidlong.t2hc</string>
 			</array>
 		</dict>
 		<dict>
@@ -31,7 +31,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>org.davidlong.tthtemplate</string>
+				<string>org.davidlong.t2ht</string>
 			</array>
 		</dict>
 	</array>
@@ -93,16 +93,16 @@
 				<string>charsetIcon320.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
-			<string>org.davidlong.tthcharset</string>
+			<string>org.davidlong.t2hc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>tthcharset</string>
+					<string>t2hc</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>
-					<string>application/org.davidlong.tthcharset</string>
+					<string>application/org.davidlong.t2hc</string>
 				</array>
 			</dict>
 		</dict>
@@ -118,16 +118,16 @@
 				<string>templateIcon320.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
-			<string>org.davidlong.tthtemplate</string>
+			<string>org.davidlong.t2ht</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>tthtemplate</string>
+					<string>t2ht</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>
-					<string>application/org.davidlong.tthtemplate</string>
+					<string>application/org.davidlong.t2ht</string>
 				</array>
 			</dict>
 		</dict>
