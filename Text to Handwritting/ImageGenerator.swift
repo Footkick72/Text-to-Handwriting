@@ -200,11 +200,8 @@ class ImageGenerator: NSObject {
                     for i in 0 ..< chars.count {
                         if var letter = charset.getImage(char: String(chars[i])), !markdown.contains(i) {
                             
-                            // regenerate the strokes with added weight
-                            var factor = charset.forceMultiplier
-                            if isBold {
-                                factor *= 1.5
-                            }
+                            // regenerate the strokes with added weight, assuming the word is bold for a worst-case scenario.
+                            let factor = charset.forceMultiplier * 1.5
                             
                             letter = letter.thickened(factor: CGFloat(factor))
                             
@@ -225,7 +222,8 @@ class ImageGenerator: NSObject {
                         }
                     }
                     
-                    if word.bounds.maxX.isFinite && Int(word.bounds.maxX) >= size[0] - right_margin {
+                    // assume worst case with * 1.1
+                    if word.bounds.maxX.isFinite && Int(word.bounds.maxX * 1.1) >= size[0] - right_margin {
                         self.createNewLine()
                     } else {
                         x_pos = oldX
