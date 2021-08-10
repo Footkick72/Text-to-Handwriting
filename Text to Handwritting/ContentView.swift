@@ -24,9 +24,6 @@ struct ContentView: View {
                                             showingInfoScreen = true
                                         }) {
                                             Image(systemName: "info.circle")
-                                        }
-                                        .sheet(isPresented: $showingInfoScreen) {
-                                            InfoView()
                                         },
                                     trailing:
                                         Button("Convert to handwriting") {
@@ -39,9 +36,12 @@ struct ContentView: View {
                                         .sheet(isPresented: $showingGenerationOptions) {
                                             OptionsView(document: $document, shown: $showingGenerationOptions)
                                         }
+                                        .alert(isPresented: $showingNoPermissionAlert) {
+                                            Alert(title: Text("Cannot convert to handwriting"), message: Text("Text to Handwritting does not have permission to save images to your photo library"), dismissButton: .default(Text("Ok")))
+                                        }
                 )
-                .alert(isPresented: $showingNoPermissionAlert) {
-                    Alert(title: Text("Cannot convert to handwriting"), message: Text("Text to Handwritting does not have permission to save images to your photo library"), dismissButton: .default(Text("Ok")))
+                .sheet(isPresented: $showingInfoScreen) {
+                    InfoView()
                 }
         }
     }
