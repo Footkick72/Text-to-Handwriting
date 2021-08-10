@@ -173,6 +173,7 @@ struct WritingView: View {
             document.object.characters.removeValue(forKey: selection)
             return
         }
+        document.object.characters[selection]!.remove(at: imageIndex)
     }
 }
 
