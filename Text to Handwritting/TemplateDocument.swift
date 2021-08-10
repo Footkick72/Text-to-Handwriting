@@ -30,17 +30,17 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     static var fileType = UTType.templateDocument
     static var defaults: Dictionary<URL, Template> = [
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("blank.tthtemplate"):
-            Template(bg: UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 1.5, spacing: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
+            Template(bg: UIImage(imageLiteralResourceName: "blankPaper.png"), margins: CGRect(x: 150, y: 150, width: 2250, height: 3000), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("transparent.tthtemplate"):
-            Template(bg: UIImage(imageLiteralResourceName: "transparentpaper.png"), margins: CGRect(x: 50, y: 50, width: 750, height: 1000), size: 1.5, spacing: 30, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
+            Template(bg: UIImage(imageLiteralResourceName: "transparentPaper.png"), margins: CGRect(x: 150, y: 150, width: 2250, height: 3000), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("lined.tthtemplate"):
-            Template(bg: UIImage(imageLiteralResourceName: "linedpaper.png"), margins: CGRect(x: 120, y: 110, width: 650, height: 980), size: 1.0, spacing: 26.8, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
+            Template(bg: UIImage(imageLiteralResourceName: "linedPaper.png"), margins: CGRect(x: 360, y: 400, width: 1950, height: 2810), size: 1.0, spacing: 85.4, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
     
     init(from: Data) throws {
         object = try JSONDecoder().decode(Template.self, from: from)
     }
 
-    init(bg: UIImage = UIImage(imageLiteralResourceName: "blankpaper.png"), margins: CGRect = CGRect(x: 50, y: 50, width: 750, height: 1000), size: Float = 30, spacing: Float = 1.5, textColor: Array<Float> = [0.0, 0.0, 0.0, 1.0], writingStyle: String =  "Pen") {
+    init(bg: UIImage = UIImage(imageLiteralResourceName: "blankPaper.png"), margins: CGRect = CGRect(x: 150, y: 150, width: 2250, height: 3000), size: Float = 1.0, spacing: Float = 60, textColor: Array<Float> = [0.0, 0.0, 0.0, 1.0], writingStyle: String =  "Pen") {
         object = Template(bg: bg, margins: margins, size: size, spacing: spacing, textColor: textColor, writingStyle: writingStyle)
     }
 
