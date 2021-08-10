@@ -14,9 +14,15 @@ struct WritingView: View {
     @State var chars: String
     @State var selection: String
     @State var canvas = PKCanvasView()
+    
     @State var canvasScale: Double = 1.0
     @State var previousScale: Double = 1.0
+    
+    @GestureState var scaleFromGesture: CGFloat = 1.0
+    @State var previousScaleFromGesture: CGFloat = 1.0
+    
     @State var toolWidth: Double = 20.0
+    
     @ScaledMetric var imageSize: CGFloat = 50
     @ScaledMetric(relativeTo: .largeTitle) var canvasButtonsSize: CGFloat = 50
     
@@ -112,18 +118,36 @@ struct WritingView: View {
                             )
                             .aspectRatio(CGFloat(1.0), contentMode: .fit)
                             .border(Color.black, width: 2)
-                    }.frame(width: max(50 + canvasButtonsSize, (50 + canvasButtonsSize) * CGFloat(1.0 - canvasScale) + geometry.size.width * CGFloat(canvasScale)), height: max(50 + canvasButtonsSize, (50 + canvasButtonsSize) * CGFloat(1.0 - canvasScale) + geometry.size.height * CGFloat(canvasScale)))
-                }.frame(width: geometry.size.width, height: geometry.size.height)
+                    }
+                    .frame(width: max(50 + canvasButtonsSize, (50 + canvasButtonsSize) * CGFloat(1.0 - canvasScale) + geometry.size.width * CGFloat(canvasScale)), height: max(50 + canvasButtonsSize, (50 + canvasButtonsSize) * CGFloat(1.0 - canvasScale) + geometry.size.height * CGFloat(canvasScale)))
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .contentShape(Rectangle())
+                .gesture(
+                    MagnificationGesture(minimumScaleDelta: 0.0)
+                        .updating($scaleFromGesture) { currentState, gestureState, transaction in
+                            gestureState = currentState
+                        }
+                )
+                .onChange(of: scaleFromGesture) { value in
+                    if value != 1.0 && previousScaleFromGesture != 1.0 {
+                        let percentChange = value/previousScaleFromGesture
+                        
+                        self.canvasScale *= Double(percentChange)
+                        self.canvasScale = min(1.0, max(0.0, Double(self.canvasScale)))
+                    }
+                    self.previousScaleFromGesture = value
+                }
             }
             VStack {
                 Slider(value: $canvasScale, in: 0.0...1, step: 0.01, onEditingChanged: { _ in }, label: {})
                     .padding(.horizontal, 50)
-                .onChange(of: canvasScale) { _ in
-                    UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
-                    let percentChange = canvasScale/previousScale
-                    canvas.drawing.transform(using: CGAffineTransform(scaleX: CGFloat(percentChange), y: CGFloat(percentChange)))
-                    previousScale = canvasScale
-                }
+                    .onChange(of: canvasScale) { _ in
+                        UserDefaults.standard.setValue(canvasScale, forKey: "writingViewCanvasScale")
+                        let percentChange = canvasScale/previousScale
+                        canvas.drawing.transform(using: CGAffineTransform(scaleX: CGFloat(percentChange), y: CGFloat(percentChange)))
+                        previousScale = canvasScale
+                    }
                 Text("Writing Canvas Scale")
             }
             VStack {
