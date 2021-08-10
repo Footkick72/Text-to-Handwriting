@@ -21,7 +21,7 @@ class AutoDocumentCreator {
     let instructions = """
                                             Welcome to Text to Handwriting!
                                             
-                                            This application converts typed text into images of handwritten text. To see it in action, tap the "Convert to handwriting" button at the top right of this document, and then tap "Save to Photos". A handwritten version of this file will be added to your photos.
+                                            This application converts typed text into images of handwritten text. To see it in action, tap the "Convert to handwriting" button at the top right of this document, and then tap "Save to photos". A handwritten version of this file will be added to your photos.
                                             
                                             The generation can be customized when tapping "Convert to handwriting". There is a character set that gives the handwriting style, and a template that gives the paper style. Tap on them to select a different character set or template. There are default templates for lined and unlined paper, and one default character set. The import button is used to select a new character set or template file from your filesystem. The generator supports simple markdown. You can place a pair of "*"s on either end of **any text you want to bold**. You can also __underline text__ with two "_"s or use two "~"s for ~~strikethrough~~. You can also combine these modifiers together to create **~~__an effect like this.__~~**
                                             
