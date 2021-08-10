@@ -60,6 +60,7 @@ struct TemplateEditor: View {
             .frame(width: 300, height: 150)
             .clipped()
         }
+        .padding(20)
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary) { image in
                 document.object.background = image.pngData()!

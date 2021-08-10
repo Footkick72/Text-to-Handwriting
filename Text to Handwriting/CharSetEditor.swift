@@ -96,6 +96,7 @@ struct CharSetEditor: View {
                                     }
             )
         }
+        .padding(20)
     }
     
     func getBackgroundColor(char: String) -> Color {
