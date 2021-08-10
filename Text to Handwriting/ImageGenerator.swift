@@ -68,7 +68,7 @@ class ImageGenerator: NSObject {
         self.space_length = Int(Double(line_spacing) * 0.5)
         self.line_end_buffer = Int(line_spacing)
         
-        self.drawWidth = charset.getDrawWidth(forSize: CGFloat(font_size * line_spacing))
+        self.drawWidth = charset.getDrawWidth(forSize: CGFloat(charset.forceMultiplier * font_size * line_spacing))
         
         self.image = PKDrawing()
         self.size = [Int(template.getBackground().size.width), Int(template.getBackground().size.height)]
@@ -274,7 +274,7 @@ class ImageGenerator: NSObject {
                                                   size: CGSize(width: drawWidth, height: drawWidth),
                                                   opacity: 1.0,
                                                   force: 1.0,
-                                                  azimuth: 0.0,
+                                                  azimuth: CGFloat.pi/2,
                                                   altitude: 0.0)
                         underlinePath.append(point)
                     }
@@ -296,7 +296,7 @@ class ImageGenerator: NSObject {
                                                   size: CGSize(width: drawWidth, height: drawWidth),
                                                   opacity: 1.0,
                                                   force: 1.0,
-                                                  azimuth: 0.0,
+                                                  azimuth: CGFloat.pi/2,
                                                   altitude: 0.0)
                         strikethroughPath.append(point)
                     }
