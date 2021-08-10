@@ -1,6 +1,6 @@
 //
 //  DocumentSelector.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/26/21.
 //

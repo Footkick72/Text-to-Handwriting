@@ -1,6 +1,6 @@
 //
 //  ImageGenerator.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 8/4/21.
 //

@@ -67,7 +67,7 @@ struct TemplateEditor: View {
             }
         }
         .alert(isPresented: $showingNoPermissionAlert) {
-            Alert(title: Text("Cannot open photos"), message: Text("Text to Handwritting does not have permission to acess your photo library"), dismissButton: .default(Text("Ok")))
+            Alert(title: Text("Cannot open photos"), message: Text("Text to Handwriting does not have permission to acess your photo library"), dismissButton: .default(Text("Ok")))
         }
         .onAppear() {
             realTextColor = Color(.sRGB, red: Double(document.object.textColor[0]), green: Double(document.object.textColor[1]), blue: Double(document.object.textColor[2]), opacity: Double(document.object.textColor[3]))

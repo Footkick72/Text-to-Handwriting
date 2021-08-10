@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1A3CA90726BABD9800762413 /* ImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3CA90626BABD9800762413 /* ImageGenerator.swift */; };
-		1A3F8D42268B684200710E99 /* Text_to_HandwrittingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D41268B684200710E99 /* Text_to_HandwrittingApp.swift */; };
-		1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D43268B684200710E99 /* Text_to_HandwrittingDocument.swift */; };
+		1A3F8D42268B684200710E99 /* Text_to_HandwritingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D41268B684200710E99 /* Text_to_HandwritingApp.swift */; };
+		1A3F8D44268B684200710E99 /* Text_to_HandwritingDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D43268B684200710E99 /* Text_to_HandwritingDocument.swift */; };
 		1A3F8D46268B684200710E99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D45268B684200710E99 /* ContentView.swift */; };
 		1A3F8D48268B684200710E99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A3F8D47268B684200710E99 /* Assets.xcassets */; };
 		1A3F8D4B268B684200710E99 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A3F8D4A268B684200710E99 /* Preview Assets.xcassets */; };
@@ -36,14 +36,14 @@
 		1AA4E6EF26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */; };
 		1AB6A20126C31C7C00291755 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB6A20026C31C7C00291755 /* InfoView.swift */; };
 		1ACB329826AF3322000674BC /* DocumentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329726AF3322000674BC /* DocumentSelector.swift */; };
-		1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */; };
+		1ACB329A26AF48EB000674BC /* HandwritingDocumentProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACB329926AF48EB000674BC /* HandwritingDocumentProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1A3CA90626BABD9800762413 /* ImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGenerator.swift; sourceTree = "<group>"; };
-		1A3F8D3E268B684200710E99 /* Text to Handwritting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Text to Handwritting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A3F8D41268B684200710E99 /* Text_to_HandwrittingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwrittingApp.swift; sourceTree = "<group>"; };
-		1A3F8D43268B684200710E99 /* Text_to_HandwrittingDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwrittingDocument.swift; sourceTree = "<group>"; };
+		1A3F8D3E268B684200710E99 /* Text to Handwriting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Text to Handwriting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A3F8D41268B684200710E99 /* Text_to_HandwritingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwritingApp.swift; sourceTree = "<group>"; };
+		1A3F8D43268B684200710E99 /* Text_to_HandwritingDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwritingDocument.swift; sourceTree = "<group>"; };
 		1A3F8D45268B684200710E99 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1A3F8D47268B684200710E99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A3F8D4A268B684200710E99 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 		1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDocumentCreator.swift; sourceTree = "<group>"; };
 		1AB6A20026C31C7C00291755 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		1ACB329726AF3322000674BC /* DocumentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSelector.swift; sourceTree = "<group>"; };
-		1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwrittingDocumentProtocols.swift; sourceTree = "<group>"; };
+		1ACB329926AF48EB000674BC /* HandwritingDocumentProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwritingDocumentProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +93,7 @@
 				1A86D09E26B5DDF8007A236A /* Resources */,
 				1A3F9853268E77CF00710E99 /* .gitignore */,
 				1A3F8D3F268B684200710E99 /* Products */,
-				1A3F8D40268B684200710E99 /* Text to Handwritting */,
+				1A3F8D40268B684200710E99 /* Text to Handwriting */,
 				1A3F984D268E3DC300710E99 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -101,16 +101,16 @@
 		1A3F8D3F268B684200710E99 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A3F8D3E268B684200710E99 /* Text to Handwritting.app */,
+				1A3F8D3E268B684200710E99 /* Text to Handwriting.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A3F8D40268B684200710E99 /* Text to Handwritting */ = {
+		1A3F8D40268B684200710E99 /* Text to Handwriting */ = {
 			isa = PBXGroup;
 			children = (
-				1A3F8D41268B684200710E99 /* Text_to_HandwrittingApp.swift */,
-				1A3F8D43268B684200710E99 /* Text_to_HandwrittingDocument.swift */,
+				1A3F8D41268B684200710E99 /* Text_to_HandwritingApp.swift */,
+				1A3F8D43268B684200710E99 /* Text_to_HandwritingDocument.swift */,
 				1A3CA90626BABD9800762413 /* ImageGenerator.swift */,
 				1A3F8D45268B684200710E99 /* ContentView.swift */,
 				1AB6A20026C31C7C00291755 /* InfoView.swift */,
@@ -121,7 +121,7 @@
 				1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */,
 				1ACB329726AF3322000674BC /* DocumentSelector.swift */,
 				1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */,
-				1ACB329926AF48EB000674BC /* HandwrittingDocumentProtocols.swift */,
+				1ACB329926AF48EB000674BC /* HandwritingDocumentProtocols.swift */,
 				1AA1E2E126A0F6A6007DAE76 /* WritingView.swift */,
 				1AA1E2CB269F2863007DAE76 /* NumberSelector.swift */,
 				1A948E7F26AB2F3C00BE942C /* TemplateDocument.swift */,
@@ -135,7 +135,7 @@
 				1A3F8D4C268B684200710E99 /* Info.plist */,
 				1A3F8D49268B684200710E99 /* Preview Content */,
 			);
-			path = "Text to Handwritting";
+			path = "Text to Handwriting";
 			sourceTree = "<group>";
 		};
 		1A3F8D49268B684200710E99 /* Preview Content */ = {
@@ -178,9 +178,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1A3F8D3D268B684200710E99 /* Text to Handwritting */ = {
+		1A3F8D3D268B684200710E99 /* Text to Handwriting */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A3F8D4F268B684200710E99 /* Build configuration list for PBXNativeTarget "Text to Handwritting" */;
+			buildConfigurationList = 1A3F8D4F268B684200710E99 /* Build configuration list for PBXNativeTarget "Text to Handwriting" */;
 			buildPhases = (
 				1A3F8D3A268B684200710E99 /* Sources */,
 				1A3F8D3B268B684200710E99 /* Frameworks */,
@@ -190,9 +190,9 @@
 			);
 			dependencies = (
 			);
-			name = "Text to Handwritting";
+			name = "Text to Handwriting";
 			productName = "Text to Handwritting";
-			productReference = 1A3F8D3E268B684200710E99 /* Text to Handwritting.app */;
+			productReference = 1A3F8D3E268B684200710E99 /* Text to Handwriting.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -209,7 +209,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1A3F8D39268B684200710E99 /* Build configuration list for PBXProject "Text to Handwritting" */;
+			buildConfigurationList = 1A3F8D39268B684200710E99 /* Build configuration list for PBXProject "Text to Handwriting" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -222,7 +222,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1A3F8D3D268B684200710E99 /* Text to Handwritting */,
+				1A3F8D3D268B684200710E99 /* Text to Handwriting */,
 			);
 		};
 /* End PBXProject section */
@@ -253,15 +253,15 @@
 				1AA4E6EF26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift in Sources */,
 				1AA1E2BA269B8D9A007DAE76 /* FilesManager.swift in Sources */,
 				1AA1E2E226A0F6A6007DAE76 /* WritingView.swift in Sources */,
-				1A3F8D42268B684200710E99 /* Text_to_HandwrittingApp.swift in Sources */,
+				1A3F8D42268B684200710E99 /* Text_to_HandwritingApp.swift in Sources */,
 				1A3F92D1268CB75800710E99 /* Extensions.swift in Sources */,
 				1AA1E2CC269F2863007DAE76 /* NumberSelector.swift in Sources */,
 				1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */,
-				1A3F8D44268B684200710E99 /* Text_to_HandwrittingDocument.swift in Sources */,
+				1A3F8D44268B684200710E99 /* Text_to_HandwritingDocument.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */,
 				1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */,
 				1A3CA90726BABD9800762413 /* ImageGenerator.swift in Sources */,
-				1ACB329A26AF48EB000674BC /* HandwrittingDocumentProtocols.swift in Sources */,
+				1ACB329A26AF48EB000674BC /* HandwritingDocumentProtocols.swift in Sources */,
 				1AB6A20126C31C7C00291755 /* InfoView.swift in Sources */,
 				1A53399C26A71B7E00CC037D /* CharSetDocument.swift in Sources */,
 				1A59E4AF2690FAC500F93D58 /* Template.swift in Sources */,
@@ -400,16 +400,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Text to Handwritting/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Text to Handwriting/Preview Content\"";
 				DEVELOPMENT_TEAM = PJMGXL4PJQ;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Text to Handwritting/Info.plist";
+				INFOPLIST_FILE = "Text to Handwriting/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.davidlong.Text-to-Handwritting";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.davidlong.Text-to-Handwriting";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -422,16 +422,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Text to Handwritting/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Text to Handwriting/Preview Content\"";
 				DEVELOPMENT_TEAM = PJMGXL4PJQ;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Text to Handwritting/Info.plist";
+				INFOPLIST_FILE = "Text to Handwriting/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.davidlong.Text-to-Handwritting";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.davidlong.Text-to-Handwriting";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -441,7 +441,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1A3F8D39268B684200710E99 /* Build configuration list for PBXProject "Text to Handwritting" */ = {
+		1A3F8D39268B684200710E99 /* Build configuration list for PBXProject "Text to Handwriting" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A3F8D4D268B684200710E99 /* Debug */,
@@ -450,7 +450,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A3F8D4F268B684200710E99 /* Build configuration list for PBXNativeTarget "Text to Handwritting" */ = {
+		1A3F8D4F268B684200710E99 /* Build configuration list for PBXNativeTarget "Text to Handwriting" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A3F8D50268B684200710E99 /* Debug */,

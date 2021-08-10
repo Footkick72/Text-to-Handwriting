@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A3F8D3D268B684200710E99"
-               BuildableName = "Text to Handwritting.app"
-               BlueprintName = "Text to Handwritting"
-               ReferencedContainer = "container:Text to Handwritting.xcodeproj">
+               BuildableName = "Text to Handwriting.app"
+               BlueprintName = "Text to Handwriting"
+               ReferencedContainer = "container:Text to Handwriting.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A3F8D3D268B684200710E99"
-            BuildableName = "Text to Handwritting.app"
-            BlueprintName = "Text to Handwritting"
-            ReferencedContainer = "container:Text to Handwritting.xcodeproj">
+            BuildableName = "Text to Handwriting.app"
+            BlueprintName = "Text to Handwriting"
+            ReferencedContainer = "container:Text to Handwriting.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A3F8D3D268B684200710E99"
-            BuildableName = "Text to Handwritting.app"
-            BlueprintName = "Text to Handwritting"
-            ReferencedContainer = "container:Text to Handwritting.xcodeproj">
+            BuildableName = "Text to Handwriting.app"
+            BlueprintName = "Text to Handwriting"
+            ReferencedContainer = "container:Text to Handwriting.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

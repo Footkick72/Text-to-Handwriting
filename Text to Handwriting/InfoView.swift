@@ -1,6 +1,6 @@
 //
 //  InfoView.swift
-//  Text to Handwritting
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 8/10/21.
 //
@@ -15,12 +15,12 @@ struct InfoView: View {
         VStack(spacing: 30) {
             Text(
                 """
-                Text to Handwritting
+                Text to Handwriting
                 
                 ©2021 by Daniel Christopher Long
                 
                 Source code availiable at:
-                https://github.com/Footkick72/Text-to-Handwritting
+                https://github.com/Footkick72/Text-to-Handwriting
                 MIT License
                 
                 To learn how to use this app,

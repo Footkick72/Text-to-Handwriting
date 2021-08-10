@@ -37,7 +37,7 @@ struct ContentView: View {
                                             OptionsView(document: $document, shown: $showingGenerationOptions)
                                         }
                                         .alert(isPresented: $showingNoPermissionAlert) {
-                                            Alert(title: Text("Cannot convert to handwriting"), message: Text("Text to Handwritting does not have permission to save images to your photo library"), dismissButton: .default(Text("Ok")))
+                                            Alert(title: Text("Cannot convert to handwriting"), message: Text("Text to Handwriting does not have permission to save images to your photo library"), dismissButton: .default(Text("Ok")))
                                         }
                 )
                 .sheet(isPresented: $showingInfoScreen) {

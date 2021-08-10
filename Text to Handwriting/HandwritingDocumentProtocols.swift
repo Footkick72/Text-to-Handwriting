@@ -1,6 +1,6 @@
 //
-//  HandwrittingDocumentProtocols.swift
-//  Text to Handwritting
+//  HandwritingDocumentProtocols.swift
+//  Text to Handwriting
 //
 //  Created by Daniel Long on 7/26/21.
 //
