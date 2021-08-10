@@ -159,8 +159,8 @@ struct WritingView: View {
     }
     
     func saveImage(image: PKDrawing) {
-        if document.object.availiable_chars.firstIndex(of: Character(selection)) == nil {
-            document.object.availiable_chars += selection
+        if document.object.available_chars.firstIndex(of: Character(selection)) == nil {
+            document.object.available_chars += selection
         }
         
         let s = document.object.characters[selection] ?? []
@@ -169,7 +169,7 @@ struct WritingView: View {
     
     func deleteImage(imageIndex: Int) {
         if document.object.characters[selection]!.count <= 1 {
-            document.object.availiable_chars.remove(at: document.object.availiable_chars.firstIndex(of: Character(selection))!)
+            document.object.available_chars.remove(at: document.object.available_chars.firstIndex(of: Character(selection))!)
             document.object.characters.removeValue(forKey: selection)
             return
         }

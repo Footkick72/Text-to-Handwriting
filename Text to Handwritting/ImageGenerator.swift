@@ -45,6 +45,8 @@ class ImageGenerator: NSObject {
     var strikethroughPath = Array<PKStrokePoint>()
     var strikethroughPathY: CGFloat = 0
     
+    var drawWidth: CGFloat
+    
     var proceedingMarkdownCharCount = 0
     var isBold = false
     var isUnderline = false
@@ -65,6 +67,8 @@ class ImageGenerator: NSObject {
         self.letter_spacing = charset.letterSpacing
         self.space_length = Int(Double(line_spacing) * 0.5)
         self.line_end_buffer = Int(line_spacing)
+        
+        self.drawWidth = charset.getDrawWidth(forSize: CGFloat(font_size * line_spacing))
         
         self.image = PKDrawing()
         self.size = [Int(template.getBackground().size.width), Int(template.getBackground().size.height)]
@@ -197,27 +201,12 @@ class ImageGenerator: NSObject {
                         if var letter = charset.getImage(char: String(chars[i])), !markdown.contains(i) {
                             
                             // regenerate the strokes with added weight
-                            var newStrokes = [PKStroke]()
-                            for stroke in letter.strokes {
-                                var newPoints = [PKStrokePoint]()
-                                stroke.path.forEach { (point) in
-                                    let newSize = point.size.applying(CGAffineTransform(scaleX: CGFloat(charset.forceMultiplier), y: CGFloat(charset.forceMultiplier)))
-                                    let newPoint = PKStrokePoint(location: point.location,
-                                                                 timeOffset: point.timeOffset,
-                                                                 size: newSize,
-                                                                 opacity: point.opacity,
-                                                                 force: point.force,
-                                                                 azimuth: point.azimuth,
-                                                                 altitude: point.altitude)
-                                    newPoints.append(newPoint)
-                                }
-                                let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
-                                var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
-                                newStroke.transform = stroke.transform
-                                newStrokes.append(newStroke)
+                            var factor = charset.forceMultiplier
+                            if isBold {
+                                factor *= 1.5
                             }
                             
-                            letter = PKDrawing(strokes: newStrokes)
+                            letter = letter.thickened(factor: CGFloat(factor))
                             
                             // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
                             let fillingScale = CGFloat(1.8 * font_size)
@@ -247,30 +236,12 @@ class ImageGenerator: NSObject {
                 if var letter = charset.getImage(char: String(self.text[char_i])) {
                     
                     // regenerate the strokes with added weight
-                    var newStrokes = [PKStroke]()
-                    for stroke in letter.strokes {
-                        var newPoints = [PKStrokePoint]()
-                        stroke.path.forEach { (point) in
-                            var newSize = point.size.applying(CGAffineTransform(scaleX: CGFloat(charset.forceMultiplier), y: CGFloat(charset.forceMultiplier)))
-                            if isBold {
-                                newSize = point.size.applying(CGAffineTransform(scaleX: 1.5, y: 1.5))
-                            }
-                            let newPoint = PKStrokePoint(location: point.location,
-                                                         timeOffset: point.timeOffset,
-                                                         size: newSize,
-                                                         opacity: point.opacity,
-                                                         force: point.force,
-                                                         azimuth: point.azimuth,
-                                                         altitude: point.altitude)
-                            newPoints.append(newPoint)
-                        }
-                        let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
-                        var newStroke = PKStroke(ink: PKInk(.pen, color: UIColor.white), path: newPath)
-                        newStroke.transform = stroke.transform
-                        newStrokes.append(newStroke)
+                    var factor = charset.forceMultiplier
+                    if isBold {
+                        factor *= 1.5
                     }
                     
-                    letter = PKDrawing(strokes: newStrokes)
+                    letter = letter.thickened(factor: CGFloat(factor))
                     
                     // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
                     let fillingScale = CGFloat(1.8 * font_size)
@@ -302,9 +273,11 @@ class ImageGenerator: NSObject {
                         let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
                                                                     y: underlinePathY),
                                                   timeOffset: TimeInterval(),
-                                                  size: CGSize(width: 3, height: 3),
-                                                  opacity: 1.0, force: 1.0,
-                                                  azimuth: 0.0, altitude: 0.0)
+                                                  size: CGSize(width: drawWidth, height: drawWidth),
+                                                  opacity: 1.0,
+                                                  force: 1.0,
+                                                  azimuth: 0.0,
+                                                  altitude: 0.0)
                         underlinePath.append(point)
                     }
                     
@@ -322,9 +295,11 @@ class ImageGenerator: NSObject {
                         let point = PKStrokePoint(location: CGPoint(x: letter.bounds.midX,
                                                                     y: strikethroughPathY),
                                                   timeOffset: TimeInterval(),
-                                                  size: CGSize(width: 3, height: 3),
-                                                  opacity: 1.0, force: 1.0,
-                                                  azimuth: 0.0, altitude: 0.0)
+                                                  size: CGSize(width: drawWidth, height: drawWidth),
+                                                  opacity: 1.0,
+                                                  force: 1.0,
+                                                  azimuth: 0.0,
+                                                  altitude: 0.0)
                         strikethroughPath.append(point)
                     }
                     

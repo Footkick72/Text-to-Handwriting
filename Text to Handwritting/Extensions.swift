@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Photos
+import PencilKit
 
 extension UIImage {
     func cropAlpha(cropVertical: Bool, cropHorizontal: Bool) -> UIImage {
@@ -106,5 +107,30 @@ extension PHPhotoLibrary {
             @unknown default:
                 fatalError()
         }
+    }
+}
+
+extension PKDrawing {
+    func thickened(factor: CGFloat) -> PKDrawing {
+        var newStrokes = [PKStroke]()
+        for stroke in self.strokes {
+            var newPoints = [PKStrokePoint]()
+            stroke.path.forEach { (point) in
+                let newPoint = PKStrokePoint(location: point.location,
+                                             timeOffset: point.timeOffset,
+                                             size: CGSize(width: point.size.width * factor, height: point.size.height * factor),
+                                             opacity: point.opacity,
+                                             force: point.force,
+                                             azimuth: point.azimuth,
+                                             altitude: point.altitude)
+                newPoints.append(newPoint)
+            }
+            let newPath = PKStrokePath(controlPoints: newPoints, creationDate: Date())
+            var newStroke = PKStroke(ink: stroke.ink, path: newPath)
+            newStroke.transform = stroke.transform
+            newStrokes.append(newStroke)
+        }
+        
+        return PKDrawing(strokes: newStrokes)
     }
 }

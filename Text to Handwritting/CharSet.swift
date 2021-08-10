@@ -13,23 +13,43 @@ fileprivate let substitutions: Dictionary<String, Array<String>> = ["\"": ["”"
                                                                     "'": ["’", "‘", "’"]]
 
 struct CharSet: Equatable, Codable, HandwritingDocumentResource {
-    var availiable_chars: String
+    var available_chars: String
     var characters: Dictionary<String,Array<PKDrawing>>
     var letterSpacing: Int
     var forceMultiplier: Float
     
     init(characters: Dictionary<String,Array<PKDrawing>>, letterSpacing: Int = 4, forceMultiplier: Float = 1) {
         self.characters = characters
-        self.availiable_chars = ""
+        self.available_chars = ""
         self.letterSpacing = letterSpacing
         self.forceMultiplier = forceMultiplier
         for char in characters.keys {
-            availiable_chars += char
+            available_chars += char
         }
     }
     
     func numberOfCharacters(char: String) -> Int {
         return self.getImages(char: char).count
+    }
+    
+    func getDrawWidth(forSize: CGFloat) -> CGFloat {
+        var sum: CGFloat = 0
+        for char in available_chars {
+            let image = getImage(char: String(char))!
+            var strokeSum = 0
+            for stroke in image.strokes {
+                var pathSum = 0
+                stroke.path.forEach({ point in
+                    pathSum += Int(point.size.width + point.size.height)
+                })
+                pathSum /= stroke.path.count * 2
+                strokeSum += pathSum
+            }
+            strokeSum /= image.strokes.count
+            sum += CGFloat(strokeSum)
+        }
+        let width: CGFloat = sum/CGFloat(available_chars.count) * sqrt(CGFloat(forSize/256.0)) * 2.2
+        return width
     }
     
     func getImage(char: String) -> PKDrawing? {
@@ -62,18 +82,18 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func getPreview() -> UIImage {
-        if availiable_chars.count == 0 {
+        if available_chars.count == 0 {
             return UIImage(cgImage: UIImage(named: "space")!.cgImage!, scale: 4.0, orientation: .up)
         }
         var image = PKDrawing()
         var i = 0
         for y in 0..<3 {
             for x in 0..<3 {
-                var char = getSameImage(char: String(availiable_chars[i]))
+                var char = getSameImage(char: String(available_chars[i]))
                 char.transform(using: CGAffineTransform(translationX: CGFloat(x*256), y: CGFloat(y*256)))
                 image.append(char)
                 i += 1
-                if i >= availiable_chars.count {
+                if i >= available_chars.count {
                     return image.image(from: CGRect(x: 0, y: 0, width: 256*3, height: 256*3), scale: 5.0)
                 }
             }
