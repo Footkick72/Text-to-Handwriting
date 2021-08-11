@@ -17,6 +17,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     @State var showingUniquenessAlert = false
     @State var textToGenerate: String
     @ObservedObject var objectCatalog: Catalog<DocType>
+    @Binding var disabled: Bool
     
     var itemWidth: CGFloat = 150
     
@@ -47,7 +48,9 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
             }
         }
         .onTapGesture {
-            showingSelector = true
+            if !disabled {
+                showingSelector = true
+            }
         }
         .popover(isPresented: $showingSelector) {
             UserFilesView<DocType>(showingSelector: $showingSelector, textToGenerate: textToGenerate, objectCatalog: objectCatalog)
