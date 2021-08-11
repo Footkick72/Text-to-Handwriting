@@ -107,6 +107,16 @@ class ImageGenerator: NSObject {
         y_pos += line_spacing
         if y_pos >= Float(size[1]) - line_spacing - Float(bottom_margin) {
             y_pos = Float(top_margin)
+            
+            // trim any subsequent newlines so that breaking before a newline does not indent the next page
+            while char_i != self.text.index(before: self.text.endIndex) && self.text[char_i] == "\n" {
+                generated += 1
+                char_i = self.text.index(after: char_i)
+            }
+            // go back one, as within the main loop we have not incremented yet
+            generated -= 1
+            char_i = self.text.index(before: char_i)
+            
             self.savePage(template: template, image: &image)
         }
     }
