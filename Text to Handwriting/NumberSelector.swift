@@ -10,23 +10,29 @@ import SwiftUI
 
 struct NumberSelector: View {
     @Binding var value: Float
+    @State var internalValue: Float = 0
     @State var minValue: Float
     @State var maxValue: Float
     @State var label: String
-    
-    let rounded: Bool
+    @State var displayValue: String = ""
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             Text(label)
-            Slider(value: $value,
-                   in: minValue...maxValue,
-                   step: 0.01,
+            Slider(value: $internalValue,
+                   in: log2(minValue) ... log2(maxValue),
+                   step: 0.00001,
                    onEditingChanged: {_ in },
-                   minimumValueLabel: Text(String(rounded ? Float(Int(minValue)) : round(minValue * 100) / 100)),
-                   maximumValueLabel: Text(String(rounded ? Float(Int(maxValue)) : round(maxValue * 100) / 100)),
+                   minimumValueLabel: Text(String(minValue)),
+                   maximumValueLabel: Text(String(maxValue)),
                    label: {})
-            Text(String(rounded ? Float(Int(value)) : round(value * 100) / 100))
+                .onChange(of: internalValue) { v in
+                    value = exp2(v)
+                }
+                .onAppear() {
+                    internalValue = log2(value)
+                }
+            Text(String(round(value * 100) / 100))
         }
     }
 }
