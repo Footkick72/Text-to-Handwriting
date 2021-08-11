@@ -37,7 +37,8 @@ struct TemplateEditor: View {
                     ))
                     ImageRectSelector(document: $document, scale: displayScale)
                         .scaleEffect(CGFloat(displayScale))
-                }.frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height)
             }.padding()
             NumberSelector(value: $document.object.fontSize, minValue: 0.2, maxValue: 4, label: "Relative font size", rounded: false)
                 .frame(width: 300)

@@ -93,6 +93,7 @@ struct ImageRectSelector: View {
             .onChange(of: document.object.background) { _ in
                 document.object.margins = CGRect(origin: CGPoint(x: 0, y: 0), size: document.object.getBackground().size)
             }
+            .border(Color.black, width: CGFloat(1/scale))
     }
     
     
