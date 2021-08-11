@@ -42,7 +42,7 @@ struct TemplateEditor: View {
             NumberSelector(value: $document.object.fontSize, minValue: 0.2, maxValue: 4, label: "Relative font size", rounded: false)
                 .frame(width: 300)
             Spacer(minLength: 20)
-            NumberSelector(value: $document.object.lineSpacing, minValue: 10, maxValue: 200, label: "Line Spacing", rounded: false)
+            NumberSelector(value: $document.object.lineSpacing, minValue: 10, maxValue: 500, label: "Line Spacing", rounded: false)
                 .frame(width: 300)
             ColorPicker("Font color", selection: $realTextColor)
                 .onChange(of: realTextColor) { value in
