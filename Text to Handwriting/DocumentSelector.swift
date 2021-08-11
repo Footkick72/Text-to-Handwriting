@@ -19,7 +19,7 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
     @ObservedObject var objectCatalog: Catalog<DocType>
     @Binding var disabled: Bool
     
-    var itemWidth: CGFloat = 150
+    @ScaledMetric var itemWidth: CGFloat = 150
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -27,8 +27,10 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
         VStack {
             title
                 .foregroundColor(.blue)
+                .font(.headline)
             if let path = objectCatalog.documentPath, let object = objectCatalog.document()?.object {
                 Text(verbatim: path.lastPathComponent.removeExtension(DocType.fileExtension))
+                    .font(.subheadline)
                 Image(uiImage: object.getPreview())
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -149,6 +151,7 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                 VStack(spacing: 12.5) {
                     Text("Import")
                         .foregroundColor(.blue)
+                        .font(.subheadline)
                     Button(action: {
                         showingImporter = true
                     }) {

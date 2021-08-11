@@ -37,15 +37,17 @@ struct OptionsView: View {
                         }
                     }
                 }
+                .font(.headline)
                 .disabled((charsets.document() == nil || templates.document() == nil) ? true : false)
                 .alert(isPresented: $finished) {
-                    Alert(title: Text("Image saved to photos"), message: nil, dismissButton: .default(Text("Ok")) { shown = false })
+                    Alert(title: Text("Image saved to photos").font(.body), message: nil, dismissButton: .default(Text("Ok")) { shown = false })
                 }
                 Button("Cancel") {
                     if !generating {
                         shown = false
                     }
                 }
+                .font(.headline)
                 .foregroundColor(.red)
             }
         }
