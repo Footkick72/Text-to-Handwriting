@@ -126,7 +126,22 @@ class ImageGenerator: NSObject {
         word = PKDrawing()
     }
     
+    func applyReplacements() {
+        let replacements: Dictionary<String, String> = ["…" : "..."]
+        
+        var i = self.text.startIndex
+        while i != self.text.endIndex {
+            
+            if replacements.keys.contains(String(self.text[i])) {
+                self.text.replaceSubrange(i...i, with: replacements[String(self.text[i])]!)
+            }
+            
+            i = self.text.index(after: i)
+        }
+    }
+    
     func createImage() {
+        applyReplacements()
         while char_i != self.text.endIndex {
             
             
