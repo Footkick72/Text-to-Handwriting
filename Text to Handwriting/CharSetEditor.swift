@@ -82,9 +82,10 @@ struct CharSetEditor: View {
                 WritingView(document: $document, chars: allchars, selection: currentLetter)
             }
             .navigationBarItems(trailing:
-                                    Button("Erase character set data") {
+                                    Button("Erase all") {
                                         showingDeleteDataConfirmation = true
                                     }
+                                    .font(.body)
                                     .foregroundColor(.red)
                                     .alert(isPresented: $showingDeleteDataConfirmation) {
                                         Alert(title: Text("Erase character set data"),

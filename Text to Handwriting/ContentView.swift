@@ -24,15 +24,17 @@ struct ContentView: View {
                                             showingInfoScreen = true
                                         }) {
                                             Image(systemName: "info.circle")
+                                                .font(.body)
                                         },
                                     trailing:
-                                        Button("Convert to handwriting") {
+                                        Button("Handwrite") {
                                             if PHPhotoLibrary.checkPhotoSavePermission() {
                                                 showingGenerationOptions = true
                                             } else {
                                                 showingNoPermissionAlert = true
                                             }
                                         }
+                                        .font(.body)
                                         .sheet(isPresented: $showingGenerationOptions) {
                                             OptionsView(document: $document, shown: $showingGenerationOptions)
                                         }
