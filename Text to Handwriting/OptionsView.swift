@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import StoreKit
 
 struct OptionsView: View {
     @ObservedObject var charsets = CharSets
@@ -40,7 +41,10 @@ struct OptionsView: View {
                 .font(.headline)
                 .disabled((charsets.document() == nil || templates.document() == nil) ? true : false)
                 .alert(isPresented: $finished) {
-                    Alert(title: Text("Image saved to photos").font(.body), message: nil, dismissButton: .default(Text("Ok")) { shown = false })
+                    Alert(title: Text("Image saved to photos").font(.body), message: nil, dismissButton: .default(Text("Ok")) {
+                        shown = false
+                        requestReview()
+                    })
                 }
                 Button("Cancel") {
                     if !generating {
@@ -58,5 +62,14 @@ struct OptionsView: View {
                 .frame(width: 200)
                 .padding()
         }
+    }
+    
+    func requestReview() {
+        if UserDefaults.standard.integer(forKey: "DocumentsGenerated") % 5 == 4 {
+            if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                SKStoreReviewController.requestReview(in: scene)
+            }
+        }
+        UserDefaults.standard.setValue(UserDefaults.standard.integer(forKey: "DocumentsGenerated") + 1, forKey: "DocumentsGenerated")
     }
 }
