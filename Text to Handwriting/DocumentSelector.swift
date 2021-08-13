@@ -37,7 +37,8 @@ struct DocumentSelector<DocType: HandwritingDocument>: View {
                     .frame(maxWidth: itemWidth)
                     .border(Color.black, width: 1)
                     .overlay(
-                        Text(object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                        Text(object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Missing characters!")
+                            .font(.callout)
                             .foregroundColor(.red)
                             .multilineTextAlignment(.center)
                             .padding(5)
@@ -90,7 +91,8 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                                 .frame(maxWidth: itemWidth)
                                 .border(Color.black, width: 1)
                                 .overlay(
-                                    Text(set.isCompleteFor(text: textToGenerate) ? "" : "Warning: Charset is incomplete for text!")
+                                    Text(set.isCompleteFor(text: textToGenerate) ? "" : "Warning: Missing characters!")
+                                        .font(.callout)
                                         .foregroundColor(.red)
                                         .multilineTextAlignment(.center)
                                         .padding(5)
@@ -129,7 +131,8 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                             .frame(maxWidth: itemWidth)
                             .border(Color.black, width: 1)
                             .overlay(
-                                Text(set.object.isCompleteFor(text: textToGenerate) ? "" : "Warning:\nCharset\nis incomplete\nfor text!")
+                                Text(set.object.isCompleteFor(text: textToGenerate) ? "" : "Warning: Missing characters!")
+                                    .font(.callout)
                                     .foregroundColor(.red)
                                     .multilineTextAlignment(.center)
                                     .padding(5)
