@@ -19,18 +19,25 @@ struct InfoView: View {
                 
                 ©2021 by Daniel Christopher Long
                 
-                Source code availiable at:
-                https://github.com/Footkick72/Text-to-Handwriting
-                MIT License
-                
                 To learn how to use this app,
                 read the file "Instructions.txt" in your filesystem.
+                
+                Source code availiable under standard MIT License at:
                 """
             )
-            .multilineTextAlignment(.center)
+            Link("https://github.com/Footkick72/Text-to-Handwriting", destination: URL(string: "https://github.com/Footkick72/Text-to-Handwriting")!)
+            Text(
+                """
+                To submit feedback or report a bug,
+                please email me with a description of your concern
+                and reproduction steps at text2handwriting@daniellong.org
+                """
+            )
+            Link("Privacy policy", destination: URL(string: "https://daniellong.org/text2handwriting/privacy.html")!)
             Button("Ok") {
                 shown = false
             }
         }
+        .multilineTextAlignment(.center)
     }
 }
