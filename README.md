@@ -1,12 +1,12 @@
 # Text-to-Handwritting
 © 2021 by Daniel Christopher Long
 
-An IOS app to turn typed text into images of handwritten text in your own handwriting style.
+An iOS app to turn typed text into images of handwritten text in your own handwriting style.
 https://apps.apple.com/us/app/text2handwriting/id1580833801
 
 ## Features
-* Inputing you own handwriting samples to imitate your writing style
-* A ready made default handwriting style
+* Inputting you own handwriting samples to imitate your writing style
+* A ready-made default handwriting style
 * Generating handwriting on any background
 * Simple markdown support
 * Multiple writing tools (pen, marker, pencil)
