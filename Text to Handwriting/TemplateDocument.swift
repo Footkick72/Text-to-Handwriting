@@ -30,11 +30,11 @@ struct TemplateDocument: FileDocument, HandwritingDocument {
     static var fileType = UTType.templateDocument
     static var defaults: Dictionary<URL, Template> = [
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("blank.t2ht"):
-            Template(bg: UIImage(imageLiteralResourceName: "blankPaper.png"), margins: CGRect(x: 150, y: 150, width: 2250, height: 3000), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
+            Template(bg: UIImage(imageLiteralResourceName: "blankPaper.png"), margins: CGRect(x: 0, y: 0, width: 2550, height: 3300), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("transparent.t2ht"):
-            Template(bg: UIImage(imageLiteralResourceName: "transparentPaper.png"), margins: CGRect(x: 150, y: 150, width: 2250, height: 3000), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
+            Template(bg: UIImage(imageLiteralResourceName: "transparentPaper.png"), margins: CGRect(x: 0, y: 0, width: 2550, height: 3300), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"),
         FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("lined.t2ht"):
-            Template(bg: UIImage(imageLiteralResourceName: "linedPaper.png"), margins: CGRect(x: 360, y: 400, width: 1950, height: 2810), size: 1.0, spacing: 85.8, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
+            Template(bg: UIImage(imageLiteralResourceName: "linedPaper.png"), margins: CGRect(x: 360, y: 314, width: 1950, height: 2896), size: 1.0, spacing: 85.8, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen")]
     
     init(from: Data) throws {
         object = try JSONDecoder().decode(Template.self, from: from)

@@ -58,9 +58,9 @@ class ImageGenerator: NSObject {
         self.template = template
         self.updateProgress = updateProgress
         self.font_size = template.fontSize
-        self.left_margin = template.getMargins()[0]
+        self.left_margin = template.getMargins()[0] + Int(template.lineSpacing)
         self.right_margin = template.getMargins()[1]
-        self.top_margin = template.getMargins()[2]
+        self.top_margin = template.getMargins()[2] + Int(template.lineSpacing)
         self.bottom_margin = template.getMargins()[3]
         
         self.line_spacing = template.lineSpacing

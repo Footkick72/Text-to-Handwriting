@@ -16,7 +16,7 @@ let DocumentCreator = AutoDocumentCreator()
 class AutoDocumentCreator {
     
     let files: Dictionary<String, Data> = ["EmptyCharacterSet.t2hc": try! JSONEncoder().encode(CharSet(characters: Dictionary<String, Array<PKDrawing>>(), letterSpacing: 4)),
-                                           "EmptyTemplate.t2ht": try! JSONEncoder().encode(Template(bg: UIImage(imageLiteralResourceName: "blankPaper.png"), margins: CGRect(x: 150, y: 150, width: 2250, height: 3000), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"))]
+                                           "EmptyTemplate.t2ht": try! JSONEncoder().encode(Template(bg: UIImage(imageLiteralResourceName: "blankPaper.png"), margins: CGRect(x: 0, y: 0, width: 2550, height: 3300), size: 1.0, spacing: 60, textColor: [0.0, 0.0, 0.0, 1.0], writingStyle: "Pen"))]
     
     let instructions = """
                                             Welcome to Text to Handwriting!
