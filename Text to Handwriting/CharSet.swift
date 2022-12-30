@@ -30,7 +30,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     
     mutating func addChars(chars: String) {
         for c in chars {
-            if !available_chars.contains(c) {
+            if !available_chars.contains(c) && !c.isWhitespace {
                 available_chars.append(c)
             }
             available_chars = String(available_chars.sorted())
