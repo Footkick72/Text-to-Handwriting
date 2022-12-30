@@ -14,12 +14,13 @@ struct CharSetEditor: View {
     @State var showingWritingView = false
     @State var currentLetter: String = ""
     @State var showingDeleteDataConfirmation = false
+    @State var showingAddCharsView = false
     @State var scale: CGFloat = 1.0
     @State var letterSpacing: Double = 4.0
     
     @Environment(\.colorScheme) var colorScheme
     
-    let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
+//    let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
     
     var body: some View {
         VStack {
@@ -37,15 +38,26 @@ struct CharSetEditor: View {
                     .padding(.horizontal, 50)
                 Text("Character thickness")
             }
+            
+            Button(action: {
+                showingAddCharsView = true
+            }) {
+                HStack {
+                    Image(systemName: "plus.circle")
+                    Text("Add Characters")
+                }
+                .padding(10)
+            }
+            
             let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),]
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach((0..<allchars.count), id: \.self) { i in
+                    ForEach((0..<document.object.available_chars.count), id: \.self) { i in
                         let set: CharSet = document.object
-                        let char: String = String(allchars[i])
+                        let char: String = String(document.object.available_chars[i])
                         VStack {
                             if set.numberOfCharacters(char: char) != 0 {
                                 let image = set.getSameImage(char: char)
@@ -79,7 +91,10 @@ struct CharSetEditor: View {
                 .padding(10)
             }
             .sheet(isPresented: $showingWritingView) {
-                WritingView(document: $document, chars: allchars, selection: currentLetter)
+                WritingView(document: $document, chars: document.object.available_chars, selection: currentLetter)
+            }
+            .sheet(isPresented: $showingAddCharsView) {
+                AddCharsView(document: $document, showAddView: $showingAddCharsView)
             }
             .navigationBarItems(trailing:
                                     Button("Erase all") {

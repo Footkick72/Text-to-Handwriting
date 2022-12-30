@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A25F03E295F78FF00205F81 /* AddCharsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A25F03D295F78FF00205F81 /* AddCharsView.swift */; };
+		1A25F040295F79B600205F81 /* AddCharsPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A25F03F295F79B600205F81 /* AddCharsPreset.swift */; };
+		1A25F042295F8AEA00205F81 /* AddCharsUsingPasteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A25F041295F8AEA00205F81 /* AddCharsUsingPasteView.swift */; };
 		1A3CA90726BABD9800762413 /* ImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3CA90626BABD9800762413 /* ImageGenerator.swift */; };
 		1A3F8D42268B684200710E99 /* Text_to_HandwritingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D41268B684200710E99 /* Text_to_HandwritingApp.swift */; };
 		1A3F8D44268B684200710E99 /* Text_to_HandwritingDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D43268B684200710E99 /* Text_to_HandwritingDocument.swift */; };
@@ -39,6 +42,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A25F03D295F78FF00205F81 /* AddCharsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCharsView.swift; sourceTree = "<group>"; };
+		1A25F03F295F79B600205F81 /* AddCharsPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCharsPreset.swift; sourceTree = "<group>"; };
+		1A25F041295F8AEA00205F81 /* AddCharsUsingPasteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCharsUsingPasteView.swift; sourceTree = "<group>"; };
 		1A3CA90626BABD9800762413 /* ImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGenerator.swift; sourceTree = "<group>"; };
 		1A3F8D3E268B684200710E99 /* Text to Handwriting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Text to Handwriting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A3F8D41268B684200710E99 /* Text_to_HandwritingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text_to_HandwritingApp.swift; sourceTree = "<group>"; };
@@ -117,6 +123,9 @@
 				1A53399B26A71B7E00CC037D /* CharSetDocument.swift */,
 				1A3F8D53268B701100710E99 /* CharSet.swift */,
 				1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */,
+				1A25F03D295F78FF00205F81 /* AddCharsView.swift */,
+				1A25F041295F8AEA00205F81 /* AddCharsUsingPasteView.swift */,
+				1A25F03F295F79B600205F81 /* AddCharsPreset.swift */,
 				1ACB329726AF3322000674BC /* DocumentSelector.swift */,
 				1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */,
 				1ACB329926AF48EB000674BC /* HandwritingDocumentProtocols.swift */,
@@ -252,7 +261,9 @@
 				1A3F8D42268B684200710E99 /* Text_to_HandwritingApp.swift in Sources */,
 				1A3F92D1268CB75800710E99 /* Extensions.swift in Sources */,
 				1AA1E2CC269F2863007DAE76 /* NumberSelector.swift in Sources */,
+				1A25F042295F8AEA00205F81 /* AddCharsUsingPasteView.swift in Sources */,
 				1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */,
+				1A25F040295F79B600205F81 /* AddCharsPreset.swift in Sources */,
 				1A3F8D44268B684200710E99 /* Text_to_HandwritingDocument.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */,
 				1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */,
@@ -267,6 +278,7 @@
 				1A3F8D46268B684200710E99 /* ContentView.swift in Sources */,
 				1A948E9126ADF70900BE942C /* Catalog.swift in Sources */,
 				1AA1E2D3269F28E4007DAE76 /* TemplateEditor.swift in Sources */,
+				1A25F03E295F78FF00205F81 /* AddCharsView.swift in Sources */,
 				1A948E8026AB2F3C00BE942C /* TemplateDocument.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -401,7 +413,7 @@
 				DEVELOPMENT_TEAM = 4NCA37UMUQ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Text to Handwriting/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -424,7 +436,7 @@
 				DEVELOPMENT_TEAM = 4NCA37UMUQ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Text to Handwriting/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

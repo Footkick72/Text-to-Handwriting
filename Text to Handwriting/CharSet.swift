@@ -28,6 +28,15 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         }
     }
     
+    mutating func addChars(chars: String) {
+        for c in chars {
+            if !available_chars.contains(c) {
+                available_chars.append(c)
+            }
+            available_chars = String(available_chars.sorted())
+        }
+    }
+    
     func numberOfCharacters(char: String) -> Int {
         return self.getImages(char: char).count
     }
