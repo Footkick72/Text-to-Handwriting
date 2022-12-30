@@ -25,7 +25,7 @@ struct AddCharsUsingPasteView: View {
             VStack {
                 TextField("Source Text", text: $text, axis: .vertical)
                     .border(.black)
-                    .padding(.horizontal, 50)
+                    .padding(50)
                 Button(action: {
                     document.object.addChars(chars: text)
                     showingTextBox = false
