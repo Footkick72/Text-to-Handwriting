@@ -156,6 +156,7 @@ struct CharSetEditor: View {
                                     .font(.body)
             )
         }
+        .animation(.spring(), value: selecting)
         .padding(20)
     }
     
