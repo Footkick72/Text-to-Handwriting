@@ -39,16 +39,6 @@ struct CharSetEditor: View {
                 Text("Character thickness")
             }
             
-            Button(action: {
-                showingAddCharsView = true
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle")
-                    Text("Add Characters")
-                }
-                .padding(10)
-            }
-            
             let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
@@ -86,6 +76,22 @@ struct CharSetEditor: View {
                                         self.showingWritingView = true
                                     })
                         )
+                    }
+                    Button(action: {
+                        showingAddCharsView = true
+                    }) {
+                        Image(systemName: "plus.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .padding(20)
+                            .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
+                            .aspectRatio(1.0, contentMode: .fit)
+                            .border(Color.black, width: 2)
+                            .background(
+                                Rectangle()
+                                    .foregroundColor(.blue)
+                            )
                     }
                 }
                 .padding(10)
