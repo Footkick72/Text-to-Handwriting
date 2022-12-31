@@ -66,7 +66,7 @@ struct CharSetEditor: View {
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
                             GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),]
-            ScrollView(showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: false) {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach((0..<document.object.available_chars.count), id: \.self) { i in
                         let set: CharSet = document.object
@@ -123,11 +123,8 @@ struct CharSetEditor: View {
                             showingAddCharsView = true
                         }) {
                             Image(systemName: "plus.circle")
-                                .resizable()
-                                .scaledToFit()
                                 .foregroundColor(.white)
-                                .font(.body)
-                                .padding(20)
+                                .font(.title)
                                 .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
                                 .aspectRatio(1.0, contentMode: .fit)
                                 .border(Color.black, width: 2)
