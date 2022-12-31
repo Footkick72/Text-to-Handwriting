@@ -37,6 +37,14 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         }
     }
     
+    mutating func removeChars(chars: String) {
+        for c in chars {
+            if available_chars.contains(c) {
+                available_chars.remove(at: available_chars.firstIndex(of: c)!)
+            }
+        }
+    }
+    
     func numberOfCharacters(char: String) -> Int {
         return self.getImages(char: char).count
     }
