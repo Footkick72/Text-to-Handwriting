@@ -147,7 +147,7 @@ struct CharSetEditor: View {
                 AddCharsView(document: $document, showAddView: $showingAddCharsView)
             }
             .navigationBarItems(trailing:
-                                    Button(selecting ? "Done" : "Select") {
+                                    Button(selecting ? "Cancel" : "Select") {
                                         if selecting {
                                             selectedChars = ""
                                         }
