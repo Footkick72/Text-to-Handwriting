@@ -56,7 +56,7 @@ struct OptionsView: View {
             }
         }
         .blur(radius: generating ? 6 : 0)
-        .animation(.spring())
+        .animation(.spring(), value: generating)
         if generating {
             ProgressView("Generating...", value: generationProgress, total: 1.0)
                 .frame(width: 200)
