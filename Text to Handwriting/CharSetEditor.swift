@@ -26,8 +26,6 @@ struct CharSetEditor: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-//    let allchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890':,![(.?])\";-%@&+={}#$^*_/\\~<>"
-    
     var body: some View {
         VStack {
             if selecting {
