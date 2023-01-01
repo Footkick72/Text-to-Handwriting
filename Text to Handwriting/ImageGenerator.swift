@@ -145,11 +145,9 @@ class ImageGenerator: NSObject {
             // whitespace handling
             if self.text[char_i] == " " {
                 x_pos += Float(space_length)
-                
             } else if self.text[char_i] == "\t" {
                 x_pos += Float(space_length * 4)
-                
-            } else if self.text[char_i] == "\n" {
+            } else if self.text[char_i] == "\n" || self.text[char_i] == "\r\n" {
                 createNewLine()
             }
             
