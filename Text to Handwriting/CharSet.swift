@@ -9,8 +9,6 @@ import Foundation
 import SwiftUI
 import PencilKit
 
-fileprivate let substitutions: Dictionary<String, Array<String>> = ["\"": ["”", "“", "”"],
-                                                                    "'": ["’", "‘", "’"]]
 
 struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     var available_chars: String
@@ -87,13 +85,6 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     
     func getImages(char: String) -> Array<PKDrawing> {
         guard let data = self.characters[char] else {
-            for (k, v) in substitutions {
-                for a in v {
-                    if a == char {
-                        return self.characters[k]!
-                    }
-                }
-            }
             return Array<PKDrawing>()
         }
         return data
