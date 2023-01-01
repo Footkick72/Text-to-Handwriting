@@ -19,6 +19,9 @@ struct CharSetEditor: View {
     @State var selectedChars: String = ""
     @State var scale: CGFloat = 1.0
     @State var letterSpacing: Double = 4.0
+    @State var charBoxes: Dictionary<String,CGRect> = [:]
+    @State var bulkSelectionInProgress: String = ""
+    @State var bulkSelectionInProgressIsActivating = false
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -71,14 +74,20 @@ struct CharSetEditor: View {
                     ForEach((0..<document.object.available_chars.count), id: \.self) { i in
                         let set: CharSet = document.object
                         let char: String = String(document.object.available_chars[i])
-                        VStack {
-                            if set.numberOfCharacters(char: char) != 0 {
-                                let image = set.getSameImage(char: char)
-                                Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
-                                    .resizable()
-                                    .scaledToFit()
-                            } else {
-                                Text(char)
+                        GeometryReader { reader in
+                            VStack {
+                                if set.numberOfCharacters(char: char) != 0 {
+                                    let image = set.getSameImage(char: char)
+                                    Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
+                                        .resizable()
+                                        .scaledToFit()
+                                } else {
+                                    Text(char)
+                                        .frame(width: reader.size.width, height: reader.size.height, alignment: .center)
+                                }
+                            }
+                            .onChange(of: reader.frame(in: .global)) { _ in
+                                charBoxes[char] = reader.frame(in: .named("LazyVGrid"))
                             }
                         }
                         .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
@@ -111,7 +120,11 @@ struct CharSetEditor: View {
                         .overlay(
                             alignment: .bottomTrailing
                         ) {
-                            if selectedChars.contains(char) {
+                            if selecting && (
+                                (bulkSelectionInProgress.contains(char) && bulkSelectionInProgressIsActivating) ||
+                                (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
+                                )
+                            {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.blue)
                                     .padding(2)
@@ -136,6 +149,46 @@ struct CharSetEditor: View {
                     }
                 }
                 .padding(10)
+                .gesture(
+                    DragGesture()
+                        .onChanged() { info in
+                            if selecting {
+                                var endchar: Character = " ".first!
+                                var startchar: Character = " ".first!
+                                for char in document.object.available_chars {
+                                    let c = String(char)
+                                    let box = charBoxes[c] ?? CGRect.zero
+                                    if box.contains(info.location) {
+                                        endchar = char
+                                    }
+                                    if box.contains(info.startLocation) {
+                                        startchar = char
+                                        bulkSelectionInProgressIsActivating = !selectedChars.contains(char)
+                                    }
+                                }
+                                let start = document.object.available_chars.firstIndex(of: startchar)
+                                let end = document.object.available_chars.firstIndex(of: endchar)
+                                if let start = start, let end = end {
+                                    bulkSelectionInProgress = String(document.object.available_chars[min(start,end)...max(start,end)])
+                                }
+                            }
+                        }
+                        .onEnded() { _ in
+                            for char in bulkSelectionInProgress {
+                                if bulkSelectionInProgressIsActivating {
+                                    if !selectedChars.contains(char) {
+                                        selectedChars.append(char)
+                                    }
+                                } else {
+                                    if selectedChars.contains(char) {
+                                        selectedChars.remove(at: selectedChars.firstIndex(of: char)!)
+                                    }
+                                }
+                            }
+                            bulkSelectionInProgress = ""
+                        }
+                )
+                .coordinateSpace(name: "LazyVGrid")
             }
             .sheet(isPresented: $showingWritingView) {
                 WritingView(document: $document, chars: document.object.available_chars, selection: currentLetter)
@@ -145,6 +198,7 @@ struct CharSetEditor: View {
             }
             .navigationBarItems(trailing:
                                     Button(selecting ? "Cancel" : "Select") {
+                                        bulkSelectionInProgress = ""
                                         if selecting {
                                             selectedChars = ""
                                         }
