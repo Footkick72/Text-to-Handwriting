@@ -127,6 +127,7 @@ struct CharSetEditor: View {
                             {
                                 Color.white
                                     .opacity(0.2)
+                                    .allowsHitTesting(false)
                             }
                         }
                         .overlay(
@@ -140,9 +141,11 @@ struct CharSetEditor: View {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.blue)
                                     .padding(2)
+                                    .allowsHitTesting(false)
                                 Image(systemName: "checkmark.circle")
                                     .foregroundColor(.white)
                                     .padding(2)
+                                    .allowsHitTesting(false)
                             }
                         }
                     }
