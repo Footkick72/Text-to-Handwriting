@@ -78,7 +78,7 @@ struct CharSetEditor: View {
                             VStack {
                                 if set.numberOfCharacters(char: char) != 0 {
                                     let image = set.getSameImage(char: char)
-                                    Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
+                                    Image(uiImage: image)
                                         .resizable()
                                         .scaledToFit()
                                 } else {

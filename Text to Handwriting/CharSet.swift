@@ -45,13 +45,13 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func numberOfCharacters(char: String) -> Int {
-        return self.getImages(char: char).count
+        return self.getDrawings(char: char).count
     }
     
     func getDrawWidth(forSize: CGFloat) -> CGFloat {
         var sum: CGFloat = 0
         for char in available_chars {
-            let image = getImage(char: String(char))!
+            let image = getDrawing(char: String(char))!
             var strokeSum = 0
             for stroke in image.strokes {
                 var pathSum = 0
@@ -68,14 +68,14 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         return width
     }
     
-    func getImage(char: String) -> PKDrawing? {
-        let images = getImages(char: char)
+    func getDrawing(char: String) -> PKDrawing? {
+        let images = getDrawings(char: char)
         return images.randomElement()
     }
     
-    func getSameImage(char: String) -> PKDrawing {
+    func getSameDrawing(char: String) -> PKDrawing {
         // returns the same image always for UI display purposes
-        let images = getImages(char: char)
+        let images = getDrawings(char: char)
         if images.count > 0 {
             return images.first!
         } else {
@@ -83,7 +83,12 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         }
     }
     
-    func getImages(char: String) -> Array<PKDrawing> {
+    func getSameImage(char: String) -> UIImage {
+        let drawing = getSameDrawing(char: char)
+        return drawing.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0)
+    }
+    
+    func getDrawings(char: String) -> Array<PKDrawing> {
         guard let data = self.characters[char] else {
             return Array<PKDrawing>()
         }
@@ -98,7 +103,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         var i = 0
         for y in 0..<3 {
             for x in 0..<3 {
-                var char = getSameImage(char: String(available_chars[i]))
+                var char = getSameDrawing(char: String(available_chars[i]))
                 char.transform(using: CGAffineTransform(translationX: CGFloat(x*256), y: CGFloat(y*256)))
                 image.append(char)
                 i += 1

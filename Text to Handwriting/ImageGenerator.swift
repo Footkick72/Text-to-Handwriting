@@ -223,7 +223,7 @@ class ImageGenerator: NSObject {
                     
                     // approximate the length the word will be
                     for i in 0 ..< chars.count {
-                        if var letter = charset.getImage(char: String(chars[i])), !markdown.contains(i) {
+                        if var letter = charset.getDrawing(char: String(chars[i])), !markdown.contains(i) {
                             
                             // regenerate the strokes with added weight, assuming the word is bold for a worst-case scenario.
                             let factor = charset.forceMultiplier * 1.5
@@ -256,7 +256,7 @@ class ImageGenerator: NSObject {
                     word = PKDrawing()
                 }
                 
-                if var letter = charset.getImage(char: String(self.text[char_i])) {
+                if var letter = charset.getDrawing(char: String(self.text[char_i])) {
                     
                     // regenerate the strokes with added weight
                     var factor = charset.forceMultiplier
