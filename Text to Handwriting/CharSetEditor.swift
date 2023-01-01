@@ -125,8 +125,23 @@ struct CharSetEditor: View {
                                 (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
                                 )
                             {
+                                Color.white
+                                    .opacity(0.2)
+                            }
+                        }
+                        .overlay(
+                            alignment: .bottomTrailing
+                        ) {
+                            if selecting && (
+                                (bulkSelectionInProgress.contains(char) && bulkSelectionInProgressIsActivating) ||
+                                (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
+                                )
+                            {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.blue)
+                                    .padding(2)
+                                Image(systemName: "checkmark.circle")
+                                    .foregroundColor(.white)
                                     .padding(2)
                             }
                         }
