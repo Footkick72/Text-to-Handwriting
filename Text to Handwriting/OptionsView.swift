@@ -52,7 +52,7 @@ struct OptionsView: View {
                     }
                 }
                 .font(.headline)
-                .foregroundColor(.red)
+                .foregroundColor(.blue)
             }
         }
         .blur(radius: generating ? 6 : 0)
