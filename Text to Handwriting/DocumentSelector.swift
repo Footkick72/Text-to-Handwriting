@@ -168,18 +168,19 @@ struct UserFilesView<DocType: HandwritingDocument>: View {
                 }
             }
         }
-            .fileImporter(isPresented: $showingImporter, allowedContentTypes: [DocType.fileType]) { url in
-                do {
-                    if objectCatalog.documents.firstIndex(of: try url.get()) == nil {
-                        objectCatalog.documents.append(try url.get())
-                        objectCatalog.save()
-                    } else {
-                        showingUniquenessAlert = true
-                    }
-                } catch {}
-            }
-            .onAppear() {
-                objectCatalog.trim()
-            }
+        .animation(.spring(), value: objectCatalog.documents.count)
+        .fileImporter(isPresented: $showingImporter, allowedContentTypes: [DocType.fileType]) { url in
+            do {
+                if objectCatalog.documents.firstIndex(of: try url.get()) == nil {
+                    objectCatalog.documents.append(try url.get())
+                    objectCatalog.save()
+                } else {
+                    showingUniquenessAlert = true
+                }
+            } catch {}
+        }
+        .onAppear() {
+            objectCatalog.trim()
+        }
     }
 }
