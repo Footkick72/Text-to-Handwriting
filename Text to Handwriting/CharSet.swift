@@ -41,6 +41,7 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         for c in chars {
             if available_chars.contains(c) {
                 available_chars.remove(at: available_chars.firstIndex(of: c)!)
+                characters.removeValue(forKey: String(c))
             }
         }
     }
