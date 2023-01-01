@@ -22,6 +22,7 @@ struct CharSetEditor: View {
     @State var charBoxes: Dictionary<String,CGRect> = [:]
     @State var bulkSelectionInProgress: String = ""
     @State var bulkSelectionInProgressIsActivating = false
+    @State var memoizedDisplayImages: Dictionary<String,UIImage> = [:]
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -77,8 +78,7 @@ struct CharSetEditor: View {
                         GeometryReader { reader in
                             VStack {
                                 if set.numberOfCharacters(char: char) != 0 {
-                                    let image = set.getSameImage(char: char)
-                                    Image(uiImage: image)
+                                    Image(uiImage: getDisplayImageForChar(char: char))
                                         .resizable()
                                         .scaledToFit()
                                 } else {
@@ -208,8 +208,18 @@ struct CharSetEditor: View {
                 )
                 .coordinateSpace(name: "LazyVGrid")
             }
+            .onAppear() {
+                for char in document.object.available_chars {
+                    memoizedDisplayImages[String(char)] = document.object.getSameImage(char: String(char))
+                }
+            }
             .sheet(isPresented: $showingWritingView) {
                 WritingView(document: $document, chars: document.object.available_chars, selection: currentLetter)
+                    .onDisappear() {
+                        for char in document.object.available_chars {
+                            memoizedDisplayImages[String(char)] = document.object.getSameImage(char: String(char))
+                        }
+                    }
             }
             .sheet(isPresented: $showingAddCharsView) {
                 AddCharsView(document: $document, showAddView: $showingAddCharsView)
@@ -227,6 +237,16 @@ struct CharSetEditor: View {
         }
         .animation(.spring(), value: selecting)
         .padding(20)
+    }
+    
+    func getDisplayImageForChar(char: String) -> UIImage {
+        var image: UIImage? = nil
+        if let im = memoizedDisplayImages[char] {
+            image = im
+        } else {
+            image = document.object.getSameImage(char: char)
+        }
+        return image!
     }
     
     func getBackgroundColor(char: String) -> Color {
