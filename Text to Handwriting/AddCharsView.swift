@@ -23,6 +23,11 @@ struct AddCharsView: View {
             AddCharsPreset(document: $document, showAddView: $showAddView, name: "Numbers", chars: "1234567890")
             AddCharsPreset(document: $document, showAddView: $showAddView, name: "Math/Symbols", chars: "':,![(.?])\";-%@&+={}#$^*_/\\~<>")
             AddCharsUsingPasteView(document: $document, showAddView: $showAddView)
+            Button("Cancel") {
+                showAddView = false
+            }
+            .padding(10)
+            .foregroundColor(.blue)
         }
     }
 }
