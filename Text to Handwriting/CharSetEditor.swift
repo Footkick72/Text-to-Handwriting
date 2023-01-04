@@ -23,29 +23,73 @@ struct CharSetEditor: View {
     @State var bulkSelectionInProgress: String = ""
     @State var bulkSelectionInProgressIsActivating = false
     @State var memoizedDisplayImages: Dictionary<String,UIImage> = [:]
+    @State var randomBooleanToForceButtonUpdate = false
     
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         VStack {
-            if selecting {
+            if let data = UIPasteboard.general.data(forPasteboardType: "org.davidlong.t2hc") {
                 Button(action: {
-                    showingDeleteDataConfirmation = true
+                    do {
+                        let imagesDict = try JSONDecoder().decode(Dictionary<String,Array<PKDrawing>>.self, from: data)
+                        for (c,images) in imagesDict {
+                            if document.object.available_chars.contains(c) {
+                                document.object.characters[c] = images
+                            }
+                        }
+                    } catch {
+                        print(error)
+                    }
                 }) {
-                    Image(systemName: "trash")
-                        .foregroundColor(selectedChars.count == 0 ? .gray : .red)
+                    Image(systemName: "square.and.arrow.down")
                         .font(.title2)
+                        .scaleEffect(randomBooleanToForceButtonUpdate ? 1 : 1.001) // force this button to update
                 }
-                .disabled(selectedChars.count == 0)
-                .alert(isPresented: $showingDeleteDataConfirmation) {
-                    Alert(title: Text("Erase selected characters"),
-                          message: Text("Are you sure you want to erase \(selectedChars.count) \(selectedChars.count == 1 ? "character" : "characters") from this character set?"),
-                          primaryButton: .destructive(Text("Erase data")) {
+            }
+            
+            if selecting {
+                HStack {
+                    Button(action: {
+                        showingDeleteDataConfirmation = true
+                    }) {
+                        Image(systemName: "trash")
+                            .foregroundColor(selectedChars.count == 0 ? .gray : .red)
+                            .font(.title2)
+                    }
+                    .disabled(selectedChars.count == 0)
+                    .alert(isPresented: $showingDeleteDataConfirmation) {
+                        Alert(title: Text("Erase selected characters"),
+                              message: Text("Are you sure you want to erase \(selectedChars.count) \(selectedChars.count == 1 ? "character" : "characters") from this character set?"),
+                              primaryButton: .destructive(Text("Erase data")) {
                             document.object.removeChars(chars: selectedChars)
                             selectedChars = ""
                             selecting = false
-                          },
-                          secondaryButton: .cancel())
+                        },
+                              secondaryButton: .cancel())
+                    }
+                    Button(action: {
+                        do {
+                            randomBooleanToForceButtonUpdate.toggle()
+                            let imagesForChars = (0..<selectedChars.count)
+                                .map({
+                                    document.object.getDrawings(char: String(selectedChars[$0]))
+                                })
+                            var imagesDict: Dictionary<String,Array<PKDrawing>> = [:]
+                            for (i,c) in selectedChars.enumerated() {
+                                imagesDict[String(c)] = imagesForChars[i]
+                            }
+                            let data = try JSONEncoder().encode(imagesDict)
+                            UIPasteboard.general.setData(data, forPasteboardType: "org.davidlong.t2hc")
+                        } catch {
+                            print(error)
+                        }
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(selectedChars.count == 0 ? .gray : .blue)
+                            .font(.title2)
+                    }
+                    .disabled(selectedChars.count == 0)
                 }
             } else {
                 VStack {
