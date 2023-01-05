@@ -29,26 +29,6 @@ struct CharSetEditor: View {
     
     var body: some View {
         VStack {
-            if let data = UIPasteboard.general.data(forPasteboardType: "org.davidlong.t2hc") {
-                Button(action: {
-                    do {
-                        let imagesDict = try JSONDecoder().decode(Dictionary<String,Array<PKDrawing>>.self, from: data)
-                        for (c,images) in imagesDict {
-                            if document.object.available_chars.contains(c) {
-                                document.object.characters[c] = images
-                                memoizedDisplayImages[c] = document.object.getSameImage(char: c)
-                            }
-                        }
-                    } catch {
-                        print(error)
-                    }
-                }) {
-                    Image(systemName: "square.and.arrow.down")
-                        .font(.title2)
-                        .scaleEffect(randomBooleanToForceButtonUpdate ? 1 : 1.001) // force this button to update
-                }
-            }
-            
             if selecting {
                 HStack {
                     Button(action: {
@@ -86,13 +66,33 @@ struct CharSetEditor: View {
                             print(error)
                         }
                     }) {
-                        Image(systemName: "square.and.arrow.up")
+                        Image(systemName: "doc.on.clipboard.fill")
                             .foregroundColor(selectedChars.count == 0 ? .gray : .blue)
                             .font(.title2)
                     }
                     .disabled(selectedChars.count == 0)
                 }
             } else {
+                if let data = UIPasteboard.general.data(forPasteboardType: "org.davidlong.t2hc") {
+                    Button(action: {
+                        do {
+                            let imagesDict = try JSONDecoder().decode(Dictionary<String,Array<PKDrawing>>.self, from: data)
+                            for (c,images) in imagesDict {
+                                if document.object.available_chars.contains(c) {
+                                    document.object.characters[c] = images
+                                    memoizedDisplayImages[c] = document.object.getSameImage(char: c)
+                                }
+                            }
+                        } catch {
+                            print(error)
+                        }
+                    }) {
+                        Image(systemName: "square.filled.on.square")
+                            .font(.title2)
+                            .scaleEffect(randomBooleanToForceButtonUpdate ? 1 : 1.001) // force this button to update
+                    }
+                }
+                
                 VStack {
                     Slider(value: $letterSpacing, in: 0.0...20.0, step: 0.1, onEditingChanged: { _ in }, label: {})
                         .padding(.horizontal, 50)
