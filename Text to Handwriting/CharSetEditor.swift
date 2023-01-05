@@ -36,6 +36,7 @@ struct CharSetEditor: View {
                         for (c,images) in imagesDict {
                             if document.object.available_chars.contains(c) {
                                 document.object.characters[c] = images
+                                memoizedDisplayImages[c] = document.object.getSameImage(char: c)
                             }
                         }
                     } catch {
