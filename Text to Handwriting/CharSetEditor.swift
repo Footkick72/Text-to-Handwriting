@@ -48,6 +48,7 @@ struct CharSetEditor: View {
                         },
                               secondaryButton: .cancel())
                     }
+                    Spacer()
                     Button(action: {
                         do {
                             randomBooleanToForceButtonUpdate.toggle()
@@ -75,6 +76,7 @@ struct CharSetEditor: View {
                 }
                 .disabled(selectedChars.count == 0)
                 .foregroundColor(selectedChars.count == 0 ? .gray : .blue)
+                .padding(.horizontal, 20)
             } else {
                 if let data = UIPasteboard(name: .t2h, create: true)!.data(forPasteboardType: "org.davidlong.t2hc") {
                     Button(action: {
