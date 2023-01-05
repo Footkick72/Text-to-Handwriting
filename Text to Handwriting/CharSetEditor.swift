@@ -38,7 +38,6 @@ struct CharSetEditor: View {
                             .foregroundColor(selectedChars.count == 0 ? .gray : .red)
                             .font(.title2)
                     }
-                    .disabled(selectedChars.count == 0)
                     .alert(isPresented: $showingDeleteDataConfirmation) {
                         Alert(title: Text("Erase selected characters"),
                               message: Text("Are you sure you want to erase \(selectedChars.count) \(selectedChars.count == 1 ? "character" : "characters") from this character set?"),
@@ -67,12 +66,15 @@ struct CharSetEditor: View {
                             print(error)
                         }
                     }) {
-                        Image(systemName: "doc.on.clipboard.fill")
-                            .foregroundColor(selectedChars.count == 0 ? .gray : .blue)
-                            .font(.title2)
+                        HStack{
+                            Image(systemName: "doc.on.doc")
+                                .font(.title2)
+                            Text("Copy")
+                        }
                     }
-                    .disabled(selectedChars.count == 0)
                 }
+                .disabled(selectedChars.count == 0)
+                .foregroundColor(selectedChars.count == 0 ? .gray : .blue)
             } else {
                 if let data = UIPasteboard(name: .t2h, create: true)!.data(forPasteboardType: "org.davidlong.t2hc") {
                     Button(action: {
@@ -89,9 +91,12 @@ struct CharSetEditor: View {
                             print(error)
                         }
                     }) {
-                        Image(systemName: "square.filled.on.square")
-                            .font(.title2)
-                            .scaleEffect(randomBooleanToForceButtonUpdate ? 1 : 1.001) // force this button to update
+                        HStack {
+                            Image(systemName: "doc.on.clipboard")
+                                .font(.title2)
+                            Text("Paste")
+                        }
+                        .scaleEffect(randomBooleanToForceButtonUpdate ? 1 : 1.001) // force this button to update
                     }
                 }
                 
