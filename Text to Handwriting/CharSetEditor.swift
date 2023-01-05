@@ -79,10 +79,11 @@ struct CharSetEditor: View {
                         do {
                             let imagesDict = try JSONDecoder().decode(Dictionary<String,Array<PKDrawing>>.self, from: data)
                             for (c,images) in imagesDict {
-                                if document.object.available_chars.contains(c) {
-                                    document.object.characters[c] = images
-                                    memoizedDisplayImages[c] = document.object.getSameImage(char: c)
+                                if !document.object.available_chars.contains(c) {
+                                    document.object.addChars(chars: c)
                                 }
+                                document.object.characters[c] = images
+                                memoizedDisplayImages[c] = document.object.getSameImage(char: c)
                             }
                         } catch {
                             print(error)
