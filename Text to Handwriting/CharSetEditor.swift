@@ -216,6 +216,9 @@ struct CharSetEditor: View {
                                         .foregroundColor(.blue)
                                 )
                         }
+                        .sheet(isPresented: $showingAddCharsView) {
+                            AddCharsView(document: $document, showAddView: $showingAddCharsView)
+                        }
                     }
                 }
                 .padding(10)
@@ -272,9 +275,6 @@ struct CharSetEditor: View {
                             memoizedDisplayImages[String(char)] = document.object.getSameImage(char: String(char))
                         }
                     }
-            }
-            .sheet(isPresented: $showingAddCharsView) {
-                AddCharsView(document: $document, showAddView: $showingAddCharsView)
             }
             .navigationBarItems(trailing:
                                     Button(selecting ? "Cancel" : "Select") {
