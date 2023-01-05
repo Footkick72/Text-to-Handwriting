@@ -75,3 +75,7 @@ extension PKDrawing {
         return PKDrawing(strokes: newStrokes)
     }
 }
+
+extension UIPasteboard.Name {
+    static let t2h = UIPasteboard.Name(rawValue: "text2handwritingpasteboard")
+}

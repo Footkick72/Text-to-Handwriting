@@ -61,7 +61,8 @@ struct CharSetEditor: View {
                                 imagesDict[String(c)] = imagesForChars[i]
                             }
                             let data = try JSONEncoder().encode(imagesDict)
-                            UIPasteboard.general.setData(data, forPasteboardType: "org.davidlong.t2hc")
+                            let pasteboard = UIPasteboard(name: .t2h, create: true)!
+                            pasteboard.setData(data, forPasteboardType: "org.davidlong.t2hc")
                         } catch {
                             print(error)
                         }
@@ -73,7 +74,7 @@ struct CharSetEditor: View {
                     .disabled(selectedChars.count == 0)
                 }
             } else {
-                if let data = UIPasteboard.general.data(forPasteboardType: "org.davidlong.t2hc") {
+                if let data = UIPasteboard(name: .t2h, create: true)!.data(forPasteboardType: "org.davidlong.t2hc") {
                     Button(action: {
                         do {
                             let imagesDict = try JSONDecoder().decode(Dictionary<String,Array<PKDrawing>>.self, from: data)
