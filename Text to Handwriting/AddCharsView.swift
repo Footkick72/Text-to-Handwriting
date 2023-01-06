@@ -44,20 +44,20 @@ struct AddCharsView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Picker("Character Set", selection: $selectedPreset) {
-                    ForEach(Preset.allCases) { selection in
-                        Text(selection.name)
-                    }
+            Picker("Character Set", selection: $selectedPreset) {
+                ForEach(Preset.allCases) { selection in
+                    Text(selection.name)
                 }
-                
-                Button("Add") {
-                    document.object.addChars(chars: selectedPreset.chars)
-                    showAddView = false
-                }
-                .padding(10)
-                .foregroundColor(.blue)
             }
+            .frame(width: 200)
+            .pickerStyle(.wheel)
+            
+            Button("Add") {
+                document.object.addChars(chars: selectedPreset.chars)
+                showAddView = false
+            }
+            .padding(10)
+            .foregroundColor(.blue)
             
             AddCharsUsingPasteView(document: $document, showAddView: $showAddView)
             
