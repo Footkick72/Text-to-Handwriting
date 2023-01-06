@@ -8,21 +8,59 @@
 import Foundation
 import SwiftUI
 
+enum Preset: Identifiable, CaseIterable {
+    case English, Русский, Українська, български, Español, Deutsche, Numbers, MathSymbols
+    var id: Self {self}
+    var name: String {
+        switch self {
+        case .English: return "English"
+        case .Русский: return "Русский"
+        case .Українська: return "Українська"
+        case .български: return "български"
+        case .Español: return "Español"
+        case .Deutsche: return "Deutsche"
+        case .Numbers: return "Numbers"
+        case .MathSymbols: return "Math/Symbols"
+        }
+    }
+    var chars: String {
+        switch self {
+        case .English: return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        case .Русский: return "АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя"
+        case .Українська: return "АаБбВвГгҐґДдЕеЁёЖжЗзІіЙйКкЛлМмНнОоПпРрСсТтУуЎўФфХхЦцЧчШшЫыЬьЭэЮюЯя"
+        case .български: return "АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя"
+        case .Español: return "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚVWXYZaábcdeéfghiíjklmnñoópqrstuúvwxyz"
+        case .Deutsche: return "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜßabcdefghijklmnopqrstuvwxyzäöü"
+        case .Numbers: return "1234567890"
+        case .MathSymbols: return "':,![(.?])\";-%@&+={}#$^*_/\\~<>"
+        }
+    }
+}
 
 struct AddCharsView: View {
     @Binding var document: CharSetDocument
     @Binding var showAddView: Bool
+    @State var selectedPreset: Preset = .English
     
     var body: some View {
         VStack {
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "English", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "Русский", chars: "АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя")
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "беларускі", chars: "АаБбВвГгҐґДдЕеЁёЖжЗзІіЙйКкЛлМмНнОоПпРрСсТтУуЎўФфХхЦцЧчШшЫыЬьЭэЮюЯя")
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "Українська", chars: "АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя")
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "български", chars: "АаБбВвГгДдЕеЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЬьЮюЯя")
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "Numbers", chars: "1234567890")
-            AddCharsPreset(document: $document, showAddView: $showAddView, name: "Math/Symbols", chars: "':,![(.?])\";-%@&+={}#$^*_/\\~<>")
+            HStack {
+                Picker("Character Set", selection: $selectedPreset) {
+                    ForEach(Preset.allCases) { selection in
+                        Text(selection.name)
+                    }
+                }
+                
+                Button("Add") {
+                    document.object.addChars(chars: selectedPreset.chars)
+                    showAddView = false
+                }
+                .padding(10)
+                .foregroundColor(.blue)
+            }
+            
             AddCharsUsingPasteView(document: $document, showAddView: $showAddView)
+            
             Button("Cancel") {
                 showAddView = false
             }

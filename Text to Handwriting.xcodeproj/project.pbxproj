@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1A25F03E295F78FF00205F81 /* AddCharsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A25F03D295F78FF00205F81 /* AddCharsView.swift */; };
-		1A25F040295F79B600205F81 /* AddCharsPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A25F03F295F79B600205F81 /* AddCharsPreset.swift */; };
 		1A25F042295F8AEA00205F81 /* AddCharsUsingPasteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A25F041295F8AEA00205F81 /* AddCharsUsingPasteView.swift */; };
 		1A3CA90726BABD9800762413 /* ImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3CA90626BABD9800762413 /* ImageGenerator.swift */; };
 		1A3F8D42268B684200710E99 /* Text_to_HandwritingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3F8D41268B684200710E99 /* Text_to_HandwritingApp.swift */; };
@@ -43,7 +42,6 @@
 
 /* Begin PBXFileReference section */
 		1A25F03D295F78FF00205F81 /* AddCharsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCharsView.swift; sourceTree = "<group>"; };
-		1A25F03F295F79B600205F81 /* AddCharsPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCharsPreset.swift; sourceTree = "<group>"; };
 		1A25F041295F8AEA00205F81 /* AddCharsUsingPasteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCharsUsingPasteView.swift; sourceTree = "<group>"; };
 		1A3CA90626BABD9800762413 /* ImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGenerator.swift; sourceTree = "<group>"; };
 		1A3F8D3E268B684200710E99 /* Text to Handwriting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Text to Handwriting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,7 +123,6 @@
 				1AA1E2DE26A0B32C007DAE76 /* CharSetEditor.swift */,
 				1A25F03D295F78FF00205F81 /* AddCharsView.swift */,
 				1A25F041295F8AEA00205F81 /* AddCharsUsingPasteView.swift */,
-				1A25F03F295F79B600205F81 /* AddCharsPreset.swift */,
 				1ACB329726AF3322000674BC /* DocumentSelector.swift */,
 				1AA4E6EE26B1BD1A00EDBCD9 /* AutoDocumentCreator.swift */,
 				1ACB329926AF48EB000674BC /* HandwritingDocumentProtocols.swift */,
@@ -263,7 +260,6 @@
 				1AA1E2CC269F2863007DAE76 /* NumberSelector.swift in Sources */,
 				1A25F042295F8AEA00205F81 /* AddCharsUsingPasteView.swift in Sources */,
 				1A59E4B92694D35000F93D58 /* ImagePicker.swift in Sources */,
-				1A25F040295F79B600205F81 /* AddCharsPreset.swift in Sources */,
 				1A3F8D44268B684200710E99 /* Text_to_HandwritingDocument.swift in Sources */,
 				1AA1E2CF269F2891007DAE76 /* ImageRectSelector.swift in Sources */,
 				1AA1E2DF26A0B32C007DAE76 /* CharSetEditor.swift in Sources */,
