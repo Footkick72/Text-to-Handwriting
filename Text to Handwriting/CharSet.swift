@@ -50,21 +50,24 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     
     func getDrawWidth(forSize: CGFloat) -> CGFloat {
         var sum: CGFloat = 0
+        var actualCharCount = 0
         for char in available_chars {
-            let image = getDrawing(char: String(char))!
-            var strokeSum = 0
-            for stroke in image.strokes {
-                var pathSum = 0
-                stroke.path.forEach({ point in
-                    pathSum += Int(point.size.width + point.size.height)
-                })
-                pathSum /= stroke.path.count * 2
-                strokeSum += pathSum
+            if let image = getDrawing(char: String(char)) {
+                actualCharCount += 1
+                var strokeSum = 0
+                for stroke in image.strokes {
+                    var pathSum = 0
+                    stroke.path.forEach({ point in
+                        pathSum += Int(point.size.width + point.size.height)
+                    })
+                    pathSum /= stroke.path.count * 2
+                    strokeSum += pathSum
+                }
+                strokeSum /= image.strokes.count
+                sum += CGFloat(strokeSum)
             }
-            strokeSum /= image.strokes.count
-            sum += CGFloat(strokeSum)
         }
-        let width: CGFloat = sum/CGFloat(available_chars.count) * sqrt(CGFloat(forSize/256.0)) * 2.2
+        let width: CGFloat = sum/CGFloat(actualCharCount) * sqrt(CGFloat(forSize/256.0)) * 2.2
         return width
     }
     
