@@ -11,6 +11,7 @@ import PencilKit
 
 struct WritingView: View {
     @Binding var document: CharSetDocument
+    @Binding var memoizedDisplayImages: Dictionary<String,UIImage>
     @State var chars: String
     @State var selection: String
     @State var canvas = PKCanvasView()
@@ -189,6 +190,8 @@ struct WritingView: View {
         
         let s = document.object.characters[selection] ?? []
         document.object.characters[selection] = s + [image]
+        
+        memoizedDisplayImages[selection] = document.object.getSameImage(char: selection)
     }
     
     func deleteImage(imageIndex: Int) {

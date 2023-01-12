@@ -268,7 +268,7 @@ struct CharSetEditor: View {
                 }
             }
             .sheet(isPresented: $showingWritingView) {
-                WritingView(document: $document, chars: document.object.available_chars, selection: currentLetter)
+                WritingView(document: $document, memoizedDisplayImages: $memoizedDisplayImages, chars: document.object.available_chars, selection: currentLetter)
                     .onDisappear() {
                         for char in document.object.available_chars {
                             memoizedDisplayImages[String(char)] = document.object.getSameImage(char: String(char))
