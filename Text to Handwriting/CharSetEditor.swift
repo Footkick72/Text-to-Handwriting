@@ -118,150 +118,149 @@ struct CharSetEditor: View {
                 }
             }
             
-            let columns = [ GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
-                            GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
-                            GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),
-                            GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10),]
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach((0..<document.object.available_chars.count), id: \.self) { i in
-                        let set: CharSet = document.object
-                        let char: String = String(document.object.available_chars[i])
-                        GeometryReader { reader in
-                            VStack {
-                                if set.numberOfCharacters(char: char) != 0 {
-                                    Image(uiImage: getDisplayImageForChar(char: char))
-                                        .resizable()
-                                        .scaledToFit()
-                                } else {
-                                    Text(char)
-                                        .frame(width: reader.size.width, height: reader.size.height, alignment: .center)
-                                }
-                            }
-                            .onChange(of: reader.frame(in: .global)) { _ in
-                                charBoxes[char] = reader.frame(in: .named("LazyVGrid"))
-                            }
-                        }
-                        .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .border(Color.black, width: 2)
-                        .font(UIDevice.current.userInterfaceIdiom == .pad ? .title : .title2)
-                        .background(
-                            Rectangle()
-                                .foregroundColor(getBackgroundColor(char: char))
-                        )
-                        .scaleEffect(scale)
-                        .gesture(TapGesture()
-                            .onEnded({ _ in
-                                // This entire seemingly extraneous "scale" thing is to avoid some very weird behavior where the TapGesture.onEnded closure fails to save changes to the struct's state variables unless the view itself is dependant on those changes. As a result, I have the view be dependant on the @State variable scale, which is (technically) changed by the closure. No idea why and I don't really understand it, but this works for now.
-                                scale += 1.0
-                                scale = 1.0
-                                
-                                if selecting {
-                                    if selectedChars.contains(char) {
-                                        selectedChars.remove(at: selectedChars.firstIndex(of: char.first!)!)
+            GeometryReader { outerreader in
+                let columns = Array(repeating: GridItem(.flexible(minimum: 80, maximum: 360), spacing: 10), count: Int(outerreader.size.width / 120))
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach((0..<document.object.available_chars.count), id: \.self) { i in
+                            let set: CharSet = document.object
+                            let char: String = String(document.object.available_chars[i])
+                            GeometryReader { reader in
+                                VStack {
+                                    if set.numberOfCharacters(char: char) != 0 {
+                                        Image(uiImage: getDisplayImageForChar(char: char))
+                                            .resizable()
+                                            .scaledToFit()
                                     } else {
-                                        selectedChars.append(char)
+                                        Text(char)
+                                            .frame(width: reader.size.width, height: reader.size.height, alignment: .center)
                                     }
-                                } else {
-                                    self.currentLetter = char
-                                    self.showingWritingView = true
                                 }
-                            })
-                        )
-                        .overlay(
-                            alignment: .bottomTrailing
-                        ) {
-                            if selecting && (
-                                (bulkSelectionInProgress.contains(char) && bulkSelectionInProgressIsActivating) ||
-                                (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
-                                )
-                            {
-                                Color.white
-                                    .opacity(0.2)
-                                    .allowsHitTesting(false)
+                                .onChange(of: reader.frame(in: .global)) { _ in
+                                    charBoxes[char] = reader.frame(in: .named("LazyVGrid"))
+                                }
                             }
-                        }
-                        .overlay(
-                            alignment: .bottomTrailing
-                        ) {
-                            if selecting && (
-                                (bulkSelectionInProgress.contains(char) && bulkSelectionInProgressIsActivating) ||
-                                (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
+                            .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
+                            .aspectRatio(1.0, contentMode: .fit)
+                            .border(Color.black, width: 2)
+                            .font(UIDevice.current.userInterfaceIdiom == .pad ? .title : .title2)
+                            .background(
+                                Rectangle()
+                                    .foregroundColor(getBackgroundColor(char: char))
+                            )
+                            .scaleEffect(scale)
+                            .gesture(TapGesture()
+                                .onEnded({ _ in
+                                    // This entire seemingly extraneous "scale" thing is to avoid some very weird behavior where the TapGesture.onEnded closure fails to save changes to the struct's state variables unless the view itself is dependant on those changes. As a result, I have the view be dependant on the @State variable scale, which is (technically) changed by the closure. No idea why and I don't really understand it, but this works for now.
+                                    scale += 1.0
+                                    scale = 1.0
+                                    
+                                    if selecting {
+                                        if selectedChars.contains(char) {
+                                            selectedChars.remove(at: selectedChars.firstIndex(of: char.first!)!)
+                                        } else {
+                                            selectedChars.append(char)
+                                        }
+                                    } else {
+                                        self.currentLetter = char
+                                        self.showingWritingView = true
+                                    }
+                                })
+                            )
+                            .overlay(
+                                alignment: .bottomTrailing
+                            ) {
+                                if selecting && (
+                                    (bulkSelectionInProgress.contains(char) && bulkSelectionInProgressIsActivating) ||
+                                    (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
                                 )
-                            {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.blue)
-                                    .padding(2)
-                                    .allowsHitTesting(false)
-                                Image(systemName: "checkmark.circle")
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .allowsHitTesting(false)
+                                {
+                                    Color.white
+                                        .opacity(0.2)
+                                        .allowsHitTesting(false)
+                                }
                             }
-                        }
-                    }
-                    if !selecting {
-                        Button(action: {
-                            showingAddCharsView = true
-                        }) {
-                            Image(systemName: "plus.circle")
-                                .foregroundColor(.white)
-                                .font(.title)
-                                .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
-                                .aspectRatio(1.0, contentMode: .fit)
-                                .border(Color.black, width: 2)
-                                .background(
-                                    Rectangle()
+                            .overlay(
+                                alignment: .bottomTrailing
+                            ) {
+                                if selecting && (
+                                    (bulkSelectionInProgress.contains(char) && bulkSelectionInProgressIsActivating) ||
+                                    (selectedChars.contains(char) && (bulkSelectionInProgressIsActivating || !bulkSelectionInProgress.contains(char)))
+                                )
+                                {
+                                    Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(.blue)
-                                )
+                                        .padding(2)
+                                        .allowsHitTesting(false)
+                                    Image(systemName: "checkmark.circle")
+                                        .foregroundColor(.white)
+                                        .padding(2)
+                                        .allowsHitTesting(false)
+                                }
+                            }
                         }
-                        .sheet(isPresented: $showingAddCharsView) {
-                            AddCharsView(document: $document, showAddView: $showingAddCharsView)
+                        if !selecting {
+                            Button(action: {
+                                showingAddCharsView = true
+                            }) {
+                                Image(systemName: "plus.circle")
+                                    .foregroundColor(.white)
+                                    .font(.title)
+                                    .frame(minWidth: 80, idealWidth: 360, maxWidth: 360, minHeight: 80, idealHeight: 360, maxHeight: 360)
+                                    .aspectRatio(1.0, contentMode: .fit)
+                                    .border(Color.black, width: 2)
+                                    .background(
+                                        Rectangle()
+                                            .foregroundColor(.blue)
+                                    )
+                            }
+                            .sheet(isPresented: $showingAddCharsView) {
+                                AddCharsView(document: $document, showAddView: $showingAddCharsView)
+                            }
                         }
                     }
+                    .padding(10)
+                    .gesture(
+                        DragGesture()
+                            .onChanged() { info in
+                                if selecting {
+                                    var endchar: Character = " ".first!
+                                    var startchar: Character = " ".first!
+                                    for char in document.object.available_chars {
+                                        let c = String(char)
+                                        let box = charBoxes[c] ?? CGRect.zero
+                                        if box.contains(info.location) {
+                                            endchar = char
+                                        }
+                                        if box.contains(info.startLocation) {
+                                            startchar = char
+                                            bulkSelectionInProgressIsActivating = !selectedChars.contains(char)
+                                        }
+                                    }
+                                    let start = document.object.available_chars.firstIndex(of: startchar)
+                                    let end = document.object.available_chars.firstIndex(of: endchar)
+                                    if let start = start, let end = end {
+                                        bulkSelectionInProgress = String(document.object.available_chars[min(start,end)...max(start,end)])
+                                    }
+                                }
+                            }
+                            .onEnded() { _ in
+                                for char in bulkSelectionInProgress {
+                                    if bulkSelectionInProgressIsActivating {
+                                        if !selectedChars.contains(char) {
+                                            selectedChars.append(char)
+                                        }
+                                    } else {
+                                        if selectedChars.contains(char) {
+                                            selectedChars.remove(at: selectedChars.firstIndex(of: char)!)
+                                        }
+                                    }
+                                }
+                                bulkSelectionInProgress = ""
+                            }
+                    )
+                    .coordinateSpace(name: "LazyVGrid")
                 }
-                .padding(10)
-                .gesture(
-                    DragGesture()
-                        .onChanged() { info in
-                            if selecting {
-                                var endchar: Character = " ".first!
-                                var startchar: Character = " ".first!
-                                for char in document.object.available_chars {
-                                    let c = String(char)
-                                    let box = charBoxes[c] ?? CGRect.zero
-                                    if box.contains(info.location) {
-                                        endchar = char
-                                    }
-                                    if box.contains(info.startLocation) {
-                                        startchar = char
-                                        bulkSelectionInProgressIsActivating = !selectedChars.contains(char)
-                                    }
-                                }
-                                let start = document.object.available_chars.firstIndex(of: startchar)
-                                let end = document.object.available_chars.firstIndex(of: endchar)
-                                if let start = start, let end = end {
-                                    bulkSelectionInProgress = String(document.object.available_chars[min(start,end)...max(start,end)])
-                                }
-                            }
-                        }
-                        .onEnded() { _ in
-                            for char in bulkSelectionInProgress {
-                                if bulkSelectionInProgressIsActivating {
-                                    if !selectedChars.contains(char) {
-                                        selectedChars.append(char)
-                                    }
-                                } else {
-                                    if selectedChars.contains(char) {
-                                        selectedChars.remove(at: selectedChars.firstIndex(of: char)!)
-                                    }
-                                }
-                            }
-                            bulkSelectionInProgress = ""
-                        }
-                )
-                .coordinateSpace(name: "LazyVGrid")
             }
             .onAppear() {
                 for char in document.object.available_chars {
