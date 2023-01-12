@@ -195,11 +195,6 @@ struct WritingView: View {
     }
     
     func deleteImage(imageIndex: Int) {
-//        if document.object.characters[selection]!.count <= 1 {
-//            document.object.available_chars.remove(at: document.object.available_chars.firstIndex(of: Character(selection))!)
-//            document.object.characters.removeValue(forKey: selection)
-//            return
-//        }
         document.object.characters[selection]!.remove(at: imageIndex)
     }
 }
