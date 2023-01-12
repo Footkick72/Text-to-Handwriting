@@ -409,7 +409,7 @@
 				DEVELOPMENT_TEAM = 4NCA37UMUQ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Text to Handwriting/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -432,7 +432,7 @@
 				DEVELOPMENT_TEAM = 4NCA37UMUQ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Text to Handwriting/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
