@@ -85,15 +85,29 @@ extension Text {
         self
             .background(
                 ZStack {
-                    self.offset(x: -offset, y: -offset).foregroundColor(color)
-                    self.offset(x: offset, y: -offset).foregroundColor(color)
-                    self.offset(x: -offset, y: offset).foregroundColor(color)
-                    self.offset(x: offset, y: offset).foregroundColor(color)
-                    self.offset(x: 0, y: -offset).foregroundColor(color)
-                    self.offset(x: 0, y: -offset).foregroundColor(color)
-                    self.offset(x: -offset, y: 0).foregroundColor(color)
-                    self.offset(x: offset, y: 0).foregroundColor(color)
+                    ZStack {
+                        self.offset(x: -offset, y: -offset)
+                        self.offset(x: offset, y: -offset)
+                        self.offset(x: -offset, y: offset)
+                        self.offset(x: offset, y: offset)
+                        self.offset(x: 0, y: -offset)
+                        self.offset(x: 0, y: -offset)
+                        self.offset(x: -offset, y: 0)
+                        self.offset(x: offset, y: 0)
+                    }
+                    
+                    ZStack {
+                        self.offset(x: -2*offset, y: -2*offset)
+                        self.offset(x: 2*offset, y: -2*offset)
+                        self.offset(x: -2*offset, y: 2*offset)
+                        self.offset(x: 2*offset, y: 2*offset)
+                        self.offset(x: 0, y: -2*offset)
+                        self.offset(x: 0, y: -2*offset)
+                        self.offset(x: -2*offset, y: 0)
+                        self.offset(x: 2*offset, y: 0)
+                    }
                 }
+                    .foregroundColor(color)
             )
     }
 }
