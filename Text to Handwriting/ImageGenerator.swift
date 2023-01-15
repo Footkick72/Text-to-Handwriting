@@ -363,7 +363,7 @@ class ImageGenerator: NSObject {
                                                      y: 0,
                                                      width: template.getBackground().size.width,
                                                      height: template.getBackground().size.height),
-                                        scale: min(3.0, max(1.0, 3000/max(template.getBackground().size.width, template.getBackground().size.height))))
+                                        scale: min(3.0, max(2.0, 3000/max(template.getBackground().size.width, template.getBackground().size.height))))
                 img.draw(at: CGPoint.zero)
                 
             }
