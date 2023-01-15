@@ -31,8 +31,10 @@ struct WritingView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
-            Text("Write " + selection)
+            Text("Write \(selection)")
                 .font(.title)
+            Text(selection.first!.unicodeScalars.first!.properties.name!.lowercased())
+                .font(.title3)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 25) {
                     ForEach(0..<document.object.getDrawings(char: selection).count, id: \.self) { i in
