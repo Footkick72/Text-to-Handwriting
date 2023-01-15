@@ -17,7 +17,7 @@ struct InfoView: View {
                 """
                 Text to Handwriting
                 
-                ©2021 by Daniel Christopher Long
+                ©2023 by Daniel Christopher Long
                 
                 To learn how to use this app,
                 read the file "Instructions.txt" in your filesystem.
