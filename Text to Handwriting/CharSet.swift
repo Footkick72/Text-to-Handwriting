@@ -99,18 +99,24 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func getPreview() -> UIImage {
-        if available_chars.count == 0 {
+        var real_chars = ""
+        for char in available_chars {
+            if numberOfCharacters(char: String(char)) > 0 {
+                real_chars += String(char)
+            }
+        }
+        if real_chars.count == 0 {
             return UIImage(cgImage: UIImage(named: "space")!.cgImage!, scale: 4.0, orientation: .up)
         }
         var image = PKDrawing()
         var i = 0
         for y in 0..<3 {
             for x in 0..<3 {
-                var char = getSameDrawing(char: String(available_chars[i]))
+                var char = getSameDrawing(char: String(real_chars[i]))
                 char.transform(using: CGAffineTransform(translationX: CGFloat(x*256), y: CGFloat(y*256)))
                 image.append(char)
                 i += 1
-                if i >= available_chars.count {
+                if i >= real_chars.count {
                     return image.image(from: CGRect(x: 0, y: 0, width: 256*3, height: 256*3), scale: 5.0)
                 }
             }
