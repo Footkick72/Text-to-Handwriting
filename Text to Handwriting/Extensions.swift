@@ -79,3 +79,21 @@ extension PKDrawing {
 extension UIPasteboard.Name {
     static let t2h = UIPasteboard.Name(rawValue: "text2handwritingpasteboard")
 }
+
+extension Text {
+    func textborder(offset: CGFloat, color: Color) -> some View {
+        self
+            .background(
+                ZStack {
+                    self.offset(x: -offset, y: -offset).foregroundColor(color)
+                    self.offset(x: offset, y: -offset).foregroundColor(color)
+                    self.offset(x: -offset, y: offset).foregroundColor(color)
+                    self.offset(x: offset, y: offset).foregroundColor(color)
+                    self.offset(x: 0, y: -offset).foregroundColor(color)
+                    self.offset(x: 0, y: -offset).foregroundColor(color)
+                    self.offset(x: -offset, y: 0).foregroundColor(color)
+                    self.offset(x: offset, y: 0).foregroundColor(color)
+                }
+            )
+    }
+}
