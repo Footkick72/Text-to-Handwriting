@@ -145,7 +145,7 @@ struct CharSetEditor: View {
                             letterSpacing = Double(document.object.letterSpacing)
                         }
                     Text("Character spacing")
-                    Slider(value: $document.object.forceMultiplier, in: 0.5...5.0, step: 0.1, onEditingChanged: { _ in }, label: {})
+                    Slider(value: $document.object.forceMultiplier, in: 0.2...5.0, step: 0.1, onEditingChanged: { _ in }, label: {})
                         .padding(.horizontal, 50)
                         .onChange(of: document.object.forceMultiplier) { _ in
                             for char in document.object.available_chars {
