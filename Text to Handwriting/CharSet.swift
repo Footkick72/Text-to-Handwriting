@@ -110,12 +110,22 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func getPreview() -> UIImage {
-        var real_chars = ""
+        var alpha_chars = ""
+        var num_chars = ""
+        var other_chars = ""
         for char in available_chars {
             if numberOfCharacters(char: String(char)) > 0 {
-                real_chars += String(char)
+                if char.isLetter {
+                    alpha_chars += String(char)
+                } else if char.isNumber {
+                    num_chars += String(char)
+                }
+                else {
+                    other_chars += String(char)
+                }
             }
         }
+        let real_chars = alpha_chars + num_chars + other_chars
         if real_chars.count == 0 {
             return UIImage(cgImage: UIImage(named: "space")!.cgImage!, scale: 4.0, orientation: .up)
         }
