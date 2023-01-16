@@ -35,7 +35,6 @@ struct CharSetEditor: View {
                         showingDeleteDataConfirmation = true
                     }) {
                         Image(systemName: "trash")
-                            .foregroundColor(selectedChars.count == 0 ? .gray : .red)
                             .font(.title2)
                     }
                     .alert(isPresented: $showingDeleteDataConfirmation) {
@@ -47,6 +46,40 @@ struct CharSetEditor: View {
                             selecting = false
                         },
                               secondaryButton: .cancel())
+                    }
+                    Spacer()
+                    Button(action: {
+                        for char in selectedChars {
+                            let c = String(char)
+                            var new: Array<PKDrawing> = []
+                            if let ims = document.object.characters[c] {
+                                for o in ims {
+                                    new.append(o.thickened(factor: 1.1))
+                                }
+                            }
+                            document.object.characters[c] = new
+                            memoizedDisplayImages[c] = document.object.getSameImage(char: c)
+                        }
+                    }) {
+                        Image(systemName:"pencil.tip.crop.circle.badge.plus")
+                            .font(.title2)
+                    }
+                    Spacer()
+                    Button(action: {
+                        for char in selectedChars {
+                            let c = String(char)
+                            var new: Array<PKDrawing> = []
+                            if let ims = document.object.characters[c] {
+                                for o in ims {
+                                    new.append(o.thickened(factor: 1.0/1.1))
+                                }
+                            }
+                            document.object.characters[c] = new
+                            memoizedDisplayImages[c] = document.object.getSameImage(char: c)
+                        }
+                    }) {
+                        Image(systemName:"pencil.tip.crop.circle.badge.minus")
+                            .font(.title2)
                     }
                     Spacer()
                     Button(action: {
