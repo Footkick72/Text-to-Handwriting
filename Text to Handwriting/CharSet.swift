@@ -95,6 +95,17 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
         guard let data = self.characters[char] else {
             return Array<PKDrawing>()
         }
+        var thickened: Array<PKDrawing> = []
+        for im in data {
+            thickened.append(im.thickened(factor: CGFloat(self.forceMultiplier)))
+        }
+        return thickened
+    }
+    
+    func getUnscaledDrawings(char: String) -> Array<PKDrawing> {
+        guard let data = self.characters[char] else {
+            return Array<PKDrawing>()
+        }
         return data
     }
     

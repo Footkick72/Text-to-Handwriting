@@ -37,9 +37,9 @@ struct WritingView: View {
                 .font(.title3)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 25) {
-                    ForEach(0..<document.object.getDrawings(char: selection).count, id: \.self) { i in
+                    ForEach(0..<document.object.getUnscaledDrawings(char: selection).count, id: \.self) { i in
                         ZStack {
-                            let image = document.object.getDrawings(char: selection)[i]
+                            let image = document.object.getUnscaledDrawings(char: selection)[i]
                             Image(uiImage: image.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)

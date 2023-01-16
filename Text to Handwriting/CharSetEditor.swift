@@ -147,6 +147,11 @@ struct CharSetEditor: View {
                     Text("Character spacing")
                     Slider(value: $document.object.forceMultiplier, in: 0.5...5.0, step: 0.1, onEditingChanged: { _ in }, label: {})
                         .padding(.horizontal, 50)
+                        .onChange(of: document.object.forceMultiplier) { _ in
+                            for char in document.object.available_chars {
+                                memoizedDisplayImages[String(char)] = document.object.getSameImage(char: String(char))
+                            }
+                        }
                     Text("Character thickness")
                 }
             }

@@ -68,7 +68,7 @@ class ImageGenerator: NSObject {
         self.space_length = Int(Double(line_spacing) * 0.5)
         self.line_end_buffer = Int(line_spacing)
         
-        self.drawWidth = charset.getDrawWidth(forSize: CGFloat(charset.forceMultiplier * font_size * line_spacing))
+        self.drawWidth = charset.getDrawWidth(forSize: CGFloat(font_size * line_spacing))
         
         self.image = PKDrawing()
         self.size = [Int(template.getBackground().size.width), Int(template.getBackground().size.height)]
@@ -209,9 +209,7 @@ class ImageGenerator: NSObject {
                         if var letter = charset.getDrawing(char: String(chars[i])), !markdown.contains(i) {
                             
                             // regenerate the strokes with added weight, assuming the word is bold for a worst-case scenario.
-                            let factor = charset.forceMultiplier * 1.5
-                            
-                            letter = letter.thickened(factor: CGFloat(factor))
+                            letter = letter.thickened(factor: 1.5)
                             
                             // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
                             let fillingScale = CGFloat(1.8 * font_size)
@@ -242,12 +240,9 @@ class ImageGenerator: NSObject {
                 if var letter = charset.getDrawing(char: String(self.text[char_i])) {
                     
                     // regenerate the strokes with added weight
-                    var factor = charset.forceMultiplier
                     if isBold {
-                        factor *= 1.5
+                        letter = letter.thickened(factor: CGFloat(1.5))
                     }
-                    
-                    letter = letter.thickened(factor: CGFloat(factor))
                     
                     // properly fill the lines - in the drawingView, the suggested area is half the full box, which is what is otherwise getting mapped on.
                     let fillingScale = CGFloat(1.8 * font_size)
