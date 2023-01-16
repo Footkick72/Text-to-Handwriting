@@ -24,6 +24,7 @@ struct AddCharsUsingPasteView: View {
         .sheet(isPresented: $showingTextBox) {
             VStack {
                 TextField("Source Text", text: $text, axis: .vertical)
+                    .frame(maxHeight: .infinity, alignment: .topLeading)
                     .border(.black)
                     .padding(50)
                 Button(action: {
