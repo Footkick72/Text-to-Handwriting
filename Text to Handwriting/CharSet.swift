@@ -94,8 +94,11 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func getSameImage(char: String) -> UIImage {
-        let drawing = getSameDrawing(char: char)
-        return drawing.image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0)
+        guard let drawings = self.characters[char] else {
+            return UIImage()
+        }
+        let drawing = drawings[0]
+        return drawing.thickened(factor: CGFloat(self.forceMultiplier)).image(from: CGRect(x: 0, y: 0, width: 256, height: 256), scale: 1.0)
     }
     
     func getDrawings(char: String) -> Array<PKDrawing> {
