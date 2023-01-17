@@ -45,7 +45,10 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func numberOfCharacters(char: String) -> Int {
-        return self.getDrawings(char: char).count
+        if let c = self.characters[char] {
+            return c.count
+        }
+        return 0
     }
     
     func getDrawWidth(forSize: CGFloat) -> CGFloat {
@@ -72,18 +75,22 @@ struct CharSet: Equatable, Codable, HandwritingDocumentResource {
     }
     
     func getDrawing(char: String) -> PKDrawing? {
-        let images = getDrawings(char: char)
-        return images.randomElement()
+        guard let drawings = self.characters[char] else {
+            return PKDrawing()
+        }
+        guard let drawing = drawings.randomElement() else {
+            return PKDrawing()
+        }
+        return drawing.thickened(factor: CGFloat(self.forceMultiplier))
     }
     
     func getSameDrawing(char: String) -> PKDrawing {
         // returns the same image always for UI display purposes
-        let images = getDrawings(char: char)
-        if images.count > 0 {
-            return images.first!
-        } else {
+        guard let drawings = self.characters[char] else {
             return PKDrawing()
         }
+        let drawing = drawings[0]
+        return drawing.thickened(factor: CGFloat(self.forceMultiplier))
     }
     
     func getSameImage(char: String) -> UIImage {
